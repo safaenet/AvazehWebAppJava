@@ -1,4 +1,4 @@
-package com.safadana.AvazehWebApp;
+package com.safadana.AvazehRetailManagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
