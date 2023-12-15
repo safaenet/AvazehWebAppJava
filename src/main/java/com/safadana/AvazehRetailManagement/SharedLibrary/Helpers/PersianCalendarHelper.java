@@ -2,33 +2,33 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.Helpers;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.chrono.PersianChronology;
 import java.time.format.DateTimeFormatter;
+import com.github.mfathi91.time.PersianDate;
 
 public class PersianCalendarHelper {
 
     // Gets the current Persian date in format of "YYYY/mm/dd"
     public static String getCurrentPersianDate() {
-        LocalDate now = LocalDate.now(PersianChronology.INSTANCE);
-        return String.format("%04d/%02d/%02d", now.getYear(), now.getMonthValue(), now.getDayOfMonth());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return dtf.format(PersianDate.now());
     }
 
     // Gets the current Persian date + AddDays in format of "YYYY/mm/dd"
     public static String getPersianDate(int addDays) {
-        LocalDate now = LocalDate.now(PersianChronology.INSTANCE).plusDays(addDays);
-        return String.format("%04d/%02d/%02d", now.getYear(), now.getMonthValue(), now.getDayOfMonth());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return dtf.format(PersianDate.now().plusDays(addDays));
     }
 
     // Gets the current Persian date in format of "YYYYmmdd"
     public static String getCurrentRawPersianDate() {
-        LocalDate now = LocalDate.now(PersianChronology.INSTANCE);
-        return String.format("%04d%02d%02d", now.getYear(), now.getMonthValue(), now.getDayOfMonth());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return dtf.format(PersianDate.now());
     }
 
     // Gets the current Persian date + AddDays in format of "YYYYmmdd"
     public static String getRawPersianDate(int addDays) {
-        LocalDate now = LocalDate.now(PersianChronology.INSTANCE).plusDays(addDays);
-        return String.format("%04d%02d%02d", now.getYear(), now.getMonthValue(), now.getDayOfMonth());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+        return dtf.format(PersianDate.now().plusDays(addDays));
     }
 
     // Gets the current time in format of "HH:mm:ss"
@@ -37,17 +37,18 @@ public class PersianCalendarHelper {
     }
 
     public static String toPersianDate(LocalDate localDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        return localDate.format(formatter);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return dtf.format(PersianDate.fromGregorian(localDate));
     }
 
     public static String toPersianDateTime(LocalDate localDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        return localDate.format(formatter);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+        return dtf.format(PersianDate.fromGregorian(localDate));
     }
 
     public static LocalDate toGregorianDate(String persianDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        return LocalDate.parse(persianDate, formatter).withChronology(PersianChronology.INSTANCE);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        PersianDate pd = PersianDate.parse(persianDate, dtf);
+        return pd.toGregorian();
     }
 }
