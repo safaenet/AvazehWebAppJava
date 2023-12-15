@@ -2,12 +2,17 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.Helpers;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "transactionitems")
 @Data
 public class TransactionItemModel {
+    @Id
     private int id;
     private int transactionId;
     private String title;
@@ -27,8 +32,8 @@ public class TransactionItemModel {
         return getTimeUpdated() + " " + getDateUpdated();
     }
 
-    public BigDecimal getCountValue() {
-        return BigDecimal.valueOf(Helpers.evaluateExpression(countString));
+    public double getCountValue() {
+        return Helpers.evaluateExpression(countString);
     }
 
     public boolean isCountStringValid() {
@@ -40,7 +45,7 @@ public class TransactionItemModel {
         }
     }
 
-    public BigDecimal getTotalValue() {
-        return BigDecimal.valueOf(getAmount()).multiply(getCountValue());
+    public double getTotalValue() {
+        return getAmount() * getCountValue();
     }
 }

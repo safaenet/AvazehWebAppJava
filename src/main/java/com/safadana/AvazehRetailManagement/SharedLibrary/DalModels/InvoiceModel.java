@@ -6,21 +6,33 @@ import java.util.List;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "invoices")
 @Data
 public class InvoiceModel {
+    @Id
     private int id;
+
+    @ManyToOne(cascade = CascadeType.ALL)
     private CustomerModel customer;
     private String about;
     private String dateCreated;
     private String timeCreated;
     private String dateUpdated;
     private String timeUpdated;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "invoiceId")
     private List<InvoiceItemModel> items;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "invoiceId")
     private List<InvoicePaymentModel> payments;
     private DiscountTypes discountType = DiscountTypes.Amount;
     private double discountValue;

@@ -7,8 +7,11 @@ import java.util.List;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.TransactionFinancialStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -23,41 +26,41 @@ public class TransactionModel {
     private String timeCreated;
     private String dateUpdated;
     private String timeUpdated;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "transactionId")
     private List<TransactionItemModel> items;
     private String descriptions;
-    private BigDecimal totalPositiveItemsSum;
-    private BigDecimal totalNegativeItemsSum;
+    private double totalPositiveItemsSum;
+    private double totalNegativeItemsSum;
 
-    public BigDecimal getPositiveItemsSum() {
+    public double getPositiveItemsSum() {
         if (items == null) {
-            return BigDecimal.ZERO;
+            return 0;
         }
-        return this.items.stream().filter(i -> i.getTotalValue().compareTo(BigDecimal.ZERO) > 0)
-                .map(TransactionItemModel::getTotalValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return this.items.stream().filter(i -> i.getTotalValue() > 0)
+                .mapToDouble(TransactionItemModel::getTotalValue).sum();
     }
 
-    public BigDecimal getNegativeItemsSum() {
+    public double getNegativeItemsSum() {
         if (this.items == null) {
-            return BigDecimal.ZERO;
+            return 0;
         }
-        return this.items.stream().filter(i -> i.getTotalValue().compareTo(BigDecimal.ZERO) < 0)
-                .map(TransactionItemModel::getTotalValue)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return this.items.stream().filter(i -> i.getTotalValue() < 0)
+                .mapToDouble(TransactionItemModel::getTotalValue).sum();
     }
 
-    public BigDecimal getBalance() {
-        return getPositiveItemsSum().add(getNegativeItemsSum());
+    public double getBalance() {
+        return getPositiveItemsSum() + getNegativeItemsSum();
     }
 
-    public BigDecimal getTotalBalance() {
-        return this.totalPositiveItemsSum.add(this.totalNegativeItemsSum);
+    public double getTotalBalance() {
+        return this.totalPositiveItemsSum + this.totalNegativeItemsSum;
     }
 
     public TransactionFinancialStatus getTransactionFinancialStatus() {
-        if (getBalance().compareTo(BigDecimal.ZERO) == 0) {
+        if (getBalance() == 0) {
             return TransactionFinancialStatus.Balanced;
-        } else if (getBalance().compareTo(BigDecimal.ZERO) > 0) {
+        } else if (getBalance() > 0) {
             return TransactionFinancialStatus.Positive;
         } else {
             return TransactionFinancialStatus.Negative;

@@ -2,20 +2,28 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.Helpers;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
+@Entity
+@Table(name = "invoiceitems")
 @Data
 public class InvoiceItemModel {
     @Id
     private int id;
 
     private int invoiceId;
+    @ManyToOne(cascade = CascadeType.ALL)
     private ProductModel product;
     private long buyPrice;
     private long sellPrice;
     private String barCode;
     private String countString = "1";
+    @ManyToOne(cascade = CascadeType.ALL)
     private ProductUnitModel unit;
     private String dateCreated;
     private String timeCreated;

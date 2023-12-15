@@ -1,6 +1,5 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
