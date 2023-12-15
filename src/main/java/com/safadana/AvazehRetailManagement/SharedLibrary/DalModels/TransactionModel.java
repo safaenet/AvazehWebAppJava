@@ -1,8 +1,6 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
-
-import java.math.BigDecimal;
 import java.util.List;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.TransactionFinancialStatus;
