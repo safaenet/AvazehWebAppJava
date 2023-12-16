@@ -1,7 +1,10 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
+import java.time.LocalDateTime;
+
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeEventTypes;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -13,10 +16,17 @@ import lombok.Data;
 public class ChequeEventModel {
     @Id
     private int id;
-    
+
+    @Column(nullable = false)
     private int chequeId;
-    private String eventDate;
+
+    @Column(nullable = false)
+    private LocalDateTime eventDate;
+
+    @Column(nullable = false)
     private ChequeEventTypes eventType;
+    
+    @Column(length = 50)
     private String eventText;
 
     public String getEventTypeString() {

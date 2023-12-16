@@ -1,5 +1,11 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -13,10 +19,16 @@ public class InvoicePaymentModel {
     private int id;
     
     private int invoiceId;
-    private String dateCreated;
-    private String timeCreated;
-    private String dateUpdated;
-    private String timeUpdated;
+
+    @CreatedDate
+    private LocalDateTime dateCreated;
+
+    @LastModifiedDate
+    private LocalDateTime dateUpdated;
+
+    @Column(nullable = false)
     private double payAmount;
+
+    @Column(columnDefinition="TEXT")
     private String descriptions;
 }

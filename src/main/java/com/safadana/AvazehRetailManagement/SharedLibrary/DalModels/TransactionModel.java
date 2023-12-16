@@ -1,16 +1,23 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
+
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.TransactionFinancialStatus;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "transactions")
@@ -19,16 +26,26 @@ public class TransactionModel {
     @Id
     private int id;
 
+    @Column(length = 100, nullable = false)
     private String fileName;
-    private String dateCreated;
-    private String timeCreated;
-    private String dateUpdated;
-    private String timeUpdated;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @CreatedDate
+    private LocalDateTime dateCreated;
+    
+    @LastModifiedDate
+    private LocalDateTime dateUpdated;
+    
+    @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "transactionId")
     private List<TransactionItemModel> items;
+
+    @Column(columnDefinition="TEXT")
     private String descriptions;
+
+    @Transient
     private double totalPositiveItemsSum;
+
+    @Transient
     private double totalNegativeItemsSum;
 
     public double getPositiveItemsSum() {

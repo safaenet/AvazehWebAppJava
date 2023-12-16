@@ -2,11 +2,16 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -21,24 +26,40 @@ public class InvoiceModel {
     @Id
     private int id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     private CustomerModel customer;
+
+    @Column(length = 50)
     private String about;
-    private String dateCreated;
-    private String timeCreated;
-    private String dateUpdated;
-    private String timeUpdated;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @CreatedDate
+    private LocalDateTime dateCreated;
+
+    @LastModifiedDate
+    private LocalDateTime dateUpdated;
+
+    @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "invoiceId")
     private List<InvoiceItemModel> items;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "invoiceId")
     private List<InvoicePaymentModel> payments;
+
     private DiscountTypes discountType = DiscountTypes.Amount;
+
     private double discountValue;
+
+    @Column(columnDefinition="TEXT")
     private String descriptions;
+
+    @Column(nullable = false)
     private InvoiceLifeStatus lifeStatus;
+
+    @Column(nullable = true)
     private int prevInvoiceId;
+
+    @Column(nullable = true)
     private double prevInvoiceBalance;
 
     public double getTotalItemsBuySum() {

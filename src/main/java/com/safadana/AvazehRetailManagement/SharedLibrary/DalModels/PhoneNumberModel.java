@@ -1,5 +1,6 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -13,5 +14,7 @@ public class PhoneNumberModel {
     private int id;
 
     private int customerId;
+
+    @Column(length = 50, nullable = false)
     private String phoneNumber;
 }
