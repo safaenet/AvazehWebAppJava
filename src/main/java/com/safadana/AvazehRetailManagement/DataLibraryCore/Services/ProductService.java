@@ -33,4 +33,8 @@ public class ProductService {
     public ProductModel getByBarcode(String barcode) {
         return productDAO.findByBarcode(barcode);
     }
+
+    public List<ProductModel> getByProductName(String text) {
+        return productDAO.findByProductNameContains(text);
+    }
 }

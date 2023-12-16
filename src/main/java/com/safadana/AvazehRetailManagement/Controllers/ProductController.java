@@ -38,4 +38,9 @@ public class ProductController {
     public ProductModel getProductById(@PathVariable String barcode) {
         return productService.getByBarcode(barcode);
     }
+
+    @GetMapping("/ProductName/{name}")
+    public List<ProductModel> getProductByProductName(@PathVariable String name) {
+        return productService.getByProductName(name);
+    }
 }
