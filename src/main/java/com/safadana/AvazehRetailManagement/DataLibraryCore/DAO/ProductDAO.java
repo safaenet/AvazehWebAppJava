@@ -15,14 +15,11 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductModel;
 public interface ProductDAO extends JpaRepository<ProductModel, Integer> {
     ProductModel findByBarcode(String barcode);
 
-    @Async("asyncExecutor")
+    @Async
     @Query("FROM ProductModel WHERE UPPER(productName) LIKE CONCAT('%', UPPER(?1), '%') " +
             "OR UPPER(descriptions) LIKE CONCAT('%', UPPER(?1), '%') " +
             "OR UPPER(barcode) LIKE CONCAT('%', UPPER(?1), '%') " +
             "OR dateCreated LIKE CONCAT('%', ?1, '%') " +
             "OR dateUpdated LIKE CONCAT('%', ?1, '%')")
-    CompletableFuture<Page<ProductModel>> findByMany(String productName, Pageable pageable);
-
-    @Async
-    CompletableFuture<ProductModel> findById(int id);
+    CompletableFuture<Page<ProductModel>> findByMany(String searchText, Pageable pageable);
 }

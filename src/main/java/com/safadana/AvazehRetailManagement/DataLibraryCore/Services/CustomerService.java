@@ -9,19 +9,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.ProductDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductModel;
+import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.CustomerDAO;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
 
 @Service
-public class ProductService {
+public class CustomerService {
     @Autowired
-    ProductDAO DAO;
+    CustomerDAO DAO;
 
-    public CompletableFuture<List<ProductModel>> getAll() {
+    public CompletableFuture<List<CustomerModel>> getAll() {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<ProductModel>> getWithPagination(String searchText, int offset, int pageSize,
+    public CompletableFuture<Page<CustomerModel>> getWithPagination(String searchText, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
@@ -29,15 +29,11 @@ public class ProductService {
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<ProductModel> getById(int id) {
+    public CompletableFuture<CustomerModel> getById(int id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<ProductModel> getByBarcode(String barcode) {
-        return CompletableFuture.completedFuture(DAO.findByBarcode(barcode));
-    }
-
-    public CompletableFuture<ProductModel> createUpdateProduct(ProductModel product) {
+    public CompletableFuture<CustomerModel> createUpdateProduct(CustomerModel product) {
         return CompletableFuture.completedFuture(DAO.save(product));
     }
 
