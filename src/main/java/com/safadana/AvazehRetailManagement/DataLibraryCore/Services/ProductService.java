@@ -20,10 +20,10 @@ public class ProductService {
         return productDAO.findAll();
     }
 
-    public Page<ProductModel> getAllWithPagination(int offset, int pageSize, String sortColumn,
+    public List<ProductModel> getWithPagination(String searchText, int offset, int pageSize, String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return productDAO.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+        return productDAO.findByCustom(searchText, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public ProductModel getById(int id) {
@@ -32,9 +32,5 @@ public class ProductService {
 
     public ProductModel getByBarcode(String barcode) {
         return productDAO.findByBarcode(barcode);
-    }
-
-    public List<ProductModel> getByProductName(String text) {
-        return productDAO.findByProductNameContains(text);
     }
 }

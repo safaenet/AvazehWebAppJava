@@ -23,10 +23,10 @@ public class ProductController {
         return productService.getAll();
     }
 
-    @GetMapping("/AllProductsWithPagination/{offset}/{pageSize}/{sortColumn}/{sortOrder}")
-    public Page<ProductModel> getAllProductsWithPagination(@PathVariable int offset, @PathVariable int pageSize,
+    @GetMapping("/ProductsWithPagination/{searchText}/{offset}/{pageSize}/{sortColumn}/{sortOrder}")
+    public List<ProductModel> getProductsWithPagination(@PathVariable String searchText, @PathVariable int offset, @PathVariable int pageSize,
             @PathVariable String sortColumn, @PathVariable String sortOrder) {
-        return productService.getAllWithPagination(offset, pageSize, sortColumn, sortOrder);
+        return productService.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")
@@ -37,10 +37,5 @@ public class ProductController {
     @GetMapping("/Barcode/{barcode}")
     public ProductModel getProductById(@PathVariable String barcode) {
         return productService.getByBarcode(barcode);
-    }
-
-    @GetMapping("/ProductName/{name}")
-    public List<ProductModel> getProductByProductName(@PathVariable String name) {
-        return productService.getByProductName(name);
     }
 }
