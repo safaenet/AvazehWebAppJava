@@ -9,19 +9,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.CustomerDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
+import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.ChequeDAO;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
 @Service
 public class ChequeService {
     @Autowired
-    CustomerDAO DAO;
+    ChequeDAO DAO;
 
-    public CompletableFuture<List<CustomerModel>> getAll() {
+    public CompletableFuture<List<ChequeModel>> getAll() {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<CustomerModel>> getWithPagination(String searchText, int offset, int pageSize,
+    public CompletableFuture<Page<ChequeModel>> getWithPagination(String searchText, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
@@ -29,15 +30,26 @@ public class ChequeService {
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<CustomerModel> getById(int id) {
+    public CompletableFuture<ChequeModel> getById(int id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<CustomerModel> createUpdateProduct(CustomerModel product) {
+    public CompletableFuture<ChequeModel> createUpdateProduct(ChequeModel product) {
         return CompletableFuture.completedFuture(DAO.save(product));
     }
 
     public void deleteById(int id) {
         DAO.deleteById(id);
+    }
+
+    public CompletableFuture<List<String>> getBankNames() {
+        return DAO.findBankNames();
+    }
+
+    public CompletableFuture<List<ChequeModel>> getCloseCheques() {
+        int addDays = 3; // This should be read from settings.
+        String today = PersianCalendarHelper.getCurrentRawPersianDate();
+        String until = PersianCalendarHelper.getRawPersianDate(addDays);
+        return DAO.findCloseCheques(today, until);
     }
 }

@@ -17,7 +17,7 @@ public interface CustomerDAO extends JpaRepository<CustomerModel, Integer> {
     @Async
     @Query("SELECT c FROM CustomerModel c LEFT JOIN FETCH c.phoneNumbers pn WHERE " +
             "(c.id = customerId) AND " +
-            "pn.phoneNumber LIKE CONCAT('%', UPPER(?1), '%') " +
+            "pn.phoneNumber LIKE CONCAT('%', ?1, '%') " +
             "OR UPPER(firstName) LIKE CONCAT('%', UPPER(?1), '%') " +
             "OR UPPER(lastName) LIKE CONCAT('%', UPPER(?1), '%') " +
             "OR UPPER(CONCAT(firstName, ' ', lastName)) LIKE CONCAT('%', UPPER(?1), '%') " +

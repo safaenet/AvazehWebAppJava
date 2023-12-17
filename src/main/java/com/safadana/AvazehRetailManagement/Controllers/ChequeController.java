@@ -14,22 +14,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.CustomerService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
+import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.ChequeService;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 
 @RestController
-@RequestMapping("/Customer")
+@RequestMapping("/Cheque")
 public class ChequeController {
     @Autowired
-    CustomerService service;
+    ChequeService service;
 
     @GetMapping("/GetAll")
-    public CompletableFuture<List<CustomerModel>> getAll() {
+    public CompletableFuture<List<ChequeModel>> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<CustomerModel>> getWithPagination(@RequestParam String searchText,
+    public CompletableFuture<Page<ChequeModel>> getWithPagination(@RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
@@ -37,17 +37,27 @@ public class ChequeController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<CustomerModel> getById(@PathVariable int id) {
+    public CompletableFuture<ChequeModel> getById(@PathVariable int id) {
         return service.getById(id);
     }
 
     @PostMapping("/CreateUpdate")
-    public CompletableFuture<CustomerModel> createUpdate(@RequestBody CustomerModel product) {
+    public CompletableFuture<ChequeModel> createUpdate(@RequestBody ChequeModel product) {
         return service.createUpdateProduct(product);
     }
 
     @DeleteMapping("/Delete/{id}")
     public void delete(@PathVariable int id) {
         service.deleteById(id);
+    }
+
+    @GetMapping("/GetBankNames")
+    public CompletableFuture<List<String>> getBankNames() {
+        return service.getBankNames();
+    }
+
+    @GetMapping("/GetCloseCheques")
+    public CompletableFuture<List<ChequeModel>> getCloseCheques() {
+        return service.getCloseCheques();
     }
 }
