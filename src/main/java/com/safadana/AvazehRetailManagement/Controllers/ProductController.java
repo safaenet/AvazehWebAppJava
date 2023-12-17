@@ -2,7 +2,6 @@ package com.safadana.AvazehRetailManagement.Controllers;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
