@@ -24,7 +24,7 @@ public class ProductController {
     }
 
     @GetMapping("/ProductsWithPagination/{searchText}/{offset}/{pageSize}/{sortColumn}/{sortOrder}")
-    public List<ProductModel> getProductsWithPagination(@PathVariable String searchText, @PathVariable int offset, @PathVariable int pageSize,
+    public Page<ProductModel> getProductsWithPagination(@PathVariable String searchText, @PathVariable int offset, @PathVariable int pageSize,
             @PathVariable String sortColumn, @PathVariable String sortOrder) {
         return productService.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
     }
