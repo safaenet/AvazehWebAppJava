@@ -2,11 +2,7 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.TransactionFinancialStatus;
 import jakarta.persistence.Column;
@@ -27,11 +23,11 @@ public class TransactionModel {
     @Column(length = 100, nullable = false)
     private String fileName;
 
-    @CreatedDate
-    private LocalDateTime dateCreated;
+    @Column(length = 20, nullable = false)
+    private String dateCreated;
     
-    @LastModifiedDate
-    private LocalDateTime dateUpdated;
+    @Column(length = 20)
+    private String dateUpdated;
     
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "transactionId")

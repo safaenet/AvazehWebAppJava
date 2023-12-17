@@ -1,11 +1,8 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.constraints.Email;
-
-import org.springframework.data.annotation.CreatedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,15 +32,15 @@ public class CustomerModel {
     @Email
     private String emailAddress;
 
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String postAddress;
 
-    @CreatedDate
-    private LocalDateTime dateJoined;
+    @Column(length = 20, nullable = false)
+    private String dateJoined;
 
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String descriptions;
-    
+
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "customerId")
     private List<PhoneNumberModel> phoneNumbers;

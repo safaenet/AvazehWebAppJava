@@ -1,6 +1,5 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeEventTypes;
@@ -33,11 +32,11 @@ public class ChequeModel {
     @Column(length = 100)
     private String about;
 
-    @Column(nullable = false)
-    private LocalDate issueDate;
+    @Column(nullable = false, length = 20)
+    private String issueDate;
 
-    @Column(nullable = false)
-    private LocalDate dueDate;
+    @Column(nullable = false, length = 10)
+    private String dueDate;
 
     @Column(length = 50, nullable = false)
     private String bankName;

@@ -2,11 +2,6 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.Helpers;
 
 import jakarta.persistence.Column;
@@ -32,22 +27,14 @@ public class TransactionItemModel {
     @Column(length = 50, nullable = false)
     private String countString = "1";
 
-    @CreatedDate
-    private LocalDateTime dateCreated;
+    @Column(length = 20, nullable = false)
+    private String dateCreated;
 
-    @LastModifiedDate
-    private LocalDateTime dateUpdated;
+    @Column(length = 20)
+    private String dateUpdated;
 
     @Column(length = 50)
     private String descriptions;
-
-    // public String getDateTimeCreated() {
-    //     return getTimeCreated() + " " + getDateCreated();
-    // }
-
-    // public String getDateTimeUpdated() {
-    //     return getTimeUpdated() + " " + getDateUpdated();
-    // }
 
     public double getCountValue() {
         return Helpers.evaluateExpression(countString);

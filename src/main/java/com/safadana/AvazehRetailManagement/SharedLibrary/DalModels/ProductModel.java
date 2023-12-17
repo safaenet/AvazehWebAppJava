@@ -1,10 +1,5 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -34,23 +29,15 @@ public class ProductModel {
     @Column(length = 50)
     private String countString = "0";
 
-    @CreatedDate
-    private LocalDateTime dateCreated;
+    @Column(length = 20, nullable = false)
+    private String dateCreated;
 
-    @LastModifiedDate
-    private LocalDateTime dateUpdated;
+    @Column(length = 20)
+    private String dateUpdated;
 
     @Column(columnDefinition="TEXT")
     private String descriptions;
 
     @Column(nullable = false)
     private boolean isActive = true;
-
-    // public String getDateTimeCreated() {
-    //     return timeCreated + " " + dateCreated;
-    // }
-
-    // public String getDateTimeUpdated() {
-    //     return timeUpdated + " " + dateUpdated;
-    // }
 }

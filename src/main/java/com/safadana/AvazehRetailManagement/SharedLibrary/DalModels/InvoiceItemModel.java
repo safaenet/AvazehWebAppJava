@@ -1,10 +1,5 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.Helpers;
 
 import jakarta.persistence.Column;
@@ -38,11 +33,11 @@ public class InvoiceItemModel {
     @ManyToOne
     private ProductUnitModel unit;
 
-    @CreatedDate
-    private LocalDateTime dateCreated;
+    @Column(length = 20, nullable = false)
+    private String dateCreated;
 
-    @LastModifiedDate
-    private LocalDateTime dateUpdated;
+    @Column(length = 20)
+    private String dateUpdated;
 
     @Column(nullable = false)
     private boolean delivered;

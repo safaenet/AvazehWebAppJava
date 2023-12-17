@@ -1,7 +1,5 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
-import java.time.LocalDateTime;
-
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeEventTypes;
 
 import jakarta.persistence.Column;
@@ -20,12 +18,12 @@ public class ChequeEventModel {
     @Column(nullable = false)
     private int chequeId;
 
-    @Column(nullable = false)
-    private LocalDateTime eventDate;
+    @Column(nullable = false, length = 20)
+    private String eventDate;
 
     @Column(nullable = false)
     private ChequeEventTypes eventType;
-    
+
     @Column(length = 50)
     private String eventText;
 

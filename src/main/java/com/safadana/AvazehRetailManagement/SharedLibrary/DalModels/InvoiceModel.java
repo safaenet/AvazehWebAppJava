@@ -2,11 +2,7 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 import jakarta.persistence.Column;
@@ -30,11 +26,11 @@ public class InvoiceModel {
     @Column(length = 50)
     private String about;
 
-    @CreatedDate
-    private LocalDateTime dateCreated;
+    @Column(length = 20, nullable = false)
+    private String dateCreated;
 
-    @LastModifiedDate
-    private LocalDateTime dateUpdated;
+    @Column(length = 20)
+    private String dateUpdated;
 
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "invoiceId")
