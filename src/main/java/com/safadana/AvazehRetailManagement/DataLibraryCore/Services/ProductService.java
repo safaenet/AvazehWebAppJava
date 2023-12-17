@@ -18,27 +18,28 @@ public class ProductService {
     @Autowired
     ProductDAO productDAO;
 
-    @Async
     public CompletableFuture<List<ProductModel>> getAll() {
-        return productDAO.findAll();
+        return CompletableFuture.completedFuture(productDAO.findAll());
     }
 
-    public CompletableFuture<Page<ProductModel>> getWithPagination(String searchText, int offset, int pageSize, String sortColumn,
+    public CompletableFuture<Page<ProductModel>> getWithPagination(String searchText, int offset, int pageSize,
+            String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return productDAO.findByMany(searchText, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+        return productDAO.findByMany(searchText,
+                PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<ProductModel> getById(int id) {
-        return productDAO.findById(id).get();
+        return productDAO.findById(id);
     }
 
     public CompletableFuture<ProductModel> getByBarcode(String barcode) {
-        return productDAO.findByBarcode(barcode);
+        return CompletableFuture.completedFuture(productDAO.findByBarcode(barcode));
     }
 
     public CompletableFuture<ProductModel> createUpdateProduct(ProductModel product) {
-        return productDAO.save(product);
+        return CompletableFuture.completedFuture(productDAO.save(product));
     }
 
     public void deleteProduct(int id) {
