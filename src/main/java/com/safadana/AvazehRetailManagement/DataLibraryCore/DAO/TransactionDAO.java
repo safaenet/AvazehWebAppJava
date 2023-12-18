@@ -11,10 +11,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
 
 @Repository
-public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
+public interface TransactionDAO extends JpaRepository<TransactionModel, Integer> {
 
     @Async
     @Query("SELECT c FROM ChequeModel c LEFT JOIN FETCH c.events e WHERE " +
@@ -32,15 +33,5 @@ public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
             "serialNumber LIKE CONCAT('%', ?1, '%') OR " +
             "identifier LIKE CONCAT('%', ?1, '%') OR " +
             "UPPER(descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
-    CompletableFuture<Page<ChequeModel>> findByMany(String searchText, Pageable pageable);
-
-    @Async
-    @Query("SELECT DISTINCT c.bankName FROM ChequeModel c")
-    CompletableFuture<List<String>> findBankNames();
-
-    @Async
-    @Query("SELECT c FROM ChequeModel c LEFT JOIN FETCH c.events WHERE " +
-            "CAST(REPLACE(c.dueDate, '/','') AS INTEGER) >= CAST(:today AS INTEGER) AND " +
-            "CAST(REPLACE(c.dueDate, '/','') AS INTEGER) <= CAST(:until AS INTEGER)")
-    CompletableFuture<List<ChequeModel>> findCloseCheques(@Param("today") String today, @Param("until") String until);
+    CompletableFuture<Page<TransactionListModel>> findByMany(String searchText, Pageable pageable);
 }
