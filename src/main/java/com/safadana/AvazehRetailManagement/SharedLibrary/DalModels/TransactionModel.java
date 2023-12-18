@@ -31,18 +31,12 @@ public class TransactionModel {
     
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "transactionId")
-    private List<TransactionItemModel> items;
+    private List<TransactionItemModel> items; //List of Items for one Page.
 
     @Column(columnDefinition="TEXT")
     private String descriptions;
 
-    @Transient
-    private double totalPositiveItemsSum;
-
-    @Transient
-    private double totalNegativeItemsSum;
-
-    public double getPositiveItemsSum() {
+    public double getPositiveItemsSum() { //Of Page.
         if (items == null) {
             return 0;
         }
@@ -50,7 +44,7 @@ public class TransactionModel {
                 .mapToDouble(TransactionItemModel::getTotalValue).sum();
     }
 
-    public double getNegativeItemsSum() {
+    public double getNegativeItemsSum() { //Of Page.
         if (this.items == null) {
             return 0;
         }
@@ -58,9 +52,15 @@ public class TransactionModel {
                 .mapToDouble(TransactionItemModel::getTotalValue).sum();
     }
 
-    public double getBalance() {
+    public double getBalance() { //Of Page.
         return getPositiveItemsSum() + getNegativeItemsSum();
     }
+
+    @Transient
+    private double totalPositiveItemsSum;
+
+    @Transient
+    private double totalNegativeItemsSum;
 
     public double getTotalBalance() {
         return this.totalPositiveItemsSum + this.totalNegativeItemsSum;

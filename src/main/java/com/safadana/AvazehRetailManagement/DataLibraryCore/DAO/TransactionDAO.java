@@ -11,8 +11,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @Repository
 public interface TransactionDAO extends JpaRepository<TransactionModel, Integer> {
@@ -33,5 +33,15 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Integer>
             "serialNumber LIKE CONCAT('%', ?1, '%') OR " +
             "identifier LIKE CONCAT('%', ?1, '%') OR " +
             "UPPER(descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
-    CompletableFuture<Page<TransactionListModel>> findByMany(String searchText, Pageable pageable);
+    CompletableFuture<Page<TransactionModel>> findByMany(String searchText, Pageable pageable);
+
+    @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(p.productName AS itemName) FROM ProductModel p "
+            + "UNION " +
+            "SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(ti.title AS itemName) FROM TransactionItems ti")
+    CompletableFuture<List<ItemsForComboBox>> getProductItems();
+
+    @Async
+    @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
+            + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
+    CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") int id);
 }

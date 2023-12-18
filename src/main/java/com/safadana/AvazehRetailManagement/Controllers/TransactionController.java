@@ -1,6 +1,7 @@
 package com.safadana.AvazehRetailManagement.Controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,21 +16,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.TransactionService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @RestController
-@RequestMapping("/Cheque")
+@RequestMapping("/Transaction")
 public class TransactionController {
     @Autowired
     TransactionService service;
 
     @GetMapping("/GetAll")
-    public CompletableFuture<List<ChequeModel>> getAll() {
+    public CompletableFuture<List<TransactionModel>> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<ChequeModel>> getWithPagination(@RequestParam String searchText,
+    public CompletableFuture<Page<TransactionModel>> getWithPagination(@RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
@@ -37,12 +39,12 @@ public class TransactionController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<ChequeModel> getById(@PathVariable int id) {
+    public CompletableFuture<TransactionModel> getById(@PathVariable int id) {
         return service.getById(id);
     }
 
     @PostMapping("/CreateUpdate")
-    public CompletableFuture<ChequeModel> createUpdate(@RequestBody ChequeModel product) {
+    public CompletableFuture<TransactionModel> createUpdate(@RequestBody TransactionModel product) {
         return service.createUpdateProduct(product);
     }
 
@@ -51,13 +53,13 @@ public class TransactionController {
         service.deleteById(id);
     }
 
-    @GetMapping("/GetBankNames")
-    public CompletableFuture<List<String>> getBankNames() {
-        return service.getBankNames();
+    @GetMapping("/ProductItems")
+    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
+        return service.getProductItems();
     }
 
-    @GetMapping("/GetCloseCheques")
-    public CompletableFuture<List<ChequeModel>> getCloseCheques() {
-        return service.getCloseCheques();
+    @GetMapping("/TransactionNames")
+    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@RequestParam Optional<Integer> id) {
+        return service.getTransactionNames(id.isEmpty() ? 0 : id.get());
     }
 }
