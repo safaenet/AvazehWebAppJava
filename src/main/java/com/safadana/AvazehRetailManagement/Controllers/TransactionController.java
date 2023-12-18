@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.TransactionService;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
@@ -31,7 +32,7 @@ public class TransactionController {
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<TransactionModel>> getWithPagination(@RequestParam String searchText,
+    public CompletableFuture<Page<TransactionListModel>> getWithPagination(@RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {

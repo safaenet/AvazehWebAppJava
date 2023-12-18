@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
@@ -18,8 +19,9 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForCombo
 public interface TransactionDAO extends JpaRepository<TransactionModel, Integer> {
 
         @Async
-        @Query("SELECT t FROM TransactionModel t LEFT JOIN FETCH t.items i WHERE " +
-                        "(t.id = i.transactionId) AND " +
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel" +
+                        "(t.id, t.fileName, t.dateCreated, t.dateUpdated, t.descriptions, 0 AS totalPositiveItemsSum, 1 AS totalNegativeItemsSum) " +
+                        "FROM TransactionModel t LEFT JOIN t.items i WHERE " +
                         "UPPER(t.fileName) LIKE CONCAT('%', UPPER(?1), '%') OR " +
                         "t.dateCreated LIKE CONCAT('%', ?1, '%') OR " +
                         "t.dateUpdated LIKE CONCAT('%', ?1, '%') OR " +
@@ -30,7 +32,7 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Integer>
                         "i.dateCreated LIKE CONCAT('%', ?1, '%') OR " +
                         "i.dateUpdated LIKE CONCAT('%', ?1, '%') OR " +
                         "UPPER(i.descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
-        CompletableFuture<Page<TransactionModel>> findByMany(String searchText, Pageable pageable);
+        CompletableFuture<Page<TransactionListModel>> findByMany(String searchText, Pageable pageable);
 
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p "

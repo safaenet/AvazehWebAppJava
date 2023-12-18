@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.TransactionDAO;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
@@ -22,7 +23,7 @@ public class TransactionService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<TransactionModel>> getWithPagination(String searchText, int offset, int pageSize,
+    public CompletableFuture<Page<TransactionListModel>> getWithPagination(String searchText, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
