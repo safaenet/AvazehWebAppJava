@@ -16,15 +16,15 @@ public interface CustomerDAO extends JpaRepository<CustomerModel, Integer> {
 
     @Async
     @Query("SELECT c FROM CustomerModel c LEFT JOIN FETCH c.phoneNumbers pn WHERE " +
-            "(c.id = customerId) AND " +
+            "(c.id = pn.customerId) AND " +
             "pn.phoneNumber LIKE CONCAT('%', ?1, '%') " +
-            "OR UPPER(firstName) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(lastName) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(CONCAT(firstName, ' ', lastName)) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(companyName) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(emailAddress) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR UPPER(postAddress) LIKE CONCAT('%', UPPER(?1), '%') " +
-            "OR dateJoined LIKE CONCAT('%', ?1, '%') " +
-            "OR UPPER(descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
+            "OR UPPER(c.firstName) LIKE CONCAT('%', UPPER(?1), '%') " +
+            "OR UPPER(c.lastName) LIKE CONCAT('%', UPPER(?1), '%') " +
+            "OR UPPER(CONCAT(c.firstName, ' ', c.lastName)) LIKE CONCAT('%', UPPER(?1), '%') " +
+            "OR UPPER(c.ompanyName) LIKE CONCAT('%', UPPER(?1), '%') " +
+            "OR UPPER(c.emailAddress) LIKE CONCAT('%', UPPER(?1), '%') " +
+            "OR UPPER(c.postAddress) LIKE CONCAT('%', UPPER(?1), '%') " +
+            "OR c.dateJoined LIKE CONCAT('%', ?1, '%') " +
+            "OR UPPER(c.descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
     CompletableFuture<Page<CustomerModel>> findByMany(String searchText, Pageable pageable);
 }

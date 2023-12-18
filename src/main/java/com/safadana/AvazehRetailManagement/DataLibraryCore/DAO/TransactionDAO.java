@@ -17,31 +17,29 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForCombo
 @Repository
 public interface TransactionDAO extends JpaRepository<TransactionModel, Integer> {
 
-    @Async
-    @Query("SELECT c FROM ChequeModel c LEFT JOIN FETCH c.events e WHERE " +
-            "(c.id = chequeId) AND " +
-            "e.eventDate LIKE CONCAT('%', ?1, '%') OR " +
-            "CAST(e.eventType as text) LIKE CONCAT('%', ?1, '%') OR " +
-            "UPPER(e.eventText) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "UPPER(drawer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "UPPER(orderer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "CAST(payAmount as text) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "UPPER(about) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "issueDate LIKE CONCAT('%', ?1, '%') OR " +
-            "dueDate LIKE CONCAT('%', ?1, '%') OR " +
-            "UPPER(bankName) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "serialNumber LIKE CONCAT('%', ?1, '%') OR " +
-            "identifier LIKE CONCAT('%', ?1, '%') OR " +
-            "UPPER(descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
-    CompletableFuture<Page<TransactionModel>> findByMany(String searchText, Pageable pageable);
+        @Async
+        @Query("SELECT t FROM TransactionModel t LEFT JOIN FETCH t.items i WHERE " +
+                        "(t.id = i.transactionId) AND " +
+                        "UPPER(t.fileName) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+                        "t.dateCreated LIKE CONCAT('%', ?1, '%') OR " +
+                        "t.dateUpdated LIKE CONCAT('%', ?1, '%') OR " +
+                        "UPPER(t.descriptions) LIKE CONCAT('%', UPPER(?1), '%') OR " +
 
-    @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(p.productName AS itemName) FROM ProductModel p "
-            + "UNION " +
-            "SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(ti.title AS itemName) FROM TransactionItems ti")
-    CompletableFuture<List<ItemsForComboBox>> getProductItems();
+                        "UPPER(i.title) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+                        "CAST(i.amount as text) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+                        "i.dateCreated LIKE CONCAT('%', ?1, '%') OR " +
+                        "i.dateUpdated LIKE CONCAT('%', ?1, '%') OR " +
+                        "UPPER(i.descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
+        CompletableFuture<Page<TransactionModel>> findByMany(String searchText, Pageable pageable);
 
-    @Async
-    @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
-            + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
-    CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") int id);
+        @Async
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p "
+                        + "UNION " +
+                        "SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(1 AS id, ti.title AS itemName) FROM TransactionItemModel ti")
+        CompletableFuture<List<ItemsForComboBox>> getProductItems();
+
+        @Async
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
+                        + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
+        CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") int id);
 }

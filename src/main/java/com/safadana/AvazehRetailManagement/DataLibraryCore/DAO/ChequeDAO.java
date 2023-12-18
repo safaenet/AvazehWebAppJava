@@ -22,16 +22,16 @@ public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
             "e.eventDate LIKE CONCAT('%', ?1, '%') OR " +
             "CAST(e.eventType as text) LIKE CONCAT('%', ?1, '%') OR " +
             "UPPER(e.eventText) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "UPPER(drawer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "UPPER(orderer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "CAST(payAmount as text) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "UPPER(about) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "issueDate LIKE CONCAT('%', ?1, '%') OR " +
-            "dueDate LIKE CONCAT('%', ?1, '%') OR " +
-            "UPPER(bankName) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-            "serialNumber LIKE CONCAT('%', ?1, '%') OR " +
-            "identifier LIKE CONCAT('%', ?1, '%') OR " +
-            "UPPER(descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
+            "UPPER(c.drawer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+            "UPPER(c.orderer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+            "CAST(c.payAmount as text) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+            "UPPER(c.about) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+            "c.issueDate LIKE CONCAT('%', ?1, '%') OR " +
+            "c.dueDate LIKE CONCAT('%', ?1, '%') OR " +
+            "UPPER(c.bankName) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+            "c.serialNumber LIKE CONCAT('%', ?1, '%') OR " +
+            "c.identifier LIKE CONCAT('%', ?1, '%') OR " +
+            "UPPER(c.descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
     CompletableFuture<Page<ChequeModel>> findByMany(String searchText, Pageable pageable);
 
     @Async
