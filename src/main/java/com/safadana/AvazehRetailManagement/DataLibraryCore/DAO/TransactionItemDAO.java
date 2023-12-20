@@ -11,12 +11,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionItemModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @Repository
-public interface TransactionDAO extends JpaRepository<TransactionModel, Integer> {
+public interface TransactionItemDAO extends JpaRepository<TransactionItemModel, Integer> {
 
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel" +

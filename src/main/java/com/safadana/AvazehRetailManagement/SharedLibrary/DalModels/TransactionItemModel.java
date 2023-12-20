@@ -27,6 +27,9 @@ public class TransactionItemModel {
     @Column(length = 50, nullable = false)
     private String countString = "1";
 
+    @Column(nullable = false)
+    private double countValue = 1;
+
     @Column(length = 20, nullable = false)
     private String dateCreated;
 
@@ -36,9 +39,9 @@ public class TransactionItemModel {
     @Column(length = 50)
     private String descriptions;
 
-    public double getCountValue() {
-        return Helpers.evaluateExpression(countString);
-    }
+    // public double getCountValue() {
+    //     return Helpers.evaluateExpression(countString);
+    // }
 
     public boolean isCountStringValid() {
         try {
