@@ -34,8 +34,8 @@ public class ChequeService {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<ChequeModel> createUpdateProduct(ChequeModel product) {
-        return CompletableFuture.completedFuture(DAO.save(product));
+    public CompletableFuture<ChequeModel> createUpdateProduct(ChequeModel item) {
+        return CompletableFuture.completedFuture(DAO.save(item));
     }
 
     public void deleteById(int id) {
@@ -48,7 +48,7 @@ public class ChequeService {
 
     public CompletableFuture<List<ChequeModel>> getCloseCheques() {
         int addDays = 3; // This should be read from settings.
-        String today = PersianCalendarHelper.getCurrentRawPersianDate();
+        String today = PersianCalendarHelper.getRawPersianDate();
         String until = PersianCalendarHelper.getRawPersianDate(addDays);
         return DAO.findCloseCheques(today, until);
     }

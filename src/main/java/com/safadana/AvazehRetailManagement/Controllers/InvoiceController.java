@@ -1,7 +1,6 @@
 package com.safadana.AvazehRetailManagement.Controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +14,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.TransactionService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
+import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.InvoiceService;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @RestController
-@RequestMapping("/Transaction")
-public class TransactionController {
+@RequestMapping("/Invoice")
+public class InvoiceController {
     @Autowired
-    TransactionService service;
+    InvoiceService service;
 
     @GetMapping("/GetAll")
-    public CompletableFuture<List<TransactionModel>> getAll() {
+    public CompletableFuture<List<InvoiceModel>> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<TransactionListModel>> getWithPagination(@RequestParam String searchText,
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
@@ -40,12 +39,12 @@ public class TransactionController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<TransactionModel> getById(@PathVariable int id) {
+    public CompletableFuture<InvoiceModel> getById(@PathVariable int id) {
         return service.getById(id);
     }
 
     @PostMapping("/CreateUpdate")
-    public CompletableFuture<TransactionModel> createUpdate(@RequestBody TransactionModel item) {
+    public CompletableFuture<InvoiceModel> createUpdate(@RequestBody InvoiceModel item) {
         return service.createUpdateProduct(item);
     }
 
@@ -57,10 +56,5 @@ public class TransactionController {
     @GetMapping("/ProductItems")
     public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
         return service.getProductItems();
-    }
-
-    @GetMapping("/TransactionNames")
-    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@RequestParam Optional<Integer> id) {
-        return service.getTransactionNames(id.isEmpty() ? 0 : id.get());
     }
 }

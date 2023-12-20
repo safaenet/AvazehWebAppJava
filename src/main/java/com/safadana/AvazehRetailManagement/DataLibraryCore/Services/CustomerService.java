@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.CustomerDAO;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
 @Service
 public class CustomerService {
@@ -33,8 +34,11 @@ public class CustomerService {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<CustomerModel> createUpdateProduct(CustomerModel product) {
-        return CompletableFuture.completedFuture(DAO.save(product));
+    public CompletableFuture<CustomerModel> createUpdateProduct(CustomerModel item) {
+        if (item.getDateJoined() == null || item.getDateJoined() == "") {
+            item.setDateJoined(PersianCalendarHelper.getPersianDateTime());
+        }
+        return CompletableFuture.completedFuture(DAO.save(item));
     }
 
     public void deleteById(int id) {

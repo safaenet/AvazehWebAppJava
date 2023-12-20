@@ -9,45 +9,41 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.TransactionDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.TransactionItemDAO;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionItemModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
 @Service
 public class TransactionItemService {
     @Autowired
-    TransactionDAO DAO;
+    TransactionItemDAO DAO;
 
-    public CompletableFuture<List<TransactionModel>> getAll() {
-        return CompletableFuture.completedFuture(DAO.findAll());
+    public CompletableFuture<List<TransactionItemModel>> getAll(int transactionId) {
+        return DAO.findByTransactionId(transactionId);
     }
 
-    public CompletableFuture<Page<TransactionListModel>> getWithPagination(String searchText, int offset, int pageSize,
+    public CompletableFuture<Page<TransactionItemModel>> getWithPagination(int transactionId, String searchText,
+            int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return DAO.findByMany(searchText,
+        return DAO.findByMany(transactionId, searchText,
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<TransactionModel> getById(int id) {
+    public CompletableFuture<TransactionItemModel> getById(int id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<TransactionModel> createUpdateProduct(TransactionModel product) {
-        return CompletableFuture.completedFuture(DAO.save(product));
+    public CompletableFuture<TransactionItemModel> createUpdateProduct(TransactionItemModel item) {
+        if (item.getDateCreated() == null || item.getDateCreated() == "") {
+            item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
+        }
+        item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
+        return CompletableFuture.completedFuture(DAO.save(item));
     }
 
     public void deleteById(int id) {
         DAO.deleteById(id);
-    }
-
-    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
-        return DAO.getProductItems();
-    }
-
-    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(int id) {
-        return DAO.getTransactionNames(id);
     }
 }

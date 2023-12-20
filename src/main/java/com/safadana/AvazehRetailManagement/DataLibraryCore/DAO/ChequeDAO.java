@@ -23,7 +23,7 @@ public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
                         "UPPER(e.eventText) LIKE CONCAT('%', UPPER(?1), '%') OR " +
                         "UPPER(c.drawer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
                         "UPPER(c.orderer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "CAST(c.payAmount as text) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+                        "CAST(c.payAmount as text) LIKE CONCAT('%', ?1, '%') OR " +
                         "UPPER(c.about) LIKE CONCAT('%', UPPER(?1), '%') OR " +
                         "c.issueDate LIKE CONCAT('%', ?1, '%') OR " +
                         "c.dueDate LIKE CONCAT('%', ?1, '%') OR " +

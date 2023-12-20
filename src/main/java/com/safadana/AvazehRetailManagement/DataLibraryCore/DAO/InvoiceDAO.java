@@ -7,16 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @Repository
-public interface TransactionDAO extends JpaRepository<TransactionModel, Integer> {
+public interface InvoiceDAO extends JpaRepository<InvoiceModel, Integer> {
 
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel" +
@@ -34,16 +33,9 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Integer>
                         "i.dateCreated LIKE CONCAT('%', ?1, '%') OR " +
                         "i.dateUpdated LIKE CONCAT('%', ?1, '%') OR " +
                         "UPPER(i.descriptions) LIKE CONCAT('%', UPPER(?1), '%') GROUP BY t.id")
-        CompletableFuture<Page<TransactionListModel>> findByMany(String searchText, Pageable pageable);
+        CompletableFuture<Page<InvoiceListModel>> findByMany(String searchText, Pageable pageable);
 
         @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "
-                        + "UNION " +
-                        "SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(1 AS id, ti.title AS itemName) FROM TransactionItemModel ti")
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(p.id AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true")
         CompletableFuture<List<ItemsForComboBox>> getProductItems();
-
-        @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
-                        + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
-        CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") int id);
 }

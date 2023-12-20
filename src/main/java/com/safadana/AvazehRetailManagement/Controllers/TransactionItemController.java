@@ -1,7 +1,6 @@
 package com.safadana.AvazehRetailManagement.Controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,52 +14,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.TransactionService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.TransactionItemService;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionItemModel;
 
 @RestController
-@RequestMapping("/Transaction")
+@RequestMapping("/TransactionItem")
 public class TransactionItemController {
     @Autowired
-    TransactionService service;
+    TransactionItemService service;
 
-    @GetMapping("/GetAll")
-    public CompletableFuture<List<TransactionModel>> getAll() {
-        return service.getAll();
+    @GetMapping("/GetAll/{transactionId}")
+    public CompletableFuture<List<TransactionItemModel>> getAll(@PathVariable int transactionId) {
+        return service.getAll(transactionId);
     }
 
-    @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<TransactionListModel>> getWithPagination(@RequestParam String searchText,
+    @GetMapping("/GetWithPagination/{transactionId}")
+    public CompletableFuture<Page<TransactionItemModel>> getWithPagination(@PathVariable int transactionId,
+            @RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
+        return service.getWithPagination(transactionId, searchText, offset, pageSize, sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<TransactionModel> getById(@PathVariable int id) {
+    public CompletableFuture<TransactionItemModel> getById(@PathVariable int id) {
         return service.getById(id);
     }
 
     @PostMapping("/CreateUpdate")
-    public CompletableFuture<TransactionModel> createUpdate(@RequestBody TransactionModel product) {
-        return service.createUpdateProduct(product);
+    public CompletableFuture<TransactionItemModel> createUpdate(@RequestBody TransactionItemModel item) {
+        return service.createUpdateProduct(item);
     }
 
     @DeleteMapping("/Delete/{id}")
     public void delete(@PathVariable int id) {
         service.deleteById(id);
-    }
-
-    @GetMapping("/ProductItems")
-    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
-        return service.getProductItems();
-    }
-
-    @GetMapping("/TransactionNames")
-    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@RequestParam Optional<Integer> id) {
-        return service.getTransactionNames(id.isEmpty() ? 0 : id.get());
     }
 }
