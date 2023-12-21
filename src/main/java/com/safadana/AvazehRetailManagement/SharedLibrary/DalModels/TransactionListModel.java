@@ -25,11 +25,11 @@ public class TransactionListModel {
     @JsonIgnore
     public TransactionFinancialStatus getTransactionFinancialStatus() {
         if (getTotalBalance() == 0) {
-            return TransactionFinancialStatus.Balanced;
+            return TransactionFinancialStatus.BALANCED;
         } else if (getTotalBalance() > 0) {
-            return TransactionFinancialStatus.Positive;
+            return TransactionFinancialStatus.POSITIVE;
         } else {
-            return TransactionFinancialStatus.Negative;
+            return TransactionFinancialStatus.NEGATIVE;
         }
     }
 }

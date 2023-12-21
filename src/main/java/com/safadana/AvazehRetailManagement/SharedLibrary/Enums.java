@@ -6,11 +6,11 @@ public class Enums {
     }
 
     public enum ChequeEventTypes {
-        None(0),
-        Holding(1),
-        Sold(2),
-        NonSufficientFund(3),
-        Cashed(4);
+        NONE(0),
+        HOLDING(1),
+        SOLD(2),
+        RETURNED(3), //NonSufficientFund
+        CASHED(4);
     
         private final int value;
     
@@ -24,16 +24,16 @@ public class Enums {
     }
     
 
-    public enum ChequeListQueryStatus {
-        NotCashed(0),
-        Cashed(1),
-        Sold(2),
-        NonSufficientFund(3),
-        FromNowOn(4);
+    public enum ChequeStatus {
+        NOTCASHED(0),
+        CASHED(1),
+        ENDORSED(2), //Sold
+        RETURNED(3),
+        FROMNOWON(4);
     
         private final int value;
     
-        ChequeListQueryStatus(int value) {
+        ChequeStatus(int value) {
             this.value = value;
         }
     
@@ -43,8 +43,8 @@ public class Enums {
     }
 
     public enum DiscountTypes {
-        Percent(0),
-        Amount(1);
+        PERCENT(0),
+        AMOUNT(1);
     
         private final int value;
     
@@ -58,10 +58,10 @@ public class Enums {
     }
 
     public enum InvoiceFinancialStatus {
-        Balanced(0),
-        Deptor(1),
-        Creditor(2),
-        Outstanding(3);
+        BALANCED(0),
+        DEPTOR(1),
+        CREDITOR(2),
+        OVERDUE(3); //Outstanding
     
         private final int value;
     
@@ -75,10 +75,10 @@ public class Enums {
     }
 
     public enum InvoiceLifeStatus {
-        Active(0),
-        Inactive(1),
-        Archive(2),
-        Deleted(3);
+        ACTIVE(0),
+        INACTIVE(1),
+        ARCHIVED(2),
+        DELETED(3);
     
         private final int value;
     
@@ -92,9 +92,9 @@ public class Enums {
     }
 
     public enum TransactionFinancialStatus {
-        Balanced(0),
-        Positive(1),
-        Negative(2);
+        BALANCED(0),
+        POSITIVE(1),
+        NEGATIVE(2);
     
         private final int value;
     
@@ -123,8 +123,8 @@ public class Enums {
     }
     
     public enum ProductStatus {
-        InActive(0),
-        Active(1);
+        INACTIVE(0),
+        ACTIVE(1);
     
         private final int value;
     
@@ -138,8 +138,8 @@ public class Enums {
     }
 
     public enum SqlQuerySearchMode {
-        Forward(0),
-        Backward(1);
+        FORWARD(0),
+        BACKWARD(1);
     
         private final int value;
     

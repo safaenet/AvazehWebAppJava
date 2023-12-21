@@ -40,7 +40,7 @@ public class InvoiceModel {
     @JoinColumn(name = "invoiceId")
     private List<InvoicePaymentModel> payments;
 
-    private DiscountTypes discountType = DiscountTypes.Amount;
+    private DiscountTypes discountType = DiscountTypes.AMOUNT;
 
     private double discountValue;
 
@@ -67,7 +67,7 @@ public class InvoiceModel {
     }
 
     public double getTotalDiscountAmount() {
-        return discountType == DiscountTypes.Percent ? (getTotalItemsSellSum() * discountValue / 100) : discountValue;
+        return discountType == DiscountTypes.PERCENT ? (getTotalItemsSellSum() * discountValue / 100) : discountValue;
     }
 
     public double getTotalInvoiceSum() {
@@ -96,7 +96,7 @@ public class InvoiceModel {
     }
 
     public InvoiceFinancialStatus getInvoiceFinancialStatus() {
-        return getTotalBalance() == 0 ? InvoiceFinancialStatus.Balanced
-                : getTotalBalance() > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
+        return getTotalBalance() == 0 ? InvoiceFinancialStatus.BALANCED
+                : getTotalBalance() > 0 ? InvoiceFinancialStatus.DEPTOR : InvoiceFinancialStatus.CREDITOR;
     }
 }

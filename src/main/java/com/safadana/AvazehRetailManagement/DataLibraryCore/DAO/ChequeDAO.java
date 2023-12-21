@@ -18,20 +18,21 @@ public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
 
         @Async
         @Query("SELECT c FROM ChequeModel c LEFT JOIN FETCH c.events e WHERE " +
-                        "e.eventDate LIKE CONCAT('%', ?1, '%') OR " +
-                        "CAST(e.eventType as text) LIKE CONCAT('%', ?1, '%') OR " +
-                        "UPPER(e.eventText) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "UPPER(c.drawer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "UPPER(c.orderer) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "CAST(c.payAmount as text) LIKE CONCAT('%', ?1, '%') OR " +
-                        "UPPER(c.about) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "c.issueDate LIKE CONCAT('%', ?1, '%') OR " +
-                        "c.dueDate LIKE CONCAT('%', ?1, '%') OR " +
-                        "UPPER(c.bankName) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "c.serialNumber LIKE CONCAT('%', ?1, '%') OR " +
-                        "c.identifier LIKE CONCAT('%', ?1, '%') OR " +
-                        "UPPER(c.descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
-        CompletableFuture<Page<ChequeModel>> findByMany(String searchText, Pageable pageable);
+                "(:chequeStatus = NOTCASHED AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id ORDER BY ce.id DESC FETCH FIRST 1 ROW ONLY) = :eventType) AND " +
+                "(e.eventDate LIKE CONCAT('%', :searchText, '%') OR " +
+                "CAST(e.eventType as text) LIKE CONCAT('%', :searchText, '%') OR " +
+                "UPPER(e.eventText) LIKE CONCAT('%', UPPER(:searchText), '%') OR " +
+                "UPPER(c.drawer) LIKE CONCAT('%', UPPER(:searchText), '%') OR " +
+                "UPPER(c.orderer) LIKE CONCAT('%', UPPER(:searchText), '%') OR " +
+                "CAST(c.payAmount as text) LIKE CONCAT('%', :searchText, '%') OR " +
+                "UPPER(c.about) LIKE CONCAT('%', UPPER(:searchText), '%') OR " +
+                "c.issueDate LIKE CONCAT('%', :searchText, '%') OR " +
+                "c.dueDate LIKE CONCAT('%', :searchText, '%') OR " +
+                "UPPER(c.bankName) LIKE CONCAT('%', UPPER(:searchText), '%') OR " +
+                "c.serialNumber LIKE CONCAT('%', :searchText, '%') OR " +
+                "c.identifier LIKE CONCAT('%', :searchText, '%') OR " +
+                "UPPER(c.descriptions) LIKE CONCAT('%', UPPER(:searchText), '%'))")
+        CompletableFuture<Page<ChequeModel>> findByMany(@Param("searchText") String searchText, @Param("persianDate") String persianDate, @Param("chequeStatus") String chequeStatus, Pageable pageable);
 
         @Async
         @Query("SELECT DISTINCT c.bankName FROM ChequeModel c")

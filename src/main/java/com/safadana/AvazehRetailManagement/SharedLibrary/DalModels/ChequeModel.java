@@ -62,7 +62,7 @@ public class ChequeModel {
     }
 
     public String lastEventString() {
-        return events == null || events.size() == 0 ? ChequeEventTypes.None.toString()
+        return events == null || events.size() == 0 ? ChequeEventTypes.NONE.toString()
                 : lastEvent().getEventTypeString();
     }
 

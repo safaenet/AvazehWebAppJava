@@ -74,11 +74,11 @@ public class TransactionModel {
     @JsonIgnore
     public TransactionFinancialStatus getTransactionFinancialStatus() {
         if (getBalance() == 0) {
-            return TransactionFinancialStatus.Balanced;
+            return TransactionFinancialStatus.BALANCED;
         } else if (getBalance() > 0) {
-            return TransactionFinancialStatus.Positive;
+            return TransactionFinancialStatus.POSITIVE;
         } else {
-            return TransactionFinancialStatus.Negative;
+            return TransactionFinancialStatus.NEGATIVE;
         }
     }
 }

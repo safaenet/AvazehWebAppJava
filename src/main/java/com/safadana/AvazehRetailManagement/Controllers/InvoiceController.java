@@ -25,36 +25,36 @@ public class InvoiceController {
     @Autowired
     InvoiceService service;
 
-    @GetMapping("/GetAll")
-    public CompletableFuture<List<InvoiceModel>> getAll() {
-        return service.getAll();
-    }
+    // @GetMapping("/GetAll")
+    // public CompletableFuture<List<InvoiceModel>> getAll() {
+    //     return service.getAll();
+    // }
 
-    @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String searchText,
-            @RequestParam int offset,
-            @RequestParam int pageSize,
-            @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
-    }
+    // @GetMapping("/GetWithPagination")
+    // public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String searchText,
+    //         @RequestParam int offset,
+    //         @RequestParam int pageSize,
+    //         @RequestParam String sortColumn, @RequestParam String sortOrder) {
+    //     return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
+    // }
 
-    @GetMapping("/Id/{id}")
-    public CompletableFuture<InvoiceModel> getById(@PathVariable int id) {
-        return service.getById(id);
-    }
+    // @GetMapping("/Id/{id}")
+    // public CompletableFuture<InvoiceModel> getById(@PathVariable int id) {
+    //     return service.getById(id);
+    // }
 
-    @PostMapping("/CreateUpdate")
-    public CompletableFuture<InvoiceModel> createUpdate(@RequestBody InvoiceModel item) {
-        return service.createUpdateProduct(item);
-    }
+    // @PostMapping("/CreateUpdate")
+    // public CompletableFuture<InvoiceModel> createUpdate(@RequestBody InvoiceModel item) {
+    //     return service.createUpdateProduct(item);
+    // }
 
-    @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
-        service.deleteById(id);
-    }
+    // @DeleteMapping("/Delete/{id}")
+    // public void delete(@PathVariable int id) {
+    //     service.deleteById(id);
+    // }
 
-    @GetMapping("/ProductItems")
-    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
-        return service.getProductItems();
-    }
+    // @GetMapping("/ProductItems")
+    // public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
+    //     return service.getProductItems();
+    // }
 }

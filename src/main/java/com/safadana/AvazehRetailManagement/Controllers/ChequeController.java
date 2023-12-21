@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.ChequeService;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeStatus;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 
 @RestController
@@ -32,8 +33,8 @@ public class ChequeController {
     public CompletableFuture<Page<ChequeModel>> getWithPagination(@RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
-            @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
+            @RequestParam String sortColumn, @RequestParam String sortOrder, @RequestParam ChequeStatus listQueryStatus) {
+        return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder, listQueryStatus);
     }
 
     @GetMapping("/Id/{id}")

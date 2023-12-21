@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.ChequeDAO;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeStatus;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
@@ -23,11 +24,10 @@ public class ChequeService {
     }
 
     public CompletableFuture<Page<ChequeModel>> getWithPagination(String searchText, int offset, int pageSize,
-            String sortColumn,
-            String sortOrder) {
+            String sortColumn, String sortOrder, ChequeStatus listQueryStatus) {
         Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return DAO.findByMany(searchText,
-                PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+        String persianDate = PersianCalendarHelper.getPersianDate();
+        return DAO.findByMany(searchText, persianDate, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<ChequeModel> getById(int id) {

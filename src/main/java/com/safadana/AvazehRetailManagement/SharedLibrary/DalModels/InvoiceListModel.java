@@ -1,5 +1,6 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 
 import lombok.Data;
@@ -11,38 +12,32 @@ public class InvoiceListModel {
     private String customerFullName;
     private String about;
     private String dateCreated;
-    private String timeCreated;
     private String dateUpdated;
-    private String timeUpdated;
     private double totalInvoiceSum;
-    private double totalPayments;
+    private double totalInvoicePayments;
     private InvoiceLifeStatus lifeStatus;
     private int prevInvoiceId;
     private double prevInvoiceBalance;
     private int fwdInvoiceId;
 
+    @JsonIgnore
     public double getTotalInvoiceBalance() {
-        return totalInvoiceSum - totalPayments;
+        return totalInvoiceSum - totalInvoicePayments;
     }
 
+    @JsonIgnore
     public double getTotalBalance() {
         return getTotalInvoiceBalance() + prevInvoiceBalance;
     }
 
+    @JsonIgnore
     public String getInvoiceTitle() {
         return (about == null || about.isEmpty()) ? customerFullName : customerFullName + " - " + about;
     }
 
-    public String getDateTimeCreated() {
-        return timeCreated + " " + dateCreated;
-    }
-
-    public String getDateTimeUpdated() {
-        return timeUpdated + " " + dateUpdated;
-    }
-
+    @JsonIgnore
     public InvoiceFinancialStatus getInvoiceFinancialStatus() {
-        return getTotalBalance() == 0 ? InvoiceFinancialStatus.Balanced
-                : getTotalBalance() > 0 ? InvoiceFinancialStatus.Deptor : InvoiceFinancialStatus.Creditor;
+        return getTotalBalance() == 0 ? InvoiceFinancialStatus.BALANCED
+                : getTotalBalance() > 0 ? InvoiceFinancialStatus.DEPTOR : InvoiceFinancialStatus.CREDITOR;
     }
 }
