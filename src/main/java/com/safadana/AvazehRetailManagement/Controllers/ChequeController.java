@@ -31,10 +31,13 @@ public class ChequeController {
 
     @GetMapping("/GetWithPagination")
     public CompletableFuture<Page<ChequeModel>> getWithPagination(@RequestParam String searchText,
+            @RequestParam String chequeStatus,
             @RequestParam int offset,
             @RequestParam int pageSize,
-            @RequestParam String sortColumn, @RequestParam String sortOrder, @RequestParam ChequeStatus listQueryStatus) {
-        return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder, listQueryStatus);
+            @RequestParam String sortColumn, @RequestParam String sortOrder,
+            @RequestParam ChequeStatus listQueryStatus) {
+        return service.getWithPagination(searchText, chequeStatus, offset, pageSize, sortColumn, sortOrder,
+                listQueryStatus);
     }
 
     @GetMapping("/Id/{id}")

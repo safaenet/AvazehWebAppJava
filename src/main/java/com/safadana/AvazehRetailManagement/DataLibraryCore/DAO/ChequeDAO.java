@@ -17,8 +17,13 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
 
         @Async
-        @Query("SELECT c FROM ChequeModel c LEFT JOIN FETCH c.events e WHERE " +
-                "(:chequeStatus = NOTCASHED AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id ORDER BY ce.id DESC FETCH FIRST 1 ROW ONLY) = :eventType) AND " +
+        @Query("SELECT c FROM ChequeModel c LEFT JOIN FETCH c.events e WHERE (" +
+                "(:chequeStatus = 'NOTCASHED' AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id ORDER BY ce.id DESC FETCH FIRST 1 ROW ONLY) NOT IN (com.safadana.AvazehRetailManagement.SharedLibrary.ChequeEventTypes.SOLD, com.safadana.AvazehRetailManagement.SharedLibrary.ChequeEventTypes.CASHED)) OR " +
+                "(:chequeStatus = 'CASHED' AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id ORDER BY ce.id DESC FETCH FIRST 1 ROW ONLY) = com.safadana.AvazehRetailManagement.SharedLibrary.ChequeEventTypes.CASHED) OR " +
+                "(:chequeStatus = 'ENDORSED' AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id ORDER BY ce.id DESC FETCH FIRST 1 ROW ONLY) = com.safadana.AvazehRetailManagement.SharedLibrary.ChequeEventTypes.SOLD) OR " +
+                "(:chequeStatus = 'RETURNED' AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id ORDER BY ce.id DESC FETCH FIRST 1 ROW ONLY) = com.safadana.AvazehRetailManagement.SharedLibrary.ChequeEventTypes.RETURNED) OR " +
+                "(:chequeStatus = 'FROMNOWON' AND (((SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id ORDER BY ce.id DESC FETCH FIRST 1 ROW ONLY) NOT IN (com.safadana.AvazehRetailManagement.SharedLibrary.ChequeEventTypes.SOLD, com.safadana.AvazehRetailManagement.SharedLibrary.ChequeEventTypes.CASHED)) OR ((SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id ORDER BY ce.id DESC FETCH FIRST 1 ROW ONLY) = com.safadana.AvazehRetailManagement.SharedLibrary.ChequeEventTypes.SOLD) AND c.dueDate >= :persianDate)) OR " +
+                "(:chequeStatus = 'ALL')) AND " +
                 "(e.eventDate LIKE CONCAT('%', :searchText, '%') OR " +
                 "CAST(e.eventType as text) LIKE CONCAT('%', :searchText, '%') OR " +
                 "UPPER(e.eventText) LIKE CONCAT('%', UPPER(:searchText), '%') OR " +
