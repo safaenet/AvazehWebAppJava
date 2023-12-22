@@ -25,20 +25,25 @@ public class ProductService {
     public CompletableFuture<Page<ProductModel>> getWithPagination(String searchText, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
-        Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+            Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+            if(searchText == null || searchText == "") searchText = "%";
+            if(sortColumn == null || sortColumn == "") sortColumn = "id"; else searchText = "%" + searchText.toUpperCase() + "%";
+            if(pageSize == 0) pageSize = 50;
         return DAO.findByMany(searchText,
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<ProductModel> getById(int id) {
+        if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
     public CompletableFuture<ProductModel> getByBarcode(String barcode) {
+        if(barcode == null || barcode == "") return null;
         return CompletableFuture.completedFuture(DAO.findByBarcode(barcode));
     }
 
-    public CompletableFuture<ProductModel> createUpdateProduct(ProductModel item) {
+    public CompletableFuture<ProductModel> createUpdate(ProductModel item) {
         if (item.getDateCreated() == null || item.getDateCreated() == "") {
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
         }

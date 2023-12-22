@@ -20,20 +20,20 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Integer>
 
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel" +
-                        "(t.id, t.fileName, t.dateCreated, t.dateUpdated, t.descriptions, " +
-                        "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) > 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalPositiveItemsSum, " +
-                        "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) < 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalNegativeItemsSum) " +
-                        "FROM TransactionModel t LEFT JOIN t.items i WHERE " +
-                        "UPPER(t.fileName) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "t.dateCreated LIKE CONCAT('%', ?1, '%') OR " +
-                        "t.dateUpdated LIKE CONCAT('%', ?1, '%') OR " +
-                        "UPPER(t.descriptions) LIKE CONCAT('%', UPPER(?1), '%') OR " +
+                "(t.id, t.fileName, t.dateCreated, t.dateUpdated, t.descriptions, " +
+                "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) > 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalPositiveItemsSum, " +
+                "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) < 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalNegativeItemsSum) " +
+                "FROM TransactionModel t LEFT JOIN t.items i WHERE " +
+                "UPPER(t.fileName) LIKE ?1 OR " +
+                "t.dateCreated LIKE ?1 OR " +
+                "t.dateUpdated LIKE ?1 OR " +
+                "UPPER(t.descriptions) LIKE ?1 OR " +
 
-                        "UPPER(i.title) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "CAST(i.amount as text) LIKE CONCAT('%', ?1, '%') OR " +
-                        "i.dateCreated LIKE CONCAT('%', ?1, '%') OR " +
-                        "i.dateUpdated LIKE CONCAT('%', ?1, '%') OR " +
-                        "UPPER(i.descriptions) LIKE CONCAT('%', UPPER(?1), '%') GROUP BY t.id")
+                "UPPER(i.title) LIKE ?1 OR " +
+                "CAST(i.amount as text) LIKE ?1 OR " +
+                "i.dateCreated LIKE ?1 OR " +
+                "i.dateUpdated LIKE ?1 OR " +
+                "UPPER(i.descriptions) LIKE ?1 GROUP BY t.id")
         CompletableFuture<Page<TransactionListModel>> findByMany(String searchText, Pageable pageable);
 
         @Async

@@ -25,18 +25,22 @@ public class TransactionService {
     }
 
     public CompletableFuture<Page<TransactionListModel>> getWithPagination(String searchText, int offset, int pageSize,
-            String sortColumn,
-            String sortOrder) {
-        Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        String sortColumn,
+        String sortOrder) {
+        Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        if(searchText == null || searchText == "") searchText = "%";
+        if(sortColumn == null || sortColumn == "") sortColumn = "id"; else searchText = "%" + searchText.toUpperCase() + "%";
+        if(pageSize == 0) pageSize = 50;   
         return DAO.findByMany(searchText,
-                PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+        PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<TransactionModel> getById(int id) {
+        if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<TransactionModel> createUpdateProduct(TransactionModel item) {
+    public CompletableFuture<TransactionModel> createUpdate(TransactionModel item) {
         if (item.getDateCreated() == null || item.getDateCreated() == "") {
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
         }

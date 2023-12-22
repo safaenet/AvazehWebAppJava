@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.ChequeService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeStatus;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 
 @RestController
@@ -45,7 +44,7 @@ public class ChequeController {
 
     @PostMapping("/CreateUpdate")
     public CompletableFuture<ChequeModel> createUpdate(@RequestBody ChequeModel product) {
-        return service.createUpdateProduct(product);
+        return service.createUpdate(product);
     }
 
     @DeleteMapping("/Delete/{id}")

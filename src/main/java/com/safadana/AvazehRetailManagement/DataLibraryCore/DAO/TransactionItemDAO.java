@@ -20,12 +20,12 @@ public interface TransactionItemDAO extends JpaRepository<TransactionItemModel, 
 
         @Async
         @Query("SELECT ti FROM TransactionItemModel ti WHERE " +
-                        "UPPER(ti.title) LIKE CONCAT('%', UPPER(?1), '%') OR " +
-                        "CAST(ti.amount as text) LIKE CONCAT('%', ?1, '%') OR " +
-                        "ti.countString LIKE CONCAT('%', ?1, '%') OR " +
-                        "ti.dateCreated LIKE CONCAT('%', ?1, '%') OR " +
-                        "ti.dateUpdated LIKE CONCAT('%', ?1, '%') OR " +
-                        "UPPER(ti.descriptions) LIKE CONCAT('%', UPPER(?1), '%')")
+                        "UPPER(ti.title) LIKE ?1 OR " +
+                        "CAST(ti.amount as text) LIKE ?1 OR " +
+                        "ti.countString LIKE ?1 OR " +
+                        "ti.dateCreated LIKE ?1 OR " +
+                        "ti.dateUpdated LIKE ?1 OR " +
+                        "UPPER(ti.descriptions) LIKE ?1")
         CompletableFuture<Page<TransactionItemModel>> findByMany(int transactionId, String searchText,
                         Pageable pageable);
 }

@@ -43,7 +43,7 @@ public class CustomerController {
 
     @PostMapping("/CreateUpdate")
     public CompletableFuture<CustomerModel> createUpdate(@RequestBody CustomerModel product) {
-        return service.createUpdateProduct(product);
+        return service.createUpdate(product);
     }
 
     @DeleteMapping("/Delete/{id}")

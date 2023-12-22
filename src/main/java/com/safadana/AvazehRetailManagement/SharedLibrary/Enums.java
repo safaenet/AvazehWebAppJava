@@ -5,16 +5,15 @@ public class Enums {
         AND, OR
     }
 
-    public enum ChequeEventTypes {
+    public enum ChequeStatus {
         NONE(0),
-        HOLDING(1),
-        ENDORSED(2), //Sold
-        RETURNED(3), //NonSufficientFund
-        CASHED(4);
+        ENDORSED(1), //Sold
+        RETURNED(2), //NonSufficientFund
+        CASHED(3);
     
         private final int value;
     
-        ChequeEventTypes(int value) {
+        ChequeStatus(int value) {
             this.value = value;
         }
     
@@ -24,7 +23,7 @@ public class Enums {
     }
     
 
-    public enum ChequeStatus {
+    public enum ChequeQueryStatus {
         NOTCASHED(0),
         CASHED(1),
         ENDORSED(2), //Sold
@@ -33,7 +32,7 @@ public class Enums {
     
         private final int value;
     
-        ChequeStatus(int value) {
+        ChequeQueryStatus(int value) {
             this.value = value;
         }
     

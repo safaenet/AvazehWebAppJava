@@ -1,16 +1,11 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
-import java.util.List;
-
-import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeEventTypes;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Entity
@@ -50,23 +45,11 @@ public class ChequeModel {
     @Column(columnDefinition="TEXT")
     private String descriptions;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "chequeId")
-    private List<ChequeEventModel> events;
+    private ChequeStatus statusType;
 
-    @Transient
-    private String payAmountInPersian;
+    @Column(length = 20)
+    private String statusDate;
 
-    public ChequeEventModel lastEvent() {
-        return (events == null || events.size() == 0) ? null : events.get(events.size() - 1);
-    }
-
-    public String lastEventString() {
-        return events == null || events.size() == 0 ? ChequeEventTypes.NONE.toString()
-                : lastEvent().getEventTypeString();
-    }
-
-    public String lastEventText() {
-        return lastEvent() == null ? "" : lastEvent().getEventText();
-    }
+    @Column(length = 50)
+    private String statusText;
 }

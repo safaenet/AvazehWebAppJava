@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.ChequeDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeStatus;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
@@ -25,19 +24,21 @@ public class ChequeService {
 
     public CompletableFuture<Page<ChequeModel>> getWithPagination(String searchText, String chequeStatus, int offset, int pageSize,
             String sortColumn, String sortOrder) {
-        Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
         if(searchText == null || searchText == "") searchText = "%";
-        else searchText = "%" + searchText.toUpperCase() + "%";
-        chequeStatus = chequeStatus.toUpperCase();
+        if(sortColumn == null || sortColumn == "") sortColumn = "id"; else searchText = "%" + searchText.toUpperCase() + "%";
+        if(chequeStatus == null || chequeStatus == "") chequeStatus = "ALL"; else chequeStatus = chequeStatus.toUpperCase();
+        if(pageSize == 0) pageSize = 50;        
         String persianDate = PersianCalendarHelper.getPersianDate();
         return DAO.findByMany(searchText, persianDate, chequeStatus, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<ChequeModel> getById(int id) {
+        if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<ChequeModel> createUpdateProduct(ChequeModel item) {
+    public CompletableFuture<ChequeModel> createUpdate(ChequeModel item) {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 

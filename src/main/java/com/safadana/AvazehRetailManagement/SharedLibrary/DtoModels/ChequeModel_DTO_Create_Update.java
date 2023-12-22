@@ -5,9 +5,7 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeEventModel;
-
-import java.util.List;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeStatus;
 
 @Data
 public class ChequeModel_DTO_Create_Update {
@@ -43,5 +41,11 @@ public class ChequeModel_DTO_Create_Update {
     private String identifier; //Sayyaad Code
 
     private String descriptions;
-    private List<ChequeEventModel> events;
+    private ChequeStatus statusType;
+
+    @Size(max = 20, message = "Maximum length is 20")
+    private ChequeStatus statusDate;
+
+    @Size(max = 50, message = "Maximum length is 50")
+    private ChequeStatus statusText;
 }

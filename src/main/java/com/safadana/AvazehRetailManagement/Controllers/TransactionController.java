@@ -46,7 +46,7 @@ public class TransactionController {
 
     @PostMapping("/CreateUpdate")
     public CompletableFuture<TransactionModel> createUpdate(@RequestBody TransactionModel item) {
-        return service.createUpdateProduct(item);
+        return service.createUpdate(item);
     }
 
     @DeleteMapping("/Delete/{id}")

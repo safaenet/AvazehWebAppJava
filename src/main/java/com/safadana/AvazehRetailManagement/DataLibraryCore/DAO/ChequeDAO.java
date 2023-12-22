@@ -17,16 +17,15 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
 
         @Async
-        @Query("SELECT c FROM ChequeModel c LEFT JOIN FETCH c.events e WHERE (" +
-                "(:chequeStatus = 'NOTCASHED' AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id AND ce.id = (SELECT MAX(ce2.id) FROM ChequeEventModel ce2)) NOT IN (ChequeEventTypes.ENDORSED, ChequeEventTypes.CASHED)) OR " +
-                "(:chequeStatus = 'CASHED' AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id AND ce.id = (SELECT MAX(ce2.id) FROM ChequeEventModel ce2)) = ChequeEventTypes.CASHED) OR " +
-                "(:chequeStatus = 'ENDORSED' AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id AND ce.id = (SELECT MAX(ce2.id) FROM ChequeEventModel ce2)) = ChequeEventTypes.ENDORSED) OR " +
-                "(:chequeStatus = 'RETURNED' AND (SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id AND ce.id = (SELECT MAX(ce2.id) FROM ChequeEventModel ce2)) = ChequeEventTypes.RETURNED) OR " +
-                "(:chequeStatus = 'FROMNOWON' AND (((SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id AND ce.id = (SELECT MAX(ce2.id) FROM ChequeEventModel ce2)) NOT IN (ChequeEventTypes.ENDORSED, ChequeEventTypes.CASHED)) OR ((SELECT ce.eventType FROM ChequeEventModel ce WHERE ce.chequeId = c.id AND ce.id = (SELECT MAX(ce2.id) FROM ChequeEventModel ce2)) = ChequeEventTypes.ENDORSED) AND c.dueDate >= :persianDate)) OR " +
-                "(:chequeStatus = 'ALL')) AND " +
-                "(e.eventDate LIKE :searchText OR " +
-                "CAST(e.eventType as text) LIKE :searchText OR " +
-                "UPPER(e.eventText) LIKE :searchText OR " +
+        @Query("SELECT c FROM ChequeModel c WHERE (" +
+                "(:chequeStatus = 'NOTCASHED' AND c.statusType NOT IN (ChequeStatus.ENDORSED, ChequeStatus.CASHED)) OR " +
+                "(:chequeStatus = 'CASHED' AND c.statusType = ChequeStatus.CASHED) OR " +
+                "(:chequeStatus = 'ENDORSED' AND c.statusType = ChequeStatus.ENDORSED) OR " +
+                "(:chequeStatus = 'RETURNED' AND c.statusType = ChequeStatus.RETURNED) OR " +
+                "(:chequeStatus = 'FROMNOWON' AND ((c.statusType NOT IN (ChequeStatus.ENDORSED, ChequeStatus.CASHED)) OR (c.statusType = ChequeStatus.ENDORSED) AND c.dueDate >= :persianDate)) OR " +
+                "(:chequeStatus = 'ALL')) AND (" +
+                "UPPER(c.statusDate) LIKE :searchText OR " +
+                "UPPER(c.statusText) LIKE :searchText OR " +
                 "UPPER(c.drawer) LIKE :searchText OR " +
                 "UPPER(c.orderer) LIKE :searchText OR " +
                 "CAST(c.payAmount as text) LIKE :searchText OR " +
@@ -44,7 +43,7 @@ public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
         CompletableFuture<List<String>> findBankNames();
 
         @Async
-        @Query("SELECT c FROM ChequeModel c LEFT JOIN FETCH c.events WHERE " +
+        @Query("SELECT c FROM ChequeModel c WHERE " +
                         "CAST(REPLACE(c.dueDate, '/','') AS INTEGER) >= CAST(:today AS INTEGER) AND " +
                         "CAST(REPLACE(c.dueDate, '/','') AS INTEGER) <= CAST(:until AS INTEGER)")
         CompletableFuture<List<ChequeModel>> findCloseCheques(@Param("today") String today,

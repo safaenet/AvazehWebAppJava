@@ -25,16 +25,20 @@ public class CustomerService {
     public CompletableFuture<Page<CustomerModel>> getWithPagination(String searchText, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
-        Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        if(searchText == null || searchText == "") searchText = "%";
+        if(sortColumn == null || sortColumn == "") sortColumn = "id"; else searchText = "%" + searchText.toUpperCase() + "%";
+        if(pageSize == 0) pageSize = 50;   
         return DAO.findByMany(searchText,
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<CustomerModel> getById(int id) {
+        if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<CustomerModel> createUpdateProduct(CustomerModel item) {
+    public CompletableFuture<CustomerModel> createUpdate(CustomerModel item) {
         if (item.getDateJoined() == null || item.getDateJoined() == "") {
             item.setDateJoined(PersianCalendarHelper.getPersianDateTime());
         }

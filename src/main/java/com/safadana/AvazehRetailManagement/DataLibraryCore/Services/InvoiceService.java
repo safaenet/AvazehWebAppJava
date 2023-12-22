@@ -20,34 +20,34 @@ public class InvoiceService {
     @Autowired
     InvoiceDAO DAO;
 
-    // public CompletableFuture<List<InvoiceModel>> getAll() {
-    //     return CompletableFuture.completedFuture(DAO.findAll());
-    // }
+    public CompletableFuture<List<InvoiceModel>> getAll() {
+        return CompletableFuture.completedFuture(DAO.findAll());
+    }
 
-    // public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String searchText, int offset, int pageSize,
-    //         String sortColumn,
-    //         String sortOrder) {
-    //     Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-    //     return DAO.findByMany(searchText,
-    //             PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
-    // }
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String searchText, int offset, int pageSize,
+            String sortColumn,
+            String sortOrder) {
+        Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return DAO.findByMany(searchText,
+                PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+    }
 
-    // public CompletableFuture<InvoiceModel> getById(int id) {
-    //     return CompletableFuture.completedFuture(DAO.findById(id).get());
-    // }
+    public CompletableFuture<InvoiceModel> getById(int id) {
+        return CompletableFuture.completedFuture(DAO.findById(id).get());
+    }
 
-    // public CompletableFuture<InvoiceModel> createUpdateProduct(InvoiceModel item) {
-    //     if (PersianCalendarHelper.isValidPersianDateTime(item.getDateCreated()) == false)
-    //         item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
-    //     item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
-    //     return CompletableFuture.completedFuture(DAO.save(item));
-    // }
+    public CompletableFuture<InvoiceModel> createUpdateProduct(InvoiceModel item) {
+        if (PersianCalendarHelper.isValidPersianDateTime(item.getDateCreated()) == false)
+            item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
+        item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
+        return CompletableFuture.completedFuture(DAO.save(item));
+    }
 
-    // public void deleteById(int id) {
-    //     DAO.deleteById(id);
-    // }
+    public void deleteById(int id) {
+        DAO.deleteById(id);
+    }
 
-    // public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
-    //     return DAO.getProductItems();
-    // }
+    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
+        return DAO.getProductItems();
+    }
 }
