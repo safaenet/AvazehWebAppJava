@@ -30,13 +30,13 @@ public class InvoiceController {
         return service.getAll();
     }
 
-    @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String searchText,
-            @RequestParam int offset,
-            @RequestParam int pageSize,
-            @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
-    }
+    // @GetMapping("/GetWithPagination")
+    // public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String searchText,
+    //         @RequestParam int offset,
+    //         @RequestParam int pageSize,
+    //         @RequestParam String sortColumn, @RequestParam String sortOrder) {
+    //     return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
+    // }
 
     @GetMapping("/Id/{id}")
     public CompletableFuture<InvoiceModel> getById(@PathVariable int id) {

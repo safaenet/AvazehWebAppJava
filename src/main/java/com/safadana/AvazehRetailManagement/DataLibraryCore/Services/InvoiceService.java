@@ -15,6 +15,9 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 @Service
 public class InvoiceService {
     @Autowired
@@ -24,13 +27,16 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String searchText, int offset, int pageSize,
-            String sortColumn,
-            String sortOrder) {
-        Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return DAO.findByMany(searchText,
-                PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
-    }
+    // public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String searchText, int offset, int pageSize,
+    //     String sortColumn,
+    //     String sortOrder) {
+    //     Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+    //     if(searchText == null || searchText == "") searchText = "%";
+    //     if(sortColumn == null || sortColumn == "") sortColumn = "id"; else searchText = "%" + searchText.toUpperCase() + "%";
+    //     if(pageSize == 0) pageSize = 50;  
+    //     return DAO.findByMany(searchText,
+    //     PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+    // }
 
     public CompletableFuture<InvoiceModel> getById(int id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
@@ -50,4 +56,7 @@ public class InvoiceService {
     public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
         return DAO.getProductItems();
     }
+
+    @PersistenceContext
+    private EntityManager entityManager;
 }
