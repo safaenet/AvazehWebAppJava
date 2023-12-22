@@ -34,10 +34,8 @@ public class ChequeController {
             @RequestParam String chequeStatus,
             @RequestParam int offset,
             @RequestParam int pageSize,
-            @RequestParam String sortColumn, @RequestParam String sortOrder,
-            @RequestParam ChequeStatus listQueryStatus) {
-        return service.getWithPagination(searchText, chequeStatus, offset, pageSize, sortColumn, sortOrder,
-                listQueryStatus);
+            @RequestParam String sortColumn, @RequestParam String sortOrder) {
+        return service.getWithPagination(searchText, chequeStatus, offset, pageSize, sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")

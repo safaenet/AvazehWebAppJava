@@ -24,8 +24,11 @@ public class ChequeService {
     }
 
     public CompletableFuture<Page<ChequeModel>> getWithPagination(String searchText, String chequeStatus, int offset, int pageSize,
-            String sortColumn, String sortOrder, ChequeStatus listQueryStatus) {
+            String sortColumn, String sortOrder) {
         Sort.Direction sortDir = sortColumn.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        if(searchText == null || searchText == "") searchText = "%";
+        else searchText = "%" + searchText.toUpperCase() + "%";
+        chequeStatus = chequeStatus.toUpperCase();
         String persianDate = PersianCalendarHelper.getPersianDate();
         return DAO.findByMany(searchText, persianDate, chequeStatus, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }

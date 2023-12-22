@@ -1,5 +1,6 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeEventTypes;
 
 import jakarta.persistence.Column;
@@ -27,6 +28,7 @@ public class ChequeEventModel {
     @Column(length = 50)
     private String eventText;
 
+    @JsonIgnore
     public String getEventTypeString() {
         return eventType.toString();
     }
@@ -39,6 +41,7 @@ public class ChequeEventModel {
         }
     }
 
+    @JsonIgnore
     public int getEventTypeValue() {
         return this.eventType.getValue();
     }

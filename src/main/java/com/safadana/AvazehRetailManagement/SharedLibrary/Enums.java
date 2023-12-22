@@ -8,7 +8,7 @@ public class Enums {
     public enum ChequeEventTypes {
         NONE(0),
         HOLDING(1),
-        SOLD(2),
+        ENDORSED(2), //Sold
         RETURNED(3), //NonSufficientFund
         CASHED(4);
     
