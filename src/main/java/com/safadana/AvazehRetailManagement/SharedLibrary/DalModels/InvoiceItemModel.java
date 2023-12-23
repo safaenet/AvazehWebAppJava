@@ -29,6 +29,9 @@ public class InvoiceItemModel {
 
     @Column(length = 50, nullable = false)
     private String countString = "1";
+    
+    @Column(nullable = false)
+    private double countValue = 1;
 
     @ManyToOne
     private ProductUnitModel unit;
@@ -45,11 +48,11 @@ public class InvoiceItemModel {
     @Column(length = 50)
     private String descriptions;
 
-    public double getCountValue() {
-        return Helpers.evaluateExpression(countString);
-    }
+    // public double getCountValue() {
+    //     return Helpers.evaluateExpression(countString);
+    // }
 
-    public boolean getIsCountStringValid() {
+    public boolean isCountStringValid() {
         try {
             Helpers.evaluateExpression(countString);
             return true;

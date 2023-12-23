@@ -11,7 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "invoices")
@@ -50,11 +52,9 @@ public class InvoiceModel {
     @Column(nullable = false)
     private InvoiceLifeStatus lifeStatus;
 
-    @Column(nullable = true)
-    private int prevInvoiceId;
-
-    @Column(nullable = true)
-    private double prevInvoiceBalance;
+    @OneToOne
+    @JoinColumn(name = "prevInvoiceId")
+    private InvoiceModel prevInvoice;
 
     public double getTotalItemsBuySum() {
         return items == null || items.isEmpty() ? 0
@@ -84,7 +84,8 @@ public class InvoiceModel {
     }
 
     public double getTotalBalance() {
-        return getTotalInvoiceBalance() + prevInvoiceBalance;
+        if(prevInvoice == null) return getTotalInvoiceBalance();
+        else return getTotalInvoiceBalance() + prevInvoice.getTotalInvoiceBalance();
     }
 
     public double getNetProfit() {
