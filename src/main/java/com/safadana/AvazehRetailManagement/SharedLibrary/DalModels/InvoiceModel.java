@@ -42,9 +42,11 @@ public class InvoiceModel {
     @JoinColumn(name = "invoiceId")
     private List<InvoicePaymentModel> payments;
 
+    @Column(nullable = false)
     private DiscountTypes discountType = DiscountTypes.AMOUNT;
 
-    private double discountValue;
+    @Column(nullable = false)
+    private double discountValue = 0;
 
     @Column(columnDefinition="TEXT")
     private String descriptions;
