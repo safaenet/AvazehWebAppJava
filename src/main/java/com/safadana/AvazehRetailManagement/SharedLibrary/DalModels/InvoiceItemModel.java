@@ -45,14 +45,6 @@ public class InvoiceItemModel {
     @Column(length = 50)
     private String descriptions;
 
-    // public String getDateTimeCreated() {
-    //     return timeCreated + " " + dateCreated;
-    // }
-
-    // public String getDateTimeUpdated() {
-    //     return timeUpdated + " " + dateUpdated;
-    // }
-
     public double getCountValue() {
         return Helpers.evaluateExpression(countString);
     }
