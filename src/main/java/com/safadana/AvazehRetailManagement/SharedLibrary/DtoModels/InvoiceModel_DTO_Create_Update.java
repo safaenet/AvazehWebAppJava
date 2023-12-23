@@ -9,7 +9,6 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.DiscountTypes;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.InvoiceLifeStatus;
 
 @Data
 public class InvoiceModel_DTO_Create_Update {
@@ -32,5 +31,5 @@ public class InvoiceModel_DTO_Create_Update {
     @Size(max = 255, message = "Maximum length is 255")
     private String descriptions;
 
-    private InvoiceLifeStatus lifeStatus;
+    private boolean isActive;
 }

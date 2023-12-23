@@ -73,23 +73,6 @@ public class Enums {
         }
     }
 
-    public enum InvoiceLifeStatus {
-        ACTIVE(0),
-        INACTIVE(1),
-        ARCHIVED(2),
-        DELETED(3);
-    
-        private final int value;
-    
-        InvoiceLifeStatus(int value) {
-            this.value = value;
-        }
-    
-        public int getValue() {
-            return value;
-        }
-    }
-
     public enum TransactionFinancialStatus {
         BALANCED(0),
         POSITIVE(1),

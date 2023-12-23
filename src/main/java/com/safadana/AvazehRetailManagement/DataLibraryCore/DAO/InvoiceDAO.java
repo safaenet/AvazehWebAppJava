@@ -18,60 +18,15 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForCombo
 @Repository
 public interface InvoiceDAO extends JpaRepository<InvoiceModel, Integer> {
 
-        @Query("SELECT new com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel(" +
-                "i.id, i.customerId, CONCAT(cust.firstName, ' ', COALESCE(cust.lastName, '')) AS customerFullName, " +
-                "i.about, i.dateCreated, i.dateUpdated, " +
-                "ROUND(CASE WHEN COALESCE(i.discountType, 0) = 0 THEN SUM(ii.countValue * ii.sellPrice) - (COALESCE(i.discountValue, 0) / 100 * SUM(ii.countValue * ii.sellPrice)) "
-                +
-                "WHEN COALESCE(i.discountType, 0) = 1 THEN SUM(ii.countValue * ii.sellPrice) - COALESCE(i.discountValue, 0) END, 0) AS totalInvoiceSum, "
-                +
-                "COALESCE(SUM(ip.payAmount), 0) AS totalInvoicePayments, " +
-                "i.lifeStatus, i.prevInvoiceId, " +
-                "(SELECT SUM(COALESCE(isum.prevInvoiceSum, 0)) - SUM(COALESCE(ipay.prevInvoicePays, 0)) " +
-                "FROM InvoiceListModel isum " +
-                "WHERE isum.id = i.id) AS prevInvoiceBalance, " +
-                "(SELECT baseI.id FROM Invoices baseI LEFT JOIN Invoices prevI ON baseI.id = prevI.prevInvoiceId WHERE baseI.id = i.id) AS fwdInvoiceId) "
-                +
-                "FROM Invoices i " +
-                "INNER JOIN Customers cust ON i.customerId = cust.id " +
-                "LEFT JOIN InvoiceItems ii ON i.prevInvoiceId = ii.invoiceId " +
-                "LEFT JOIN InvoicePayments ip ON i.prevInvoiceId = ip.invoiceId " +
-                "WHERE (:lifeStatus = -1 OR i.lifeStatus = :lifeStatus) " +
-                "AND (:invoiceId = -1 OR i.id = :invoiceId OR i.prevInvoiceId = :invoiceId OR " +
-                "(SELECT baseI.id FROM Invoices baseI LEFT JOIN Invoices prevI ON baseI.id = prevI.prevInvoiceId WHERE baseI.id = i.id) = :invoiceId) "
-                +
-                "AND (:customerId = -1 OR i.customerId = :customerId) " +
-                "AND (:date = '%' OR i.dateCreated LIKE :date OR i.dateUpdated LIKE :date) " +
-                "AND (:searchValue = '%' OR cust.firstName || ' ' || COALESCE(cust.lastName, '') LIKE :searchValue OR i.about LIKE :searchValue OR i.descriptions LIKE :searchValue) "
-                +
-                "AND (:finStatus = -1 OR (:finStatus = 0 AND ROUND(COALESCE(SUM(ii.countValue * ii.sellPrice), 0) - (COALESCE(i.discountValue, 0) / 100 * SUM(ii.countValue * ii.sellPrice)), 0) - COALESCE(SUM(ip.payAmount), 0) + "
-                +
-                "(SELECT SUM(COALESCE(isum.prevInvoiceSum, 0)) - SUM(COALESCE(ipay.prevInvoicePays, 0)) FROM InvoiceListModel isum WHERE isum.id = i.id) = 0) "
-                +
-                "OR (:finStatus = 1 AND ROUND(COALESCE(SUM(ii.countValue * ii.sellPrice), 0) - (COALESCE(i.discountValue, 0) / 100 * SUM(ii.countValue * ii.sellPrice)), 0) - COALESCE(SUM(ip.payAmount), 0) + "
-                +
-                "(SELECT SUM(COALESCE(isum.prevInvoiceSum, 0)) - SUM(COALESCE(ipay.prevInvoicePays, 0)) FROM InvoiceListModel isum WHERE isum.id = i.id) > 0) "
-                +
-                "OR (:finStatus = 2 AND ROUND(COALESCE(SUM(ii.countValue * ii.sellPrice), 0) - (COALESCE(i.discountValue, 0) / 100 * SUM(ii.countValue * ii.sellPrice)), 0) - COALESCE(SUM(ip.payAmount), 0) + "
-                +
-                "(SELECT SUM(COALESCE(isum.prevInvoiceSum, 0)) - SUM(COALESCE(ipay.prevInvoicePays, 0)) FROM InvoiceListModel isum WHERE isum.id = i.id) < 0) "
-                +
-                "OR (:finStatus = 3 AND " +
-                "(SELECT baseI.id FROM Invoices baseI LEFT JOIN Invoices prevI ON baseI.id = prevI.prevInvoiceId WHERE baseI.id = i.id) IS NULL "
-                +
-                "AND ROUND(COALESCE(SUM(ii.countValue * ii.sellPrice), 0) - (COALESCE(i.discountValue, 0) / 100 * SUM(ii.countValue * ii.sellPrice)), 0) - COALESCE(SUM(ip.payAmount), 0) + "
-                +
-                "(SELECT SUM(COALESCE(isum.prevInvoiceSum, 0)) - SUM(COALESCE(ipay.prevInvoicePays, 0)) FROM InvoiceListModel isum WHERE isum.id = i.id) <> 0))) "
-                +
-                "GROUP BY i.id, cust.firstName, cust.lastName, i.about, i.dateCreated, i.dateUpdated, i.lifeStatus, i.prevInvoiceId")
+        @Query("")
         Page<InvoiceListModel> loadInvoiceListOldStyle2(
-                        @Param("lifeStatus") int lifeStatus,
-                        @Param("invoiceId") int invoiceId,
-                        @Param("customerId") int customerId,
-                        @Param("date") String date,
-                        @Param("searchValue") String searchValue,
-                        @Param("finStatus") int finStatus,
-                        Pageable pageable);
+                @Param("lifeStatus") int lifeStatus,
+                @Param("invoiceId") int invoiceId,
+                @Param("customerId") int customerId,
+                @Param("date") String date,
+                @Param("searchValue") String searchValue,
+                @Param("finStatus") int finStatus,
+                Pageable pageable);
 
         // @Async
         // @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel" +

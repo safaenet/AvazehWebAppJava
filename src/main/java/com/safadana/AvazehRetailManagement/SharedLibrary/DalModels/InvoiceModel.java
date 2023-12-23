@@ -52,7 +52,7 @@ public class InvoiceModel {
     private String descriptions;
 
     @Column(nullable = false)
-    private InvoiceLifeStatus lifeStatus;
+    private boolean isActive = true;
 
     @OneToOne
     @JoinColumn(name = "prevInvoiceId")

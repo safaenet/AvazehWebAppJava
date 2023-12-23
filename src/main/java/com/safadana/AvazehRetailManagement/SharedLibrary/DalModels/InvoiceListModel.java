@@ -15,7 +15,7 @@ public class InvoiceListModel {
     private String dateUpdated;
     private double totalInvoiceSum;
     private double totalInvoicePayments;
-    private InvoiceLifeStatus lifeStatus;
+    private boolean isHidden;
     private int prevInvoiceId;
     private double prevInvoiceBalance;
     private int fwdInvoiceId;
