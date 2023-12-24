@@ -27,16 +27,20 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    // public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String searchText, int offset, int pageSize,
-    //     String sortColumn,
-    //     String sortOrder) {
-    //     Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-    //     if(searchText == null || searchText == "") searchText = "%";
-    //     if(sortColumn == null || sortColumn == "") sortColumn = "id"; else searchText = "%" + searchText.toUpperCase() + "%";
-    //     if(pageSize == 0) pageSize = 50;  
-    //     return DAO.findByMany(searchText,
-    //     PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
-    // }
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
+        int offset, int pageSize,
+        String sortColumn,
+        String sortOrder) {
+        Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        if(lifeStatus == null || lifeStatus == "") lifeStatus = "ALL";
+        if(date == null || date == "") date = "%"; //else date = "%" + date + "%";
+        if(finStatus == null || finStatus == "") finStatus = "ALL";
+        if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
+        if(sortColumn == null || sortColumn == "") sortColumn = "id";
+        if(pageSize == 0) pageSize = 50;  
+        return DAO.findByMany(
+        PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+    }
 
     public CompletableFuture<InvoiceModel> getById(int id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());

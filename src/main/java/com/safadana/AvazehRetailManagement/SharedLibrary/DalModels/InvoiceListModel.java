@@ -8,31 +8,32 @@ import lombok.Data;
 @Data
 public class InvoiceListModel {
     private int id;
-    private int customerId;
-    private String customerFullName;
+    private int customerid;
+    private String customerfullname;
     private String about;
-    private String dateCreated;
-    private String dateUpdated;
-    private double totalInvoiceSum;
-    private double totalInvoicePayments;
-    private boolean isHidden;
-    private int prevInvoiceId;
-    private double prevInvoiceBalance;
-    private int fwdInvoiceId;
+    private String datecreated;
+    private String dateupdated;
+    private boolean isactive;
+    private String descriptions;
+    private double totalinvoicesum;
+    private double totalinvoicepayments;
+    private int previnvoiceid;
+    private double previnvoicebalance;
+    private int fwdinvoiceid;
 
     @JsonIgnore
     public double getTotalInvoiceBalance() {
-        return totalInvoiceSum - totalInvoicePayments;
+        return totalinvoicesum - totalinvoicepayments;
     }
 
     @JsonIgnore
     public double getTotalBalance() {
-        return getTotalInvoiceBalance() + prevInvoiceBalance;
+        return getTotalInvoiceBalance() + previnvoicebalance;
     }
 
     @JsonIgnore
     public String getInvoiceTitle() {
-        return (about == null || about.isEmpty()) ? customerFullName : customerFullName + " - " + about;
+        return (about == null || about.isEmpty()) ? customerfullname : customerfullname + " - " + about;
     }
 
     @JsonIgnore

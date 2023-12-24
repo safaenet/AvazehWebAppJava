@@ -20,10 +20,7 @@ public class CustomerModel {
     private int id;
 
     @Column(length = 50, nullable = false)
-    private String firstName;
-
-    @Column(length = 50, nullable = false)
-    private String lastName;
+    private String fullName;
 
     @Column(length = 50)
     private String companyName;
@@ -44,8 +41,4 @@ public class CustomerModel {
     @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "customerId")
     private List<PhoneNumberModel> phoneNumbers;
-
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
 }

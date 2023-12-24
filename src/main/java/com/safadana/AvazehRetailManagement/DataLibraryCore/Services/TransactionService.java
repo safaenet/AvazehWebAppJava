@@ -28,8 +28,8 @@ public class TransactionService {
         String sortColumn,
         String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        if(searchText == null || searchText == "") searchText = "%";
-        if(sortColumn == null || sortColumn == "") sortColumn = "id"; else searchText = "%" + searchText.toUpperCase() + "%";
+        if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
+        if(sortColumn == null || sortColumn == "") sortColumn = "id";
         if(pageSize == 0) pageSize = 50;   
         return DAO.findByMany(searchText,
         PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
