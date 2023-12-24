@@ -31,7 +31,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String lifeStatus,
+    public List<InvoiceListModel> getWithPagination(@RequestParam String lifeStatus,
             @RequestParam int invoiceId, @RequestParam int customerId, @RequestParam String date,
             @RequestParam String finStatus, @RequestParam String searchText,
             @RequestParam int offset,

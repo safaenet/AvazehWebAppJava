@@ -3,37 +3,39 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class InvoiceListModel {
     private int id;
-    private int customerid;
-    private String customerfullname;
+    private int customerId;
+    private String customerFullName;
     private String about;
-    private String datecreated;
-    private String dateupdated;
-    private boolean isactive;
+    private String dateCreated;
+    private String dateUpdated;
+    private boolean isActive;
     private String descriptions;
-    private double totalinvoicesum;
-    private double totalinvoicepayments;
-    private int previnvoiceid;
-    private double previnvoicebalance;
-    private int fwdinvoiceid;
+    private double totalInvoiceSum;
+    private double totalInvoicePayments;
+    private int prevInvoiceId;
+    private double prevInvoiceBalance;
+    private int fwdInvoiceId;
 
     @JsonIgnore
     public double getTotalInvoiceBalance() {
-        return totalinvoicesum - totalinvoicepayments;
+        return totalInvoiceSum - totalInvoicePayments;
     }
 
     @JsonIgnore
     public double getTotalBalance() {
-        return getTotalInvoiceBalance() + previnvoicebalance;
+        return getTotalInvoiceBalance() + prevInvoiceBalance;
     }
 
     @JsonIgnore
     public String getInvoiceTitle() {
-        return (about == null || about.isEmpty()) ? customerfullname : customerfullname + " - " + about;
+        return (about == null || about.isEmpty()) ? customerFullName : customerFullName + " - " + about;
     }
 
     @JsonIgnore

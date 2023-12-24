@@ -17,17 +17,20 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendar
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 
 @Service
 public class InvoiceService {
     @Autowired
     InvoiceDAO DAO;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public CompletableFuture<List<InvoiceModel>> getAll() {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
+    public List<InvoiceListModel> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
         int offset, int pageSize,
         String sortColumn,
         String sortOrder) {
@@ -37,9 +40,11 @@ public class InvoiceService {
         if(finStatus == null || finStatus == "") finStatus = "ALL";
         if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
         if(sortColumn == null || sortColumn == "") sortColumn = "id";
-        if(pageSize == 0) pageSize = 50;  
-        return DAO.findByMany(
-        PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+        if(pageSize == 0) pageSize = 50;
+        List<InvoiceListModel> resultList = entityManager.createNamedQuery("findByMany", InvoiceListModel.class).getResultList();
+        return resultList;
+        // return DAO.findByMany(
+        // PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<InvoiceModel> getById(int id) {
@@ -60,7 +65,4 @@ public class InvoiceService {
     public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
         return DAO.getProductItems();
     }
-
-    @PersistenceContext
-    private EntityManager entityManager;
 }

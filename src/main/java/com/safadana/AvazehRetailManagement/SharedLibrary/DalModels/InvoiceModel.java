@@ -4,10 +4,11 @@ import lombok.Data;
 
 import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,14 +16,10 @@ import jakarta.persistence.NamedNativeQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
-@Entity
-@Table(name = "invoices")
-@Data
-@NamedNativeQuery(name = "InvoiceModel.findByMany", query = "WITH RECURSIVE InvoiceHierarchy AS (" +
-                        "SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isActive, i.descriptions," +
-                        "SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, CAST(0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId " +
+@NamedNativeQuery(name = "findByMany", query = "WITH RECURSIVE InvoiceHierarchy AS (" +
+                        "SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions," +
+                        "SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId " +
                         "FROM invoices i " +
                         "INNER JOIN customers c ON i.customer_id = c.id " +
                         "LEFT JOIN (SELECT COALESCE(ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END), 0) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id " +
@@ -32,7 +29,7 @@ import jakarta.persistence.Transient;
 
                         "UNION ALL " +
 
-                        "SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isActive, i.descriptions," +
+                        "SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions," +
                         "SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, prevInvoice.invBalance AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId " +
                         "FROM invoices i " +
                         "INNER JOIN customers c ON i.customer_id = c.id " +
@@ -49,7 +46,9 @@ import jakarta.persistence.Transient;
                         "WHERE i.id = InvSums.SFN AND i.id = PFN AND i.id = InvFwds.FactorNum " +
                         ") " +
 
-                        "SELECT * FROM InvoiceHierarchy ih " 
+                        "SELECT ih.id, ih.customerId, ih.customerFullName, ih.about, ih.datecreated AS dateCreated, ih.dateupdated AS dateUpdated, ih.isactive AS isActive, ih.descriptions, ih.totalInvoiceSum, " +
+                        "ih.totalInvoicePayments, ih.previnvoiceid AS prevInvoiceId, ih.prevInvoiceBalance, ih.fwdInvoiceId FROM InvoiceHierarchy ih "
+                        // +"WHERE " +
                         // "(:lifeStatus = 'ALL' OR (:lifeStatus = 'ACTIVE' AND ih.isactive = true) OR (:lifeStatus = 'INACTIVE' AND ih.isactive = false)) AND " +
                         // "(:invoiceId <= 0 OR ih.id = :invoiceId OR ih.previnvoiceid = :invoiceId OR ih.fwdInvoiceId = :invoiceId) AND " +
                         // "(:customerId <= 0 OR ih.customerId = :customerId) AND " +
@@ -61,6 +60,9 @@ import jakarta.persistence.Transient;
                         //         "(:finStatus = 'OVERDUE' AND ih.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0)) AND " +
                         // "(:searchText = '%' OR ih.customerFullName LIKE :searchText OR ih.about LIKE :searchText OR ih.descriptions LIKE :searchText)"
                         , resultClass = InvoiceListModel.class)
+@Entity
+@Table(name = "invoices")
+@Data
 public class InvoiceModel {
     @Id
     private int id;
@@ -97,50 +99,60 @@ public class InvoiceModel {
     @Column(nullable = false)
     private boolean isActive = true;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prevInvoiceId")
     private InvoiceModel prevInvoice;
 
+    @JsonIgnore
     public double getTotalItemsBuySum() {
         return items == null || items.isEmpty() ? 0
                 : items.stream().mapToDouble(InvoiceItemModel::getTotalBuyValue).sum();
     }
 
+    @JsonIgnore
     public double getTotalItemsSellSum() {
         return items == null || items.isEmpty() ? 0
                 : items.stream().mapToDouble(InvoiceItemModel::getTotalSellValue).sum();
     }
 
+    @JsonIgnore
     public double getTotalDiscountAmount() {
         return discountType == DiscountTypes.PERCENT ? (getTotalItemsSellSum() * discountValue / 100) : discountValue;
     }
 
+    @JsonIgnore
     public double getTotalInvoiceSum() {
         return getTotalItemsSellSum() - getTotalDiscountAmount();
     }
 
+    @JsonIgnore
     public double getTotalPayments() {
         return payments == null || payments.isEmpty() ? 0
                 : payments.stream().mapToDouble(InvoicePaymentModel::getPayAmount).sum();
     }
 
+    @JsonIgnore
     public double getTotalInvoiceBalance() {
         return getTotalInvoiceSum() - getTotalPayments();
     }
 
+    @JsonIgnore
     public double getTotalBalance() {
         if(prevInvoice == null) return getTotalInvoiceBalance();
         else return getTotalInvoiceBalance() + prevInvoice.getTotalInvoiceBalance();
     }
 
+    @JsonIgnore
     public double getNetProfit() {
         return getTotalInvoiceSum() - getTotalItemsBuySum();
     }
 
+    @JsonIgnore
     public double getCurrentProfit() {
         return getNetProfit() - getTotalInvoiceBalance();
     }
 
+    @JsonIgnore
     public InvoiceFinancialStatus getInvoiceFinancialStatus() {
         return getTotalBalance() == 0 ? InvoiceFinancialStatus.BALANCED
                 : getTotalBalance() > 0 ? InvoiceFinancialStatus.DEPTOR : InvoiceFinancialStatus.CREDITOR;
