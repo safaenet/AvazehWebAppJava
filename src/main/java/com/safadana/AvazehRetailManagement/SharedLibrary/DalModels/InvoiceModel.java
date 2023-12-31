@@ -71,18 +71,18 @@ import jakarta.persistence.Table;
                         ") " +
 
                         "SELECT ih.id, ih.customerId, ih.customerFullName, ih.about, ih.datecreated AS dateCreated, ih.dateupdated AS dateUpdated, ih.isactive AS isActive, ih.descriptions, ih.totalInvoiceSum, " +
-                        "ih.totalInvoicePayments, ih.previnvoiceid AS prevInvoiceId, ih.prevInvoiceBalance, ih.fwdInvoiceId FROM InvoiceHierarchy ih "
-                        // +"WHERE " +
-                        // "(:lifeStatus = 'ALL' OR (:lifeStatus = 'ACTIVE' AND ih.isactive = true) OR (:lifeStatus = 'INACTIVE' AND ih.isactive = false)) AND " +
-                        // "(:invoiceId <= 0 OR ih.id = :invoiceId OR ih.previnvoiceid = :invoiceId OR ih.fwdInvoiceId = :invoiceId) AND " +
-                        // "(:customerId <= 0 OR ih.customerId = :customerId) AND " +
-                        // "(:date = 'ALL' OR ih.datecreated like :date OR ih.dateupdated LIKE :date) AND " +
-                        // "(:finStatus = 'ALL' OR  " +
-                        //         "(:finStatus = 'BALANCED' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance = 0) OR " +
-                        //         "(:finStatus = 'DEPTOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance > 0) OR " +
-                        //         "(:finStatus = 'CREDITOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance < 0) OR " +
-                        //         "(:finStatus = 'OVERDUE' AND ih.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0)) AND " +
-                        // "(:searchText = '%' OR ih.customerFullName LIKE :searchText OR ih.about LIKE :searchText OR ih.descriptions LIKE :searchText)"
+                        "ih.totalInvoicePayments, ih.previnvoiceid AS prevInvoiceId, ih.prevInvoiceBalance, ih.fwdInvoiceId FROM InvoiceHierarchy ih " +
+                        "WHERE " +
+                        "(:lifeStatus = 'ALL' OR (:lifeStatus = 'ACTIVE' AND ih.isactive = true) OR (:lifeStatus = 'INACTIVE' AND ih.isactive = false)) AND " +
+                        "(:invoiceId <= 0 OR ih.id = :invoiceId OR ih.previnvoiceid = :invoiceId OR ih.fwdInvoiceId = :invoiceId) AND " +
+                        "(:customerId <= 0 OR ih.customerId = :customerId) AND " +
+                        "(:date = 'ALL' OR ih.datecreated like :date OR ih.dateupdated LIKE :date) AND " +
+                        "(:finStatus = 'ALL' OR  " +
+                                "(:finStatus = 'BALANCED' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance = 0) OR " +
+                                "(:finStatus = 'DEPTOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance > 0) OR " +
+                                "(:finStatus = 'CREDITOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance < 0) OR " +
+                                "(:finStatus = 'OVERDUE' AND ih.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0)) AND " +
+                        "(:searchText = '%' OR ih.customerFullName LIKE :searchText OR ih.about LIKE :searchText OR ih.descriptions LIKE :searchText)"
                         , resultSetMapping = "InvoiceListMapping")
 @Entity
 @Table(name = "invoices")

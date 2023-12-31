@@ -30,7 +30,7 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public List<InvoiceListModel> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
         int offset, int pageSize,
         String sortColumn,
         String sortOrder) {
@@ -41,9 +41,18 @@ public class InvoiceService {
         if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
         if(sortColumn == null || sortColumn == "") sortColumn = "id";
         if(pageSize == 0) pageSize = 50;
-        List<InvoiceListModel> resultList = entityManager.createNamedQuery("findByMany", InvoiceListModel.class).getResultList();
-        return resultList;
-        // return DAO.findByMany(
+        Query query = entityManager.createNamedQuery("findByMany", InvoiceListModel.class);
+        query.setParameter("lifeStatus", lifeStatus);
+        query.setParameter("invoiceId", invoiceId);
+        query.setParameter("customerId", customerId);
+        query.setParameter("date", date);
+        query.setParameter("finStatus", finStatus);
+        query.setParameter("searchText", searchText);
+        int startPosition = (pageSize) * pageSize;
+        query.setFirstResult(startPosition);
+        query.setMaxResults(pageSize);
+        return query.;
+        // return DAO.findByMany(lifeStatus, invoiceId, customerId, date, finStatus, searchText,
         // PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
