@@ -7,6 +7,8 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 import jakarta.persistence.Column;
+import jakarta.persistence.ColumnResult;
+import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -15,8 +17,30 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedNativeQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 
+@SqlResultSetMapping(
+    name = "InvoiceListMapping",
+    classes = @ConstructorResult(
+        columns = { 
+            @ColumnResult(name = "id", type = int.class),
+            @ColumnResult(name = "customerId", type = int.class),
+            @ColumnResult(name = "customerFullName", type = String.class),
+            @ColumnResult(name = "about", type = String.class),
+            @ColumnResult(name = "dateCreated", type = String.class),
+            @ColumnResult(name = "dateUpdated", type = String.class),
+            @ColumnResult(name = "isActive", type = boolean.class),
+            @ColumnResult(name = "descriptions", type = String.class),
+            @ColumnResult(name = "totalInvoiceSum", type = double.class),
+            @ColumnResult(name = "totalInvoicePayments", type = double.class),
+            @ColumnResult(name = "prevInvoiceId", type = Integer.class),
+            @ColumnResult(name = "prevInvoiceBalance", type = double.class),
+            @ColumnResult(name = "fwdInvoiceId", type = Integer.class)
+        },
+    targetClass = InvoiceListModel.class
+    )
+)
 @NamedNativeQuery(name = "findByMany", query = "WITH RECURSIVE InvoiceHierarchy AS (" +
                         "SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions," +
                         "SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId " +
@@ -59,7 +83,7 @@ import jakarta.persistence.Table;
                         //         "(:finStatus = 'CREDITOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance < 0) OR " +
                         //         "(:finStatus = 'OVERDUE' AND ih.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0)) AND " +
                         // "(:searchText = '%' OR ih.customerFullName LIKE :searchText OR ih.about LIKE :searchText OR ih.descriptions LIKE :searchText)"
-                        , resultClass = InvoiceListModel.class)
+                        , resultSetMapping = "InvoiceListMapping")
 @Entity
 @Table(name = "invoices")
 @Data

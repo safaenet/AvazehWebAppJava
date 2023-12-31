@@ -5,9 +5,11 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class InvoiceListModel {
     private int id;
     private int customerId;
@@ -19,9 +21,9 @@ public class InvoiceListModel {
     private String descriptions;
     private double totalInvoiceSum;
     private double totalInvoicePayments;
-    private int prevInvoiceId;
+    private Integer prevInvoiceId;
     private double prevInvoiceBalance;
-    private int fwdInvoiceId;
+    private Integer fwdInvoiceId;
 
     @JsonIgnore
     public double getTotalInvoiceBalance() {
