@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +31,7 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public Page<InvoiceListModel> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
         int offset, int pageSize,
         String sortColumn,
         String sortOrder) {
@@ -51,17 +50,13 @@ public class InvoiceService {
         .setParameter("finStatus", finStatus)
         .setParameter("searchText", searchText);
         int total = query.getResultList().size();
-        Pageable pageable = new Pageable();
         query.setFirstResult(offset * pageSize);
         query.setMaxResults(pageSize);
-        
         @SuppressWarnings("unchecked")
         List<InvoiceListModel> list = query.getResultList();
-
         Page<InvoiceListModel> page = new PageImpl<>(list, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)), total);
-        
-        // CompletableFuture<Page<InvoiceListModel>> model = CompletableFuture.completedFuture(page);
-        return page;
+        CompletableFuture<Page<InvoiceListModel>> completedFuture = CompletableFuture.completedFuture(page);
+        return completedFuture;
     }
 
     public CompletableFuture<InvoiceModel> getById(int id) {
@@ -79,7 +74,7 @@ public class InvoiceService {
         DAO.deleteById(id);
     }
 
-    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
-        return DAO.getProductItems();
+    public CompletableFuture<List<String>> getInvoiceAbouts() {
+        return DAO.getInvoiceAbouts();
     }
 }

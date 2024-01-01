@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.ProductDAO;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
 @Service
@@ -53,5 +55,13 @@ public class ProductService {
 
     public void deleteById(int id) {
         DAO.deleteById(id);
+    }
+
+    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
+        return DAO.getProductItems();
+    }
+
+    public CompletableFuture<List<ProductUnitModel>> getProductUnits() {
+        return DAO.getProductUnits();
     }
 }

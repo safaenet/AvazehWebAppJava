@@ -16,16 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.ProductService;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @RestController
 @RequestMapping("/Product")
 public class ProductController {
     @Autowired
-    ProductService productService;
+    ProductService service;
 
     @GetMapping("/GetAll")
     public CompletableFuture<List<ProductModel>> getAll() {
-        return productService.getAll();
+        return service.getAll();
     }
 
     @GetMapping("/GetWithPagination")
@@ -33,26 +35,36 @@ public class ProductController {
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return productService.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
+        return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")
     public CompletableFuture<ProductModel> getById(@PathVariable int id) {
-        return productService.getById(id);
+        return service.getById(id);
     }
 
     @GetMapping("/Barcode/{barcode}")
     public CompletableFuture<ProductModel> getByBarcode(@PathVariable String barcode) {
-        return productService.getByBarcode(barcode);
+        return service.getByBarcode(barcode);
     }
 
     @PostMapping("/CreateUpdate")
     public CompletableFuture<ProductModel> createUpdate(@RequestBody ProductModel product) {
-        return productService.createUpdate(product);
+        return service.createUpdate(product);
     }
 
     @DeleteMapping("/Delete/{id}")
     public void delete(@PathVariable int id) {
-        productService.deleteById(id);
+        service.deleteById(id);
+    }
+
+    @GetMapping("/ProductItems") //loads active products
+    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
+        return service.getProductItems();
+    }
+
+    @GetMapping("/ProductUnits")
+    public CompletableFuture<List<ProductUnitModel>> getProductUnits() {
+        return service.getProductUnits();
     }
 }

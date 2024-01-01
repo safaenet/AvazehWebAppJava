@@ -31,7 +31,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/GetWithPagination")
-    public Page<InvoiceListModel> getWithPagination(@RequestParam String lifeStatus,
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String lifeStatus,
             @RequestParam int invoiceId, @RequestParam int customerId, @RequestParam String date,
             @RequestParam String finStatus, @RequestParam String searchText,
             @RequestParam int offset,
@@ -56,8 +56,8 @@ public class InvoiceController {
         service.deleteById(id);
     }
 
-    @GetMapping("/ProductItems")
-    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
-        return service.getProductItems();
+    @GetMapping("/InvoiceAbouts")
+    public CompletableFuture<List<String>> getInvoiceAbouts() {
+        return service.getInvoiceAbouts();
     }
 }

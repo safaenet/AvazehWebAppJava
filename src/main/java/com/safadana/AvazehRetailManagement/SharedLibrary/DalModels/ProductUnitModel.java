@@ -14,5 +14,5 @@ public class ProductUnitModel {
     private int id;
 
     @Column(length = 10, nullable = false)
-    private String UnitName;
+    private String unitName;
 }

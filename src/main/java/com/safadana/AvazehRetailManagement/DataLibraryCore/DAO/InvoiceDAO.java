@@ -9,12 +9,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @Repository
 public interface InvoiceDAO extends JpaRepository<InvoiceModel, Integer> {
 
         @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(p.id AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true")
-        CompletableFuture<List<ItemsForComboBox>> getProductItems();
+        @Query("SELECT DISTINCT i.about AS itemName FROM InvoiceModel i WHERE i.about IS NOT NULL ORDER BY i.about")
+        CompletableFuture<List<String>> getInvoiceAbouts();
 }

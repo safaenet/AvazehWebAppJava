@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.CustomerService;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @RestController
 @RequestMapping("/Customer")
@@ -49,5 +50,10 @@ public class CustomerController {
     @DeleteMapping("/Delete/{id}")
     public void delete(@PathVariable int id) {
         service.deleteById(id);
+    }
+
+    @GetMapping("/CustomerNames")
+    public CompletableFuture<List<ItemsForComboBox>> getCustomerNames() {
+        return service.getCustomerNames();
     }
 }
