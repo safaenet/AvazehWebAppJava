@@ -5,16 +5,126 @@
     <named-query name="customerBalance">
         <query>
             <![CDATA[
-                SELECT SUM(
-                    CASE WHEN i.discountType = DiscountTypes.PERCENT THEN (SUM(ii.countValue * ii.sellPrice) - (i.discountValue / 100 * SUM(ii.countValue * ii.sellPrice))) - SUM(ip.payAmount)
-                    ELSE SUM(ii.countValue * ii.sellPrice) - i.discountValue END
-                    ) 
-                FROM InvoiceModel i 
-                JOIN FETCH CustomerModel c
-                JOIN FETCH InvoiceItemModel ii
-                JOIN FETCH InvoicePaymentModel ip
-                WHERE i.isActive = true AND c.id = :cId
+                SELECT SUM(result)
+                FROM (
+                    SELECT 
+                        CASE 
+                            WHEN i.discountType = DiscountTypes.PERCENT THEN 
+                                COALESCE(SUM(ii.countValue * ii.sellPrice), 0) - (i.discountValue / 100 * SUM(ii.countValue * ii.sellPrice)) - COALESCE(SUM(ip.payAmount), 0)
+                            ELSE 
+                                COALESCE(SUM(ii.countValue * ii.sellPrice), 0) - i.discountValue - COALESCE(SUM(ip.payAmount), 0)
+                        END as result
+                    FROM InvoiceModel i 
+                    LEFT JOIN i.customer c
+                    LEFT JOIN i.items ii
+                    LEFT JOIN i.payments ip
+                    WHERE c.id = :cId
+                    GROUP BY i.id
+                ) as subquery
             ]]>
         </query>
     </named-query>
+
+    <named-native-query name = "findInvoiceListByMany" result-set-mapping="InvoiceListMapping">
+        <query>
+            <![CDATA[
+                WITH RECURSIVE InvoiceHierarchy AS (
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions,
+                SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                FROM invoices i
+                INNER JOIN customers c ON i.customer_id = c.id
+                LEFT JOIN (SELECT COALESCE(ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END), 0) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
+                LEFT JOIN (SELECT COALESCE(SUM(ip.payamount), 0) AS PT, i.id AS PFN FROM invoicepayments ip RIGHT JOIN invoices i ON ip.invoiceid = i.id GROUP BY i.id) AS InvPays ON InvPays.PFN = i.id
+                LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
+                WHERE i.id = InvSums.SFN AND i.id = PFN AND i.id = InvFwds.FactorNum AND i.previnvoiceid IS NULL
+                UNION ALL
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions,
+                SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, prevInvoice.invBalance AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                FROM invoices i
+                INNER JOIN customers c ON i.customer_id = c.id
+                LEFT JOIN (
+                        SELECT i.id, InvSums.SFS - InvPays.PT AS invBalance
+                        FROM invoices i
+                        LEFT JOIN (SELECT COALESCE(ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END), 0) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
+                        LEFT JOIN (SELECT COALESCE(SUM(ip.payamount), 0) AS PT, i.id AS PFN FROM invoicepayments ip RIGHT JOIN invoices i ON ip.invoiceid = i.id GROUP BY i.id) AS InvPays ON InvPays.PFN = i.id
+                ) AS prevInvoice ON i.previnvoiceid = prevInvoice.id
+                LEFT JOIN (SELECT ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
+                LEFT JOIN (SELECT COALESCE(SUM(ip.payamount), 0) AS PT, i.id AS PFN FROM invoicepayments ip RIGHT JOIN invoices i ON ip.invoiceid = i.id GROUP BY i.id) AS InvPays ON InvPays.PFN = i.id
+                LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
+                JOIN InvoiceHierarchy ih ON i.previnvoiceid = ih.id
+                WHERE i.id = InvSums.SFN AND i.id = PFN AND i.id = InvFwds.FactorNum
+                )
+                SELECT * FROM InvoiceHierarchy ih
+                WHERE
+                    (:lifeStatus = 'ALL' OR (:lifeStatus = 'ACTIVE' AND ih.isactive = true) OR (:lifeStatus = 'INACTIVE' AND ih.isactive = false)) AND
+                    (:invoiceId <= 0 OR ih.id = :invoiceId OR ih.previnvoiceid = :invoiceId OR ih.fwdInvoiceId = :invoiceId) AND
+                    (:customerId <= 0 OR ih.customerId = :customerId) AND
+                    (:date = 'ALL' OR ih.datecreated like :date OR ih.dateupdated LIKE :date) AND
+                    (:finStatus = 'ALL' OR
+                            (:finStatus = 'BALANCED' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance = 0) OR
+                            (:finStatus = 'DEPTOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance > 0) OR
+                            (:finStatus = 'CREDITOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance < 0) OR
+                            (:finStatus = 'OVERDUE' AND ih.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0)) AND
+                    (:searchText = '%' OR UPPER(ih.customerFullName) LIKE :searchText OR UPPER(ih.about) LIKE :searchText OR UPPER(ih.descriptions) LIKE :searchText) 
+            ]]>
+        </query>
+    </named-native-query>
+
+    <named-native-query name = "findPrevInvoiceList" result-set-mapping="InvoiceListMapping">
+        <query>
+            <![CDATA[
+                WITH RECURSIVE InvoiceHierarchy AS (
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions,
+                SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                FROM invoices i
+                INNER JOIN customers c ON i.customer_id = c.id
+                LEFT JOIN (SELECT COALESCE(ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END), 0) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
+                LEFT JOIN (SELECT COALESCE(SUM(ip.payamount), 0) AS PT, i.id AS PFN FROM invoicepayments ip RIGHT JOIN invoices i ON ip.invoiceid = i.id GROUP BY i.id) AS InvPays ON InvPays.PFN = i.id
+                LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
+                WHERE i.id = InvSums.SFN AND i.id = PFN AND i.id = InvFwds.FactorNum AND i.previnvoiceid IS NULL
+                UNION ALL
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions,
+                SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, prevInvoice.invBalance AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                FROM invoices i
+                INNER JOIN customers c ON i.customer_id = c.id
+                LEFT JOIN (
+                        SELECT i.id, InvSums.SFS - InvPays.PT AS invBalance
+                        FROM invoices i
+                        LEFT JOIN (SELECT COALESCE(ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END), 0) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
+                        LEFT JOIN (SELECT COALESCE(SUM(ip.payamount), 0) AS PT, i.id AS PFN FROM invoicepayments ip RIGHT JOIN invoices i ON ip.invoiceid = i.id GROUP BY i.id) AS InvPays ON InvPays.PFN = i.id
+                ) AS prevInvoice ON i.previnvoiceid = prevInvoice.id
+                LEFT JOIN (SELECT ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
+                LEFT JOIN (SELECT COALESCE(SUM(ip.payamount), 0) AS PT, i.id AS PFN FROM invoicepayments ip RIGHT JOIN invoices i ON ip.invoiceid = i.id GROUP BY i.id) AS InvPays ON InvPays.PFN = i.id
+                LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
+                JOIN InvoiceHierarchy ih ON i.previnvoiceid = ih.id
+                WHERE i.id = InvSums.SFN AND i.id = PFN AND i.id = InvFwds.FactorNum
+                )
+                SELECT * FROM InvoiceHierarchy ih
+                WHERE
+                    ih.isactive = true AND
+                    ih.id < :invoiceId AND
+                    ih.customerId = :customerId AND
+                    ih.fwdInvoiceId IS NULL AND
+                    ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0
+            ]]>
+        </query>
+    </named-native-query>
+    
+    <sql-result-set-mapping name="InvoiceListMapping">
+        <constructor-result target-class="com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel">
+            <column name="id" type="int"/>
+            <column name="customerId" type="int"/>
+            <column name="customerFullName" type="java.lang.String"/>
+            <column name="about" type="java.lang.String"/>
+            <column name="dateCreated" type="java.lang.String"/>
+            <column name="dateUpdated" type="java.lang.String"/>
+            <column name="isActive" type="boolean"/>
+            <column name="descriptions" type="java.lang.String"/>
+            <column name="totalInvoiceSum" type="double"/>
+            <column name="totalInvoicePayments" type="double"/>
+            <column name="prevInvoiceId" type="java.lang.Integer"/>
+            <column name="prevInvoiceBalance" type="double"/>
+            <column name="fwdInvoiceId" type="java.lang.Integer"/>
+        </constructor-result>
+    </sql-result-set-mapping>
 </entity-mappings>

@@ -39,7 +39,7 @@ public class InvoiceService {
         if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
         if(sortColumn == null || sortColumn == "") sortColumn = "id";
         if(pageSize == 0) pageSize = 50;
-        Query query = entityManager.createNamedQuery("findByMany")
+        Query query = entityManager.createNamedQuery("findInvoiceListByMany")
         .setParameter("lifeStatus", lifeStatus)
         .setParameter("invoiceId", invoiceId)
         .setParameter("customerId", customerId)
@@ -73,5 +73,15 @@ public class InvoiceService {
 
     public CompletableFuture<List<String>> getInvoiceAbouts() {
         return DAO.getInvoiceAbouts();
+    }
+
+    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(int invoiceId, int customerId) {
+        Query query = entityManager.createNamedQuery("findPrevInvoiceList")
+        .setParameter("invoiceId", invoiceId)
+        .setParameter("customerId", customerId);
+        @SuppressWarnings("unchecked")
+        List<InvoiceListModel> list = query.getResultList();
+        CompletableFuture<List<InvoiceListModel>> completedFuture = CompletableFuture.completedFuture(list);
+        return completedFuture;
     }
 }
