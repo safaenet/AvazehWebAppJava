@@ -82,8 +82,7 @@ import jakarta.persistence.Table;
                                 "(:finStatus = 'DEPTOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance > 0) OR " +
                                 "(:finStatus = 'CREDITOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance < 0) OR " +
                                 "(:finStatus = 'OVERDUE' AND ih.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0)) AND " +
-                        "(:searchText = '%' OR UPPER(ih.customerFullName) LIKE :searchText OR UPPER(ih.about) LIKE :searchText OR UPPER(ih.descriptions) LIKE :searchText) " +
-                        "ORDER BY :sortColumn {:sortOrder}"
+                        "(:searchText = '%' OR UPPER(ih.customerFullName) LIKE :searchText OR UPPER(ih.about) LIKE :searchText OR UPPER(ih.descriptions) LIKE :searchText) "
                         , resultSetMapping = "InvoiceListMapping")
 @Entity
 @Table(name = "invoices")

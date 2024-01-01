@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -42,22 +43,22 @@ public class InvoiceService {
         if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
         if(sortColumn == null || sortColumn == "") sortColumn = "id";
         if(pageSize == 0) pageSize = 50;
-        Query query = entityManager.createNamedQuery("findByMany", InvoiceListModel.class)
+        Query query = entityManager.createNamedQuery("findByMany")
         .setParameter("lifeStatus", lifeStatus)
         .setParameter("invoiceId", invoiceId)
         .setParameter("customerId", customerId)
         .setParameter("date", date)
         .setParameter("finStatus", finStatus)
-        .setParameter("searchText", searchText)
-        .setParameter("sortColumn", sortColumn)
-        .setParameter("sortOrder", sortOrder);
+        .setParameter("searchText", searchText);
+        int total = query.getResultList().size();
+        Pageable pageable = new Pageable();
         query.setFirstResult(offset * pageSize);
         query.setMaxResults(pageSize);
         
         @SuppressWarnings("unchecked")
         List<InvoiceListModel> list = query.getResultList();
 
-        Page<InvoiceListModel> page = new PageImpl<>(list, PageRequest.of(offset, pageSize), list.size());
+        Page<InvoiceListModel> page = new PageImpl<>(list, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)), total);
         
         // CompletableFuture<Page<InvoiceListModel>> model = CompletableFuture.completedFuture(page);
         return page;
