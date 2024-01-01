@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.InvoiceService;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @RestController
 @RequestMapping("/Invoice")

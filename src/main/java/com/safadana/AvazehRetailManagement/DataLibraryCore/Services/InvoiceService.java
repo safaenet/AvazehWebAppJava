@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.InvoiceDAO;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
 import jakarta.persistence.EntityManager;
@@ -32,9 +31,7 @@ public class InvoiceService {
     }
 
     public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
-        int offset, int pageSize,
-        String sortColumn,
-        String sortOrder) {
+        int offset, int pageSize, String sortColumn, String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
         if(lifeStatus == null || lifeStatus == "") lifeStatus = "ALL";
         if(date == null || date == "") date = "ALL"; //else date = "%" + date + "%";

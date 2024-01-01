@@ -10,6 +10,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ColumnResult;
 import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -111,6 +113,7 @@ public class InvoiceModel {
     private List<InvoicePaymentModel> payments;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private DiscountTypes discountType = DiscountTypes.AMOUNT;
 
     @Column(nullable = false)

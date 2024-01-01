@@ -53,4 +53,8 @@ public class CustomerService {
     public CompletableFuture<List<ItemsForComboBox>> getCustomerNames() {
         return DAO.getCustomerNames();
     }
+
+    public CompletableFuture<Double> getCustomerBalance(int customerId) {
+        return DAO.getCustomerBalance(customerId);
+    }
 }

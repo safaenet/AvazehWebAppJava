@@ -56,4 +56,9 @@ public class CustomerController {
     public CompletableFuture<List<ItemsForComboBox>> getCustomerNames() {
         return service.getCustomerNames();
     }
+
+    @GetMapping("/CustomerBalance/{customerId}")
+    public CompletableFuture<Double> getCustomerBalance(@PathVariable int customerId) {
+        return service.getCustomerBalance(customerId);
+    }
 }
