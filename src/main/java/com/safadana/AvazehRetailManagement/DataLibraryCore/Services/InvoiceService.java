@@ -5,6 +5,7 @@ import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -48,10 +49,14 @@ public class InvoiceService {
         query.setParameter("date", date);
         query.setParameter("finStatus", finStatus);
         query.setParameter("searchText", searchText);
-        int startPosition = (pageSize) * pageSize;
-        query.setFirstResult(startPosition);
+        query.setFirstResult(offset * pageSize);
         query.setMaxResults(pageSize);
-        return query.;
+        @SuppressWarnings("unchecked")
+        List<InvoiceListModel> list = query.getResultList();
+
+        Page<InvoiceListModel> page = new PageImpl<>(list);
+        return page;
+
         // return DAO.findByMany(lifeStatus, invoiceId, customerId, date, finStatus, searchText,
         // PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
