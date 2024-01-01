@@ -31,34 +31,36 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
+    public Page<InvoiceListModel> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
         int offset, int pageSize,
         String sortColumn,
         String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
         if(lifeStatus == null || lifeStatus == "") lifeStatus = "ALL";
-        if(date == null || date == "") date = "%"; //else date = "%" + date + "%";
+        if(date == null || date == "") date = "ALL"; //else date = "%" + date + "%";
         if(finStatus == null || finStatus == "") finStatus = "ALL";
         if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
         if(sortColumn == null || sortColumn == "") sortColumn = "id";
         if(pageSize == 0) pageSize = 50;
-        Query query = entityManager.createNamedQuery("findByMany", InvoiceListModel.class);
-        query.setParameter("lifeStatus", lifeStatus);
-        query.setParameter("invoiceId", invoiceId);
-        query.setParameter("customerId", customerId);
-        query.setParameter("date", date);
-        query.setParameter("finStatus", finStatus);
-        query.setParameter("searchText", searchText);
+        Query query = entityManager.createNamedQuery("findByMany", InvoiceListModel.class)
+        .setParameter("lifeStatus", lifeStatus)
+        .setParameter("invoiceId", invoiceId)
+        .setParameter("customerId", customerId)
+        .setParameter("date", date)
+        .setParameter("finStatus", finStatus)
+        .setParameter("searchText", searchText)
+        .setParameter("sortColumn", sortColumn)
+        .setParameter("sortOrder", sortOrder);
         query.setFirstResult(offset * pageSize);
         query.setMaxResults(pageSize);
+        
         @SuppressWarnings("unchecked")
         List<InvoiceListModel> list = query.getResultList();
 
-        Page<InvoiceListModel> page = new PageImpl<>(list);
+        Page<InvoiceListModel> page = new PageImpl<>(list, PageRequest.of(offset, pageSize), list.size());
+        
+        // CompletableFuture<Page<InvoiceListModel>> model = CompletableFuture.completedFuture(page);
         return page;
-
-        // return DAO.findByMany(lifeStatus, invoiceId, customerId, date, finStatus, searchText,
-        // PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<InvoiceModel> getById(int id) {
