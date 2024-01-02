@@ -1,6 +1,5 @@
 package com.safadana.AvazehRetailManagement.Controllers;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,33 +11,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.InvoiceItemService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceItemModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.RecentSellPriceModel;
+import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.InvoicePaymentService;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoicePaymentModel;
 
 @RestController
-@RequestMapping("/InvoiceItem")
-public class InvoiceItemController {
+@RequestMapping("/InvoicePayment")
+public class InvoicePaymentController {
     @Autowired
-    InvoiceItemService service;
+    InvoicePaymentService service;
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<InvoiceItemModel> getById(@PathVariable int id) {
+    public CompletableFuture<InvoicePaymentModel> getById(@PathVariable int id) {
         return service.getById(id);
     }
 
     @PostMapping("/CreateUpdate")
-    public CompletableFuture<InvoiceItemModel> createUpdate(@RequestBody InvoiceItemModel item) {
+    public CompletableFuture<InvoicePaymentModel> createUpdate(@RequestBody InvoicePaymentModel item) {
         return service.createUpdate(item);
     }
 
     @DeleteMapping("/Delete/{id}")
     public void delete(@PathVariable int id) {
         service.deleteById(id);
-    }
-
-    @GetMapping("/RecentSellPrices/{customerId}/{productId}/{maxRecord}")
-    public CompletableFuture<List<RecentSellPriceModel>> getRecentSellPrices(@PathVariable int customerId, @PathVariable int productId, @PathVariable int maxRecord) {
-        return service.getRecentSellPrices(customerId, productId, maxRecord);
     }
 }

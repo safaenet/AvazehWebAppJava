@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.InvoiceDAO;
+import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.InvoiceItemDAO;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
@@ -23,6 +24,8 @@ import jakarta.persistence.Query;
 public class InvoiceService {
     @Autowired
     InvoiceDAO DAO;
+    @Autowired
+    InvoiceItemDAO itemDAO;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -68,6 +71,7 @@ public class InvoiceService {
     }
 
     public void deleteById(int id) {
+        itemDAO.deleteByInvoiceId(id);
         DAO.deleteById(id);
     }
 
@@ -83,5 +87,13 @@ public class InvoiceService {
         List<InvoiceListModel> list = query.getResultList();
         CompletableFuture<List<InvoiceListModel>> completedFuture = CompletableFuture.completedFuture(list);
         return completedFuture;
+    }
+
+    public CompletableFuture<Boolean> updateInvoiceDateUpdated(int invoiceId){
+        InvoiceModel invoice;
+        invoice = DAO.getReferenceById(invoiceId);
+        invoice.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
+        DAO.save(invoice);
+        return CompletableFuture.completedFuture(true);
     }
 }

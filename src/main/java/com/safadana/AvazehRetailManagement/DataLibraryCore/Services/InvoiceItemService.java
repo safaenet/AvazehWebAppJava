@@ -21,6 +21,8 @@ import jakarta.persistence.TypedQuery;
 public class InvoiceItemService {
     @Autowired
     InvoiceItemDAO DAO;
+    @Autowired
+    InvoiceService invoiceService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -28,19 +30,21 @@ public class InvoiceItemService {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
-    public CompletableFuture<InvoiceItemModel> createUpdateProduct(InvoiceItemModel item) {
-        if (PersianCalendarHelper.isValidPersianDateTime(item.getDateCreated()) == false)
-            item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
+    public CompletableFuture<InvoiceItemModel> createUpdate(InvoiceItemModel item) {
+        if (item.getDateCreated() == null || item.getDateCreated() == "") item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
         item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
-        return CompletableFuture.completedFuture(DAO.save(item));
+        InvoiceItemModel invoiceItem = DAO.save(item);
+        if(invoiceItem != null) invoiceService.updateInvoiceDateUpdated(invoiceItem.getInvoiceId());
+        return CompletableFuture.completedFuture(invoiceItem);
     }
 
     public void deleteById(int id) {
+        InvoiceItemModel item = DAO.getReferenceById(id);
+        invoiceService.updateInvoiceDateUpdated(item.getInvoiceId());
         DAO.deleteById(id);
     }
 
     public CompletableFuture<List<RecentSellPriceModel>> getRecentSellPrices(int customerId, int productId, int maxRecord) {
-        // return DAO.getRecentSellPrices(customerId, productId, maxRecord);
         TypedQuery<Tuple> query = entityManager.createQuery(
             "SELECT ii.sellPrice AS sellPrice, ii.dateCreated AS dateSold " +
             "FROM InvoiceModel i " +
