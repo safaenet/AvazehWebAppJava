@@ -4,7 +4,6 @@ import lombok.Data;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,59 +57,4 @@ public class InvoiceModel {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prevInvoiceId")
     private InvoiceModel prevInvoice;
-
-    @JsonIgnore
-    public double getTotalItemsBuySum() {
-        return items == null || items.isEmpty() ? 0
-                : items.stream().mapToDouble(InvoiceItemModel::getTotalBuyValue).sum();
-    }
-
-    @JsonIgnore
-    public double getTotalItemsSellSum() {
-        return items == null || items.isEmpty() ? 0
-                : items.stream().mapToDouble(InvoiceItemModel::getTotalSellValue).sum();
-    }
-
-    @JsonIgnore
-    public double getTotalDiscountAmount() {
-        return discountType == DiscountTypes.PERCENT ? (getTotalItemsSellSum() * discountValue / 100) : discountValue;
-    }
-
-    @JsonIgnore
-    public double getTotalInvoiceSum() {
-        return getTotalItemsSellSum() - getTotalDiscountAmount();
-    }
-
-    @JsonIgnore
-    public double getTotalPayments() {
-        return payments == null || payments.isEmpty() ? 0
-                : payments.stream().mapToDouble(InvoicePaymentModel::getPayAmount).sum();
-    }
-
-    @JsonIgnore
-    public double getTotalInvoiceBalance() {
-        return getTotalInvoiceSum() - getTotalPayments();
-    }
-
-    @JsonIgnore
-    public double getTotalBalance() {
-        if(prevInvoice == null) return getTotalInvoiceBalance();
-        else return getTotalInvoiceBalance() + prevInvoice.getTotalInvoiceBalance();
-    }
-
-    @JsonIgnore
-    public double getNetProfit() {
-        return getTotalInvoiceSum() - getTotalItemsBuySum();
-    }
-
-    @JsonIgnore
-    public double getCurrentProfit() {
-        return getNetProfit() - getTotalInvoiceBalance();
-    }
-
-    @JsonIgnore
-    public InvoiceFinancialStatus getInvoiceFinancialStatus() {
-        return getTotalBalance() == 0 ? InvoiceFinancialStatus.BALANCED
-                : getTotalBalance() > 0 ? InvoiceFinancialStatus.DEPTOR : InvoiceFinancialStatus.CREDITOR;
-    }
 }

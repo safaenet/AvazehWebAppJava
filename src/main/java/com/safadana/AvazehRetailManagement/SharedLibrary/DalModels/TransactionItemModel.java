@@ -2,8 +2,6 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.Helpers;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -38,21 +36,4 @@ public class TransactionItemModel {
 
     @Column(length = 50)
     private String descriptions;
-
-    // public double getCountValue() {
-    //     return Helpers.evaluateExpression(countString);
-    // }
-
-    public boolean isCountStringValid() {
-        try {
-            Helpers.evaluateExpression(countString);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public double getTotalValue() {
-        return getAmount() * getCountValue();
-    }
 }

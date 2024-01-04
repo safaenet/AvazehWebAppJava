@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 
 @Repository
 public interface CustomerDAO extends JpaRepository<CustomerModel, Integer> {
@@ -29,7 +29,7 @@ public interface CustomerDAO extends JpaRepository<CustomerModel, Integer> {
     CompletableFuture<Page<CustomerModel>> findByMany(String searchText, Pageable pageable);
 
     @Async
-    @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(c.id, c.fullName AS itemName) FROM CustomerModel c ORDER BY c.fullName")
+    @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(c.id, c.fullName AS itemName) FROM CustomerModel c ORDER BY c.fullName")
     CompletableFuture<List<ItemsForComboBox>> getCustomerNames();
 
     @Async

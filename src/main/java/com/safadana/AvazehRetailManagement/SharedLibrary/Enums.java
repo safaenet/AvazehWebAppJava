@@ -1,9 +1,6 @@
 package com.safadana.AvazehRetailManagement.SharedLibrary;
 
 public class Enums {
-    public enum SqlSearchMode {
-        AND, OR
-    }
 
     public enum ChequeStatus {
         NONE(0),
@@ -103,35 +100,4 @@ public class Enums {
             return value;
         }
     }
-    
-    public enum ProductStatus {
-        INACTIVE(0),
-        ACTIVE(1);
-    
-        private final int value;
-    
-        ProductStatus(int value) {
-            this.value = value;
-        }
-    
-        public int getValue() {
-            return value;
-        }
-    }
-
-    public enum SqlQuerySearchMode {
-        FORWARD(0),
-        BACKWARD(1);
-    
-        private final int value;
-    
-        SqlQuerySearchMode(int value) {
-            this.value = value;
-        }
-    
-        public int getValue() {
-            return value;
-        }
-    }
-    
 }
