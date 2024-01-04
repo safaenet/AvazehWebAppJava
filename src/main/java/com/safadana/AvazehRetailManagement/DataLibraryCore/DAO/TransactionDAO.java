@@ -37,13 +37,13 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Integer>
         CompletableFuture<Page<TransactionListModel>> findByMany(String searchText, Pageable pageable);
 
         @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "
                         + "UNION " +
-                        "SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(1 AS id, ti.title AS itemName) FROM TransactionItemModel ti")
+                        "SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(1 AS id, ti.title AS itemName) FROM TransactionItemModel ti")
         CompletableFuture<List<ItemsForComboBox>> getProductItems();
 
         @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
                         + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
         CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") int id);
 }

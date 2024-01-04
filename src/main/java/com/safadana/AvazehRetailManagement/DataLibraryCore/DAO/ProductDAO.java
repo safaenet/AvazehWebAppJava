@@ -27,7 +27,7 @@ public interface ProductDAO extends JpaRepository<ProductModel, Integer> {
     CompletableFuture<Page<ProductModel>> findByMany(String searchText, Pageable pageable);
 
     @Async
-    @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox(p.id AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true")
+    @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(p.id AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true")
     CompletableFuture<List<ItemsForComboBox>> getProductItems();
 
     @Async
