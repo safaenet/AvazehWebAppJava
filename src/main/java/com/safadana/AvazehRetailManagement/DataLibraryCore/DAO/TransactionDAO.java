@@ -11,9 +11,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @Repository
 public interface TransactionDAO extends JpaRepository<TransactionModel, Integer> {

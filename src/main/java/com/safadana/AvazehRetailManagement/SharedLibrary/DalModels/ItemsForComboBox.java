@@ -1,4 +1,4 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels;
+package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
 
 import lombok.Data;
 

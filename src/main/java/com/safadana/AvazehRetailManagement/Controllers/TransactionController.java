@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.TransactionService;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @RestController
 @RequestMapping("/Transaction")

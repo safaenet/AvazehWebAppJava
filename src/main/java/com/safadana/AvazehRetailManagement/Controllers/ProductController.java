@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.ProductService;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @RestController
 @RequestMapping("/Product")

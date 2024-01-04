@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 
 @Repository
 public interface CustomerDAO extends JpaRepository<CustomerModel, Integer> {

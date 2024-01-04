@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DtoModels.ItemsForComboBox;
 
 @Repository
 public interface ProductDAO extends JpaRepository<ProductModel, Integer> {
