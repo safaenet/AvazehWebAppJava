@@ -21,7 +21,7 @@ public class ProductService {
     ProductDAO DAO;
 
     public CompletableFuture<List<ProductModel>> getAll() {
-        return CompletableFuture.completedFuture(DAO.findAll());
+        return CompletableFuture.completedFuture(DAO.findAll(Sort.by(Sort.Direction.ASC, "productName")));
     }
 
     public CompletableFuture<Page<ProductModel>> getWithPagination(String searchText, int offset, int pageSize,
