@@ -2,6 +2,7 @@ package com.safadana.AvazehRetailManagement.DataLibraryCore.Services;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,8 +50,21 @@ public class ProductService {
         if (item.getDateCreated() == null || item.getDateCreated() == "") {
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
         }
-        item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
-        return CompletableFuture.completedFuture(DAO.save(item));
+        if(item.getId() <= 0){ //New Item
+            try {
+                int newId = DAO.getNextId().get();
+                item.setId(newId);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        if(item.getId() > 0){
+            item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
+            return CompletableFuture.completedFuture(DAO.save(item));
+        }
+        return CompletableFuture.failedFuture(new Throwable("Error: Either there was a problem connecting to DB, or 'Id' was less than Zero."));
     }
 
     public void deleteById(int id) {

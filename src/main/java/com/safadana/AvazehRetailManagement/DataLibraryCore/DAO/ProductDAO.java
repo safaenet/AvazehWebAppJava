@@ -20,6 +20,7 @@ public interface ProductDAO extends JpaRepository<ProductModel, Integer> {
 
     @Async
     @Query("FROM ProductModel WHERE UPPER(productName) LIKE ?1 " +
+            "OR CAST(id AS text) LIKE ?1 " +
             "OR UPPER(descriptions) LIKE ?1 " +
             "OR UPPER(barcode) LIKE ?1 " +
             "OR dateCreated LIKE ?1 " +
@@ -33,4 +34,8 @@ public interface ProductDAO extends JpaRepository<ProductModel, Integer> {
     @Async
     @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel(u.id AS id, u.unitName) FROM ProductUnitModel u")
     CompletableFuture<List<ProductUnitModel>> getProductUnits();
+
+    @Async
+    @Query("SELECT COALESCE(MAX(p.id) + 1, 1) FROM ProductModel p")
+    CompletableFuture<Integer> getNextId();
 }
