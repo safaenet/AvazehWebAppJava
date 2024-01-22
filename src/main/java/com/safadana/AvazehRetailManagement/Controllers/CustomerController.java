@@ -46,6 +46,7 @@ public class CustomerController {
 
     @PostMapping("/CreateUpdate")
     public CompletableFuture<CustomerModel> createUpdate(@RequestBody CustomerModel product) {
+        System.out.println(product);
         return service.createUpdate(product);
     }
 

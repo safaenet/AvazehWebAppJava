@@ -28,43 +28,57 @@ public class ProductService {
     public CompletableFuture<Page<ProductModel>> getWithPagination(String searchText, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
-            Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-            if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
-            if(sortColumn == null || sortColumn == "") sortColumn = "id"; 
-            if(pageSize == 0) pageSize = 50;
+        Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        if (searchText == null || searchText == "")
+            searchText = "%";
+        else
+            searchText = "%" + searchText.toUpperCase() + "%";
+        if (sortColumn == null || sortColumn == "")
+            sortColumn = "id";
+        if (pageSize == 0)
+            pageSize = 50;
         return DAO.findByMany(searchText,
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<ProductModel> getById(int id) {
-        if(id == 0) return null;
+        if (id == 0)
+            return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
     public CompletableFuture<ProductModel> getByBarcode(String barcode) {
-        if(barcode == null || barcode == "") return null;
+        if (barcode == null || barcode == "")
+            return null;
         return CompletableFuture.completedFuture(DAO.findByBarcode(barcode));
     }
 
     public CompletableFuture<ProductModel> createUpdate(ProductModel item) {
         if (item.getDateCreated() == null || item.getDateCreated() == "") {
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
-        }
-        if(item.getId() <= 0){ //New Item
-            try {
-                int newId = DAO.getNextId().get();
-                item.setId(newId);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
-        }
-        if(item.getId() > 0){
             item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
-            return CompletableFuture.completedFuture(DAO.save(item));
         }
-        return CompletableFuture.failedFuture(new Throwable("Error: Either there was a problem connecting to DB, or 'Id' was less than Zero."));
+        // if(item.getId() <= 0){ //New Item
+        // try {
+        // int newId = DAO.getNextId().get();
+        // item.setId(newId);
+        // } catch (InterruptedException e) {
+        // e.printStackTrace();
+        // } catch (ExecutionException e) {
+        // e.printStackTrace();
+        // }
+        // }
+        // if(item.getId() > 0){
+        // item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
+        // return CompletableFuture.completedFuture(DAO.save(item));
+        // }
+        // return CompletableFuture.failedFuture(new Throwable("Error: Either there was
+        // a problem connecting to DB, or 'Id' was less than Zero."));
+
+        if (item.getId() > 0) {
+            item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
+        }
+        return CompletableFuture.completedFuture(DAO.save(item));
     }
 
     public void deleteById(int id) {

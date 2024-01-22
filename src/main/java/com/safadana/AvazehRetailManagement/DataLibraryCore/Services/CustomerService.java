@@ -43,6 +43,7 @@ public class CustomerService {
         if (item.getDateJoined() == null || item.getDateJoined() == "") {
             item.setDateJoined(PersianCalendarHelper.getPersianDateTime());
         }
+        
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
