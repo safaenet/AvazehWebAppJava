@@ -40,7 +40,7 @@ public class ChequeController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<ChequeModel> getById(@PathVariable int id) {
+    public CompletableFuture<ChequeModel> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
@@ -50,7 +50,7 @@ public class ChequeController {
     }
 
     @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 

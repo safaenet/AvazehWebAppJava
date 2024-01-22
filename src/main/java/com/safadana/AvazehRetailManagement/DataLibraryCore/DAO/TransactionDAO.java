@@ -16,7 +16,7 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionLi
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
 
 @Repository
-public interface TransactionDAO extends JpaRepository<TransactionModel, Integer> {
+public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
 
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel" +
@@ -45,5 +45,5 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Integer>
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
                         + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
-        CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") int id);
+        CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") Long id);
 }

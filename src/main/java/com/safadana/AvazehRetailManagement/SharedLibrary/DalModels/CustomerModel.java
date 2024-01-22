@@ -13,7 +13,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -29,7 +28,7 @@ public class CustomerModel {
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
     })
-    private int id;
+    private Long id;
 
     @Column(length = 50, nullable = false)
     private String fullName;
@@ -50,7 +49,6 @@ public class CustomerModel {
     @Column(columnDefinition = "TEXT")
     private String descriptions;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @JoinColumn(name = "customerId")
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<PhoneNumberModel> phoneNumbers;
 }

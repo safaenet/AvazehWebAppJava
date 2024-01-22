@@ -25,7 +25,7 @@ public class InvoiceItemController {
     InvoiceItemService service;
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<InvoiceItemModel> getById(@PathVariable int id) {
+    public CompletableFuture<InvoiceItemModel> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
@@ -35,12 +35,12 @@ public class InvoiceItemController {
     }
 
     @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 
     @GetMapping("/RecentSellPrices/{customerId}/{productId}/{maxRecord}")
-    public CompletableFuture<List<RecentSellPriceModel>> getRecentSellPrices(@PathVariable int customerId, @PathVariable int productId, @PathVariable int maxRecord) {
+    public CompletableFuture<List<RecentSellPriceModel>> getRecentSellPrices(@PathVariable Long customerId, @PathVariable Long productId, @PathVariable int maxRecord) {
         return service.getRecentSellPrices(customerId, productId, maxRecord);
     }
 }

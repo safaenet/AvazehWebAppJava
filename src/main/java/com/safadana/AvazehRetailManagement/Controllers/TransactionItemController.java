@@ -26,12 +26,12 @@ public class TransactionItemController {
     TransactionItemService service;
 
     @GetMapping("/GetAll/{transactionId}")
-    public CompletableFuture<List<TransactionItemModel>> getAll(@PathVariable int transactionId) {
+    public CompletableFuture<List<TransactionItemModel>> getAll(@PathVariable Long transactionId) {
         return service.getAll(transactionId);
     }
 
     @GetMapping("/GetWithPagination/{transactionId}")
-    public CompletableFuture<Page<TransactionItemModel>> getWithPagination(@PathVariable int transactionId,
+    public CompletableFuture<Page<TransactionItemModel>> getWithPagination(@PathVariable Long transactionId,
             @RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
@@ -40,7 +40,7 @@ public class TransactionItemController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<TransactionItemModel> getById(@PathVariable int id) {
+    public CompletableFuture<TransactionItemModel> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
@@ -50,7 +50,7 @@ public class TransactionItemController {
     }
 
     @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 }

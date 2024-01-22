@@ -33,7 +33,7 @@ public class InvoiceController {
 
     @GetMapping("/GetWithPagination")
     public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String lifeStatus,
-            @RequestParam int invoiceId, @RequestParam int customerId, @RequestParam String date,
+            @RequestParam Long invoiceId, @RequestParam Long customerId, @RequestParam String date,
             @RequestParam String finStatus, @RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
@@ -43,7 +43,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<InvoiceModel> getById(@PathVariable int id) {
+    public CompletableFuture<InvoiceModel> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
@@ -53,7 +53,7 @@ public class InvoiceController {
     }
 
     @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 
@@ -63,7 +63,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/GetPrevInvoices/{invoiceId}/{customerId}")
-    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(@PathVariable int invoiceId, @PathVariable int customerId) {
+    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(@PathVariable Long invoiceId, @PathVariable Long customerId) {
         return service.getPrevInvoices(invoiceId, customerId);
     }
 }

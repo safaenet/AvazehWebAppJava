@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InvoiceListModel {
-    private int id;
-    private int customerId;
+    private Long id;
+    private Long customerId;
     private String customerFullName;
     private String about;
     private String dateCreated;
@@ -18,7 +18,7 @@ public class InvoiceListModel {
     private String descriptions;
     private double totalInvoiceSum;
     private double totalInvoicePayments;
-    private Integer prevInvoiceId;
+    private Long prevInvoiceId;
     private double prevInvoiceBalance;
-    private Integer fwdInvoiceId;
+    private Long fwdInvoiceId;
 }

@@ -26,7 +26,7 @@ public class InvoiceItemService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public CompletableFuture<InvoiceItemModel> getById(int id) {
+    public CompletableFuture<InvoiceItemModel> getById(Long id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
@@ -38,13 +38,13 @@ public class InvoiceItemService {
         return CompletableFuture.completedFuture(invoiceItem);
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         InvoiceItemModel item = DAO.getReferenceById(id);
         invoiceService.updateInvoiceDateUpdated(item.getInvoiceId());
         DAO.deleteById(id);
     }
 
-    public CompletableFuture<List<RecentSellPriceModel>> getRecentSellPrices(int customerId, int productId, int maxRecord) {
+    public CompletableFuture<List<RecentSellPriceModel>> getRecentSellPrices(Long customerId, Long productId, int maxRecord) {
         TypedQuery<Tuple> query = entityManager.createQuery(
             "SELECT ii.sellPrice AS sellPrice, ii.dateCreated AS dateSold " +
             "FROM InvoiceModel i " +

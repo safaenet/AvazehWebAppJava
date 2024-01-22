@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class InvoiceItemForPrintModel {
-    private int id;
+    private Long id;
     private String productName;
     private long sellPrice;
     private String countString;

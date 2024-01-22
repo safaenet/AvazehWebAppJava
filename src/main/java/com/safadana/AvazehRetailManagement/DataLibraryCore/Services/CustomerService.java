@@ -34,7 +34,7 @@ public class CustomerService {
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<CustomerModel> getById(int id) {
+    public CompletableFuture<CustomerModel> getById(Long id) {
         if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
@@ -47,7 +47,7 @@ public class CustomerService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         DAO.deleteById(id);
     }
 
@@ -55,7 +55,7 @@ public class CustomerService {
         return DAO.getCustomerNames();
     }
 
-    public CompletableFuture<Double> getCustomerBalance(int customerId) {
+    public CompletableFuture<Double> getCustomerBalance(Long customerId) {
         return DAO.getCustomerBalance(customerId);
     }
 }

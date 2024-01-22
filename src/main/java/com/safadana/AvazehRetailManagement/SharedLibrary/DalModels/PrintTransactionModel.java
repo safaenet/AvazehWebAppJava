@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 public class PrintTransactionModel {
-    private int transactionId;
+    private Long transactionId;
     private List<TransactionItemForPrintModel> items;
     private String fileName;
     private String transactionDateCreated;

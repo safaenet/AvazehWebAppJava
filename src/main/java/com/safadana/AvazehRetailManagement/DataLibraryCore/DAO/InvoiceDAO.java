@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
 
 @Repository
-public interface InvoiceDAO extends JpaRepository<InvoiceModel, Integer> {
+public interface InvoiceDAO extends JpaRepository<InvoiceModel, Long> {
 
         @Async
         @Query("SELECT DISTINCT i.about AS itemName FROM InvoiceModel i WHERE i.about IS NOT NULL ORDER BY i.about")

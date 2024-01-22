@@ -23,7 +23,7 @@ public class InvoicePaymentController {
     InvoicePaymentService service;
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<InvoicePaymentModel> getById(@PathVariable int id) {
+    public CompletableFuture<InvoicePaymentModel> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
@@ -33,7 +33,7 @@ public class InvoicePaymentController {
     }
 
     @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 }

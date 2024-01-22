@@ -35,7 +35,7 @@ public class TransactionService {
         PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<TransactionModel> getById(int id) {
+    public CompletableFuture<TransactionModel> getById(Long id) {
         if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
@@ -48,7 +48,7 @@ public class TransactionService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         DAO.deleteById(id);
     }
 
@@ -56,7 +56,7 @@ public class TransactionService {
         return DAO.getProductItems();
     }
 
-    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(int id) {
+    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(Long id) {
         return DAO.getTransactionNames(id);
     }
 }

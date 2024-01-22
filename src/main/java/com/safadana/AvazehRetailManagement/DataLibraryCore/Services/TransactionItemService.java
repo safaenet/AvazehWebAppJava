@@ -18,11 +18,11 @@ public class TransactionItemService {
     @Autowired
     TransactionItemDAO DAO;
 
-    public CompletableFuture<List<TransactionItemModel>> getAll(int transactionId) {
+    public CompletableFuture<List<TransactionItemModel>> getAll(Long transactionId) {
         return DAO.findByTransactionId(transactionId);
     }
 
-    public CompletableFuture<Page<TransactionItemModel>> getWithPagination(int transactionId, String searchText,
+    public CompletableFuture<Page<TransactionItemModel>> getWithPagination(Long transactionId, String searchText,
             int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
@@ -34,7 +34,7 @@ public class TransactionItemService {
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<TransactionItemModel> getById(int id) {
+    public CompletableFuture<TransactionItemModel> getById(Long id) {
         if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
@@ -47,7 +47,7 @@ public class TransactionItemService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         DAO.deleteById(id);
     }
 }

@@ -28,7 +28,7 @@ public class TransactionModel {
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
     })
-    private int id;
+    private long id;
 
     @Column(length = 100, nullable = false)
     private String fileName;

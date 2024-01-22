@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceItemModel;
 
 @Repository
-public interface InvoiceItemDAO extends JpaRepository<InvoiceItemModel, Integer> {
+public interface InvoiceItemDAO extends JpaRepository<InvoiceItemModel, Long> {
 
-    void deleteByInvoiceId(int invoiceId);
-    List<InvoiceItemModel> findByInvoiceId(int invoiceId);
+    void deleteByInvoiceId(Long invoiceId);
+    List<InvoiceItemModel> findByInvoiceId(Long invoiceId);
 }

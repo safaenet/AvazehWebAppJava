@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class TransactionItemForPrintModel {
-    private int id;
+    private Long id;
     private String title;
     private long amount;
     private String countString;

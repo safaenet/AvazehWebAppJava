@@ -40,7 +40,7 @@ public class CustomerController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<CustomerModel> getById(@PathVariable int id) {
+    public CompletableFuture<CustomerModel> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
@@ -51,7 +51,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 
@@ -61,7 +61,7 @@ public class CustomerController {
     }
 
     @GetMapping("/CustomerBalance/{customerId}")
-    public CompletableFuture<Double> getCustomerBalance(@PathVariable int customerId) {
+    public CompletableFuture<Double> getCustomerBalance(@PathVariable Long customerId) {
         return service.getCustomerBalance(customerId);
     }
 }

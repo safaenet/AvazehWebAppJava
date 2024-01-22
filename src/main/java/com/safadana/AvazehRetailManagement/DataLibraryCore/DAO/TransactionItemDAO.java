@@ -13,10 +13,10 @@ import org.springframework.stereotype.Repository;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionItemModel;
 
 @Repository
-public interface TransactionItemDAO extends JpaRepository<TransactionItemModel, Integer> {
+public interface TransactionItemDAO extends JpaRepository<TransactionItemModel, Long> {
 
         @Async
-        CompletableFuture<List<TransactionItemModel>> findByTransactionId(int transactionId);
+        CompletableFuture<List<TransactionItemModel>> findByTransactionId(Long transactionId);
 
         @Async
         @Query("SELECT ti FROM TransactionItemModel ti WHERE " +
@@ -26,6 +26,6 @@ public interface TransactionItemDAO extends JpaRepository<TransactionItemModel, 
                         "ti.dateCreated LIKE ?1 OR " +
                         "ti.dateUpdated LIKE ?1 OR " +
                         "UPPER(ti.descriptions) LIKE ?1")
-        CompletableFuture<Page<TransactionItemModel>> findByMany(int transactionId, String searchText,
+        CompletableFuture<Page<TransactionItemModel>> findByMany(Long transactionId, String searchText,
                         Pageable pageable);
 }

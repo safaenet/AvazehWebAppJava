@@ -33,7 +33,7 @@ public class ChequeService {
         return DAO.findByMany(searchText, persianDate, chequeStatus, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<ChequeModel> getById(int id) {
+    public CompletableFuture<ChequeModel> getById(Long id) {
         if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
@@ -42,7 +42,7 @@ public class ChequeService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         DAO.deleteById(id);
     }
 

@@ -22,7 +22,7 @@ public class ProductUnitModel {
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
     })
-    private int id;
+    private Long id;
 
     @Column(length = 10, nullable = false)
     private String unitName;

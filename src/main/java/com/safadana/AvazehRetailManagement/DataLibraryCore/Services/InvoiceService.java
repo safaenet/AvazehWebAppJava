@@ -33,7 +33,7 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, int invoiceId, int customerId, String date, String finStatus, String searchText,
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, Long invoiceId, Long customerId, String date, String finStatus, String searchText,
         int offset, int pageSize, String sortColumn, String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
         if(lifeStatus == null || lifeStatus == "") lifeStatus = "ALL";
@@ -59,7 +59,7 @@ public class InvoiceService {
         return completedFuture;
     }
 
-    public CompletableFuture<InvoiceModel> getById(int id) {
+    public CompletableFuture<InvoiceModel> getById(Long id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
@@ -70,7 +70,7 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         itemDAO.deleteByInvoiceId(id);
         DAO.deleteById(id);
     }
@@ -79,7 +79,7 @@ public class InvoiceService {
         return DAO.getInvoiceAbouts();
     }
 
-    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(int invoiceId, int customerId) {
+    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(Long invoiceId, Long customerId) {
         Query query = entityManager.createNamedQuery("findPrevInvoiceList")
         .setParameter("invoiceId", invoiceId)
         .setParameter("customerId", customerId);
@@ -89,7 +89,7 @@ public class InvoiceService {
         return completedFuture;
     }
 
-    public CompletableFuture<Boolean> updateInvoiceDateUpdated(int invoiceId){
+    public CompletableFuture<Boolean> updateInvoiceDateUpdated(Long invoiceId){
         InvoiceModel invoice;
         invoice = DAO.getReferenceById(invoiceId);
         invoice.setDateUpdated(PersianCalendarHelper.getPersianDateTime());

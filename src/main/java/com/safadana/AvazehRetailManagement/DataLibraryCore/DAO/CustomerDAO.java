@@ -15,7 +15,7 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 
 @Repository
-public interface CustomerDAO extends JpaRepository<CustomerModel, Integer> {
+public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
 
     @Async
     @Query("SELECT c FROM CustomerModel c LEFT JOIN FETCH c.phoneNumbers pn WHERE " +
@@ -34,5 +34,5 @@ public interface CustomerDAO extends JpaRepository<CustomerModel, Integer> {
 
     @Async
     @Query(name = "customerBalance")
-    CompletableFuture<Double> getCustomerBalance(@Param("cId") int customerId);
+    CompletableFuture<Double> getCustomerBalance(@Param("cId") Long customerId);
 }

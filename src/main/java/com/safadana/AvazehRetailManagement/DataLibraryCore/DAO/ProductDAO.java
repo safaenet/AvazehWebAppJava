@@ -15,7 +15,7 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel;
 
 @Repository
-public interface ProductDAO extends JpaRepository<ProductModel, Integer> {
+public interface ProductDAO extends JpaRepository<ProductModel, Long> {
     ProductModel findByBarcode(String barcode);
 
     @Async
@@ -34,8 +34,4 @@ public interface ProductDAO extends JpaRepository<ProductModel, Integer> {
     @Async
     @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel(u.id AS id, u.unitName) FROM ProductUnitModel u")
     CompletableFuture<List<ProductUnitModel>> getProductUnits();
-
-    @Async
-    @Query("SELECT COALESCE(MAX(p.id) + 1, 1) FROM ProductModel p")
-    CompletableFuture<Integer> getNextId();
 }

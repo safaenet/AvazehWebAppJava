@@ -23,9 +23,9 @@ public class TransactionItemModel {
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
     })
-    private int id;
+    private Long id;
 
-    private int transactionId;
+    private Long transactionId;
 
     @Column(length = 100, nullable = false)
     private String title;

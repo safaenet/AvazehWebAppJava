@@ -31,7 +31,7 @@ public class InvoiceModel {
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
     })
-    private int id;
+    private Long id;
 
     @ManyToOne(optional = false)
     private CustomerModel customer;

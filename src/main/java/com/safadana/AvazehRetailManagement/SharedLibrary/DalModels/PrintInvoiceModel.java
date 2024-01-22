@@ -8,9 +8,9 @@ import lombok.Data;
 
 @Data
 public class PrintInvoiceModel {
-    private int invoiceId;
+    private Long invoiceId;
     private List<InvoiceItemForPrintModel> products;
-    private int customerId;
+    private Long customerId;
     private String customerFullName;
     private String customerPhoneNumber;
     private String invoiceDateCreated;

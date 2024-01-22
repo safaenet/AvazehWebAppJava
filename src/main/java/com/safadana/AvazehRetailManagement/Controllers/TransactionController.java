@@ -42,7 +42,7 @@ public class TransactionController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<TransactionModel> getById(@PathVariable int id) {
+    public CompletableFuture<TransactionModel> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
@@ -52,7 +52,7 @@ public class TransactionController {
     }
 
     @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 
@@ -62,7 +62,7 @@ public class TransactionController {
     }
 
     @GetMapping("/TransactionNames")
-    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@RequestParam Optional<Integer> id) {
+    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@RequestParam Optional<Long> id) {
         return service.getTransactionNames(id.isEmpty() ? 0 : id.get());
     }
 }

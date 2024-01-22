@@ -2,8 +2,6 @@ package com.safadana.AvazehRetailManagement.DataLibraryCore.Services;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +39,7 @@ public class ProductService {
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<ProductModel> getById(int id) {
+    public CompletableFuture<ProductModel> getById(Long id) {
         if (id == 0)
             return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
@@ -60,7 +58,7 @@ public class ProductService {
         }
         // if(item.getId() <= 0){ //New Item
         // try {
-        // int newId = DAO.getNextId().get();
+        // Long newId = DAO.getNextId().get();
         // item.setId(newId);
         // } catch (InterruptedException e) {
         // e.printStackTrace();
@@ -81,7 +79,7 @@ public class ProductService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(int id) {
+    public void deleteById(Long id) {
         DAO.deleteById(id);
     }
 

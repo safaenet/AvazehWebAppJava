@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 
 @Repository
-public interface ChequeDAO extends JpaRepository<ChequeModel, Integer> {
+public interface ChequeDAO extends JpaRepository<ChequeModel, Long> {
 
         @Async
         @Query("SELECT c FROM ChequeModel c WHERE (" +

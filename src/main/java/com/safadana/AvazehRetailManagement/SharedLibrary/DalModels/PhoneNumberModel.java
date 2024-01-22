@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -22,9 +24,11 @@ public class PhoneNumberModel {
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
     })
-    private int id;
+    private Long id;
 
-    private int customerId;
+    @ManyToOne
+    @JoinColumn(name = "customerId")
+    private CustomerModel customer;
 
     @Column(length = 50, nullable = false)
     private String phoneNumber;

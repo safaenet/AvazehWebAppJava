@@ -41,7 +41,7 @@ public class ProductController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<ProductModel> getById(@PathVariable int id) {
+    public CompletableFuture<ProductModel> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 
@@ -56,7 +56,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/Delete/{id}")
-    public void delete(@PathVariable int id) {
+    public void delete(@PathVariable Long id) {
         service.deleteById(id);
     }
 
