@@ -51,4 +51,7 @@ public class CustomerModel {
 
     @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<PhoneNumberModel> phoneNumbers;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InvoiceModel> invoices;
 }

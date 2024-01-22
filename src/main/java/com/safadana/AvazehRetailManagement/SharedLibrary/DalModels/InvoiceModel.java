@@ -8,6 +8,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.*;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +35,7 @@ public class InvoiceModel {
     })
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     private CustomerModel customer;
 
     @Column(length = 50)
@@ -45,11 +47,11 @@ public class InvoiceModel {
     @Column(length = 20)
     private String dateUpdated;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinColumn(name = "invoiceId")
     private List<InvoiceItemModel> items;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinColumn(name = "invoiceId")
     private List<InvoicePaymentModel> payments;
 
