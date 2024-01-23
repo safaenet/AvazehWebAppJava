@@ -19,7 +19,7 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionModel
 public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
 
         @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel" +
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionListModel" +
                 "(t.id, t.fileName, t.dateCreated, t.dateUpdated, t.descriptions, " +
                 "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) > 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalPositiveItemsSum, " +
                 "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) < 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalNegativeItemsSum) " +
@@ -37,13 +37,13 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
         CompletableFuture<Page<TransactionListModel>> findByMany(String searchText, Pageable pageable);
 
         @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "
                         + "UNION " +
-                        "SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(1 AS id, ti.title AS itemName) FROM TransactionItemModel ti")
+                        "SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox(1 AS id, ti.title AS itemName) FROM TransactionItemModel ti")
         CompletableFuture<List<ItemsForComboBox>> getProductItems();
 
         @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
                         + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
         CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") Long id);
 }

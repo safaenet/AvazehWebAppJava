@@ -111,7 +111,7 @@
     </named-native-query>
     
     <sql-result-set-mapping name="InvoiceListMapping">
-        <constructor-result target-class="com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel">
+        <constructor-result target-class="com.safadana.AvazehRetailManagement.SharedLibrary.Models.InvoiceListModel">
             <column name="id" type="java.lang.Long"/>
             <column name="customerId" type="java.lang.Long"/>
             <column name="customerFullName" type="java.lang.String"/>
