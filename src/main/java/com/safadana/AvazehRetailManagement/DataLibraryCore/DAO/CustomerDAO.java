@@ -30,7 +30,7 @@ public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
     // CompletableFuture<Page<CustomerModel>> findByMany(String searchText, Pageable pageable);
 
     @Async
-    @Query("SELECT new com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModelDto(c.id, c.fullName, c.companyName, c.emailAddress, c.postAddress, c.dateJoined, c.descriptions, p as phoneNumbers) FROM CustomerModel c JOIN c.phoneNumbers p WHERE " +
+    @Query("SELECT new com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModelDto(c.id, c.fullName, c.companyName, c.emailAddress, c.postAddress, c.dateJoined, c.descriptions, p) FROM CustomerModel c JOIN c.phoneNumbers p WHERE " +
             "p.phoneNumber LIKE ?1 " +
             "OR UPPER(c.fullName) LIKE ?1 " +
             "OR UPPER(c.companyName) LIKE ?1 " +
