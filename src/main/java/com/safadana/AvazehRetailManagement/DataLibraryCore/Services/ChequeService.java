@@ -10,8 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.ChequeDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ChequeModel;
 
 @Service
 public class ChequeService {

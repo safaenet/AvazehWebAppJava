@@ -10,10 +10,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.TransactionDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionListModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionListModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionModel;
 
 @Service
 public class TransactionService {

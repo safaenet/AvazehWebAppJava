@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.InvoicePaymentService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoicePaymentModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.InvoicePaymentModel;
 
 @CrossOrigin
 @RestController

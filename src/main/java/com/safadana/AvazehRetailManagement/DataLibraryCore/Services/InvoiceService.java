@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.InvoiceDAO;
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.InvoiceItemDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceListModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoiceModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.InvoiceListModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.InvoiceModel;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

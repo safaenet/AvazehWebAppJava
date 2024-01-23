@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.InvoicePaymentDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoicePaymentModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.InvoicePaymentModel;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

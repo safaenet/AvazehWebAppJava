@@ -1,4 +1,4 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
+package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
 
 import java.util.List;
 
@@ -17,5 +17,5 @@ public class CustomerModelDto {
     private String postAddress;
     private String dateJoined;
     private String descriptions;
-    private List<PhoneNumberModel> phoneNumbers;
+    private List<PhoneNumberModelDto> phoneNumbers;
 }

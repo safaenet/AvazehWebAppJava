@@ -1,22 +1,21 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
+package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-
-import com.safadana.AvazehRetailManagement.SharedLibrary.Enums.ChequeStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "cheques")
+@Table(name = "invoiceitems")
 @Data
-public class ChequeModel {
+public class InvoiceItemModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -26,41 +25,35 @@ public class ChequeModel {
     })
     private Long id;
 
-    @Column(length = 50, nullable = false)
-    private String drawer;
+    private Long invoiceId;
 
-    @Column(length = 50, nullable = false)
-    private String orderer;
+    @ManyToOne(optional = false)
+    private ProductModel product;
 
     @Column(nullable = false)
-    private long payAmount;
+    private long buyPrice;
 
-    @Column(length = 100)
-    private String about;
-
-    @Column(nullable = false, length = 20)
-    private String issueDate;
-
-    @Column(nullable = false, length = 10)
-    private String dueDate;
+    @Column(nullable = false)
+    private long sellPrice;
 
     @Column(length = 50, nullable = false)
-    private String bankName;
+    private String countString = "1";
+    
+    @Column(nullable = false)
+    private double countValue = 1;
 
-    @Column(length = 25)
-    private String serialNumber;
+    @ManyToOne
+    private ProductUnitModel unit;
 
-    @Column(length = 20)
-    private String identifier; // Sayyaad Code
-
-    @Column(columnDefinition="TEXT")
-    private String descriptions;
-
-    private ChequeStatus statusType;
+    @Column(length = 20, nullable = false)
+    private String dateCreated;
 
     @Column(length = 20)
-    private String statusDate;
+    private String dateUpdated;
+
+    @Column(nullable = false)
+    private boolean delivered;
 
     @Column(length = 50)
-    private String statusText;
+    private String descriptions;
 }

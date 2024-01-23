@@ -1,4 +1,4 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
+package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -11,10 +11,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Data
 @Entity
-@Table(name = "userdescriptions")
-public class UserDescriptionModel {
+@Table(name = "invoicepayments")
+@Data
+public class InvoicePaymentModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -24,9 +24,17 @@ public class UserDescriptionModel {
     })
     private Long id;
     
-    @Column(length = 30)
-    private String descriptionTitle;
+    private Long invoiceId;
 
-    @Column(columnDefinition="TEXT", nullable = false)
-    private String descriptionText;
+    @Column(length = 20, nullable = false)
+    private String dateCreated;
+
+    @Column(length = 20)
+    private String dateUpdated;
+
+    @Column(nullable = false)
+    private double payAmount;
+
+    @Column(columnDefinition="TEXT")
+    private String descriptions;
 }

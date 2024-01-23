@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.InvoicePaymentModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.InvoicePaymentModel;
 
 @Repository
 public interface InvoicePaymentDAO extends JpaRepository<InvoicePaymentModel, Long> {

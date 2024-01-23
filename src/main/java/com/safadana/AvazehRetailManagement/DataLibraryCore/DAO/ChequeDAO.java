@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ChequeModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ChequeModel;
 
 @Repository
 public interface ChequeDAO extends JpaRepository<ChequeModel, Long> {

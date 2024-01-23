@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.List;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.UserDescriptionModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.UserDescriptionModel;
 
 @Data
 public class PrintSettingsModel {

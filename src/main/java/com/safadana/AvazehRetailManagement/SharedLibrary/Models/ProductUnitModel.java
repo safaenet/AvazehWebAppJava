@@ -1,4 +1,4 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
+package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -12,10 +12,9 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "products")
+@Table(name = "productunits")
 @Data
-public class ProductModel {
-
+public class ProductUnitModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -25,30 +24,6 @@ public class ProductModel {
     })
     private Long id;
 
-    @Column(length = 100)
-    private String productName;
-
-    @Column(nullable = false)
-    private long buyPrice = 0;
-
-    @Column(nullable = false)
-    private long sellPrice = 0;
-
-    @Column(length = 15)
-    private String barcode;
-
-    @Column(length = 50)
-    private String countString = "0";
-
-    @Column(length = 20, nullable = false)
-    private String dateCreated;
-
-    @Column(length = 20)
-    private String dateUpdated;
-
-    @Column(columnDefinition="TEXT")
-    private String descriptions;
-
-    @Column(nullable = false)
-    private boolean isActive = true;
+    @Column(length = 10, nullable = false)
+    private String unitName;
 }

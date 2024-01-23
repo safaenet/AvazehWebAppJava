@@ -10,8 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.TransactionItemDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionItemModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionItemModel;
 
 @Service
 public class TransactionItemService {

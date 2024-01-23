@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.TransactionItemService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionItemModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionItemModel;
 
 @CrossOrigin
 @RestController

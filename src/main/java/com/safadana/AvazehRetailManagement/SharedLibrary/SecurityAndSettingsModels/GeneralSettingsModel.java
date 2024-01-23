@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.List;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ProductUnitModel;
 
 @Data
 public class GeneralSettingsModel {

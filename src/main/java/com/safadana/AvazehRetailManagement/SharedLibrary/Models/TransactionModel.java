@@ -1,26 +1,26 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
+package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
+
+import lombok.Data;
 
 import java.util.List;
-
-import javax.validation.constraints.Email;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "transactions")
 @Data
-public class CustomerModel {
+public class TransactionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -28,30 +28,27 @@ public class CustomerModel {
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
     })
-    private Long id;
+    private long id;
 
-    @Column(length = 50, nullable = false)
-    private String fullName;
-
-    @Column(length = 50)
-    private String companyName;
-
-    @Column(length = 50)
-    @Email
-    private String emailAddress;
-
-    @Column(columnDefinition = "TEXT")
-    private String postAddress;
+    @Column(length = 100, nullable = false)
+    private String fileName;
 
     @Column(length = 20, nullable = false)
-    private String dateJoined;
+    private String dateCreated;
+    
+    @Column(length = 20)
+    private String dateUpdated;
+    
+    @OneToMany(orphanRemoval = true)
+    @JoinColumn(name = "transactionId")
+    private List<TransactionItemModel> items; //List of Items for one Page.
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition="TEXT")
     private String descriptions;
 
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<PhoneNumberModel> phoneNumbers;
+    @Transient
+    private double totalPositiveItemsSum;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<InvoiceModel> invoices;
+    @Transient
+    private double totalNegativeItemsSum;
 }

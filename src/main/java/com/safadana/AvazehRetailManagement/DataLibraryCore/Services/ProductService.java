@@ -9,10 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.ProductDAO;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ProductUnitModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ProductModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ProductUnitModel;
 
 @Service
 public class ProductService {

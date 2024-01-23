@@ -1,4 +1,4 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
+package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -8,13 +8,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "productunits")
+@Table(name = "phonenumbers")
 @Data
-public class ProductUnitModel {
+public class PhoneNumberModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -24,6 +25,9 @@ public class ProductUnitModel {
     })
     private Long id;
 
-    @Column(length = 10, nullable = false)
-    private String unitName;
+    @ManyToOne
+    private CustomerModel customer;
+
+    @Column(length = 50, nullable = false)
+    private String phoneNumber;
 }

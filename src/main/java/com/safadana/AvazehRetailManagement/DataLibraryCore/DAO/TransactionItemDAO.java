@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
-import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.TransactionItemModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionItemModel;
 
 @Repository
 public interface TransactionItemDAO extends JpaRepository<TransactionItemModel, Long> {

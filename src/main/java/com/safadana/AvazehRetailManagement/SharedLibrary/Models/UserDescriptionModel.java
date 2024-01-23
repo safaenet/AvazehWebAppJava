@@ -1,6 +1,4 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
-
-import lombok.Data;
+package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -11,11 +9,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Data;
 
-@Entity
-@Table(name = "transactionitems")
 @Data
-public class TransactionItemModel {
+@Entity
+@Table(name = "userdescriptions")
+public class UserDescriptionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -24,27 +23,10 @@ public class TransactionItemModel {
             @Parameter(name = "increment_size", value = "1")
     })
     private Long id;
+    
+    @Column(length = 30)
+    private String descriptionTitle;
 
-    private Long transactionId;
-
-    @Column(length = 100, nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private long amount;
-
-    @Column(length = 50, nullable = false)
-    private String countString = "1";
-
-    @Column(nullable = false)
-    private double countValue = 1;
-
-    @Column(length = 20, nullable = false)
-    private String dateCreated;
-
-    @Column(length = 20)
-    private String dateUpdated;
-
-    @Column(length = 50)
-    private String descriptions;
+    @Column(columnDefinition="TEXT", nullable = false)
+    private String descriptionText;
 }

@@ -1,8 +1,4 @@
-package com.safadana.AvazehRetailManagement.SharedLibrary.DalModels;
-
-import lombok.Data;
-
-import java.util.List;
+package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -12,15 +8,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import lombok.Data;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "products")
 @Data
-public class TransactionModel {
+public class ProductModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
     @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
@@ -28,27 +23,32 @@ public class TransactionModel {
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
     })
-    private long id;
+    private Long id;
 
-    @Column(length = 100, nullable = false)
-    private String fileName;
+    @Column(length = 100)
+    private String productName;
+
+    @Column(nullable = false)
+    private long buyPrice = 0;
+
+    @Column(nullable = false)
+    private long sellPrice = 0;
+
+    @Column(length = 15)
+    private String barcode;
+
+    @Column(length = 50)
+    private String countString = "0";
 
     @Column(length = 20, nullable = false)
     private String dateCreated;
-    
+
     @Column(length = 20)
     private String dateUpdated;
-    
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "transactionId")
-    private List<TransactionItemModel> items; //List of Items for one Page.
 
     @Column(columnDefinition="TEXT")
     private String descriptions;
 
-    @Transient
-    private double totalPositiveItemsSum;
-
-    @Transient
-    private double totalNegativeItemsSum;
+    @Column(nullable = false)
+    private boolean isActive = true;
 }
