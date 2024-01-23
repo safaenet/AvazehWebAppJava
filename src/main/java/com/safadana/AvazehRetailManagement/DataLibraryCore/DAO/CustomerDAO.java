@@ -12,13 +12,25 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModelDto;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 
 @Repository
 public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
 
+    // @Async
+    // @Query("SELECT c FROM CustomerModel c LEFT JOIN FETCH c.phoneNumbers pn WHERE " +
+    //         "pn.phoneNumber LIKE ?1 " +
+    //         "OR UPPER(c.fullName) LIKE ?1 " +
+    //         "OR UPPER(c.companyName) LIKE ?1 " +
+    //         "OR UPPER(c.emailAddress) LIKE ?1 " +
+    //         "OR UPPER(c.postAddress) LIKE ?1 " +
+    //         "OR c.dateJoined LIKE ?1 " +
+    //         "OR UPPER(c.descriptions) LIKE ?1")
+    // CompletableFuture<Page<CustomerModel>> findByMany(String searchText, Pageable pageable);
+
     @Async
-    @Query("SELECT c FROM CustomerModel c LEFT JOIN FETCH c.phoneNumbers pn WHERE " +
+    @Query("SELECT new com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModelDto(c.id, c.fullName, c.companyName, c.emailAddress, c.postAddress, c.dateJoined, c.descriptions, c.phoneNumbers) FROM CustomerModel c LEFT JOIN c.phoneNumbers pn WHERE " +
             "pn.phoneNumber LIKE ?1 " +
             "OR UPPER(c.fullName) LIKE ?1 " +
             "OR UPPER(c.companyName) LIKE ?1 " +
@@ -26,7 +38,7 @@ public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
             "OR UPPER(c.postAddress) LIKE ?1 " +
             "OR c.dateJoined LIKE ?1 " +
             "OR UPPER(c.descriptions) LIKE ?1")
-    CompletableFuture<Page<CustomerModel>> findByMany(String searchText, Pageable pageable);
+    CompletableFuture<Page<CustomerModelDto>> findByMany(String searchText, Pageable pageable);
 
     @Async
     @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox(c.id, c.fullName AS itemName) FROM CustomerModel c ORDER BY c.fullName")

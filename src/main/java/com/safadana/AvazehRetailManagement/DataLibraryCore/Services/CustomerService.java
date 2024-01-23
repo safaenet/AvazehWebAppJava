@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.DAO.CustomerDAO;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModelDto;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendarHelper;
 
@@ -23,7 +24,7 @@ public class CustomerService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<CustomerModel>> getWithPagination(String searchText, int offset, int pageSize,
+    public CompletableFuture<Page<CustomerModelDto>> getWithPagination(String searchText, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;

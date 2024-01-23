@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.CustomerService;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModel;
+import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.CustomerModelDto;
 import com.safadana.AvazehRetailManagement.SharedLibrary.DalModels.ItemsForComboBox;
 
 @CrossOrigin
@@ -32,7 +33,7 @@ public class CustomerController {
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<CustomerModel>> getWithPagination(@RequestParam String searchText,
+    public CompletableFuture<Page<CustomerModelDto>> getWithPagination(@RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
