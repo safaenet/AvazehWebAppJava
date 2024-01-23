@@ -24,15 +24,15 @@ public class CustomerService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<CustomerModelDto>> getWithPagination(String searchText, int offset, int pageSize,
+    public CompletableFuture<Page<CustomerModel>> getWithPagination(String searchText, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
         if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
         if(sortColumn == null || sortColumn == "") sortColumn = "id";
-        if(pageSize == 0) pageSize = 50;   
-        return DAO.findByMany(searchText,
-                PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+        if(pageSize == 0) pageSize = 50;
+        var result = DAO.findByMany(searchText, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+        return result;
     }
 
     public CompletableFuture<CustomerModel> getById(Long id) {

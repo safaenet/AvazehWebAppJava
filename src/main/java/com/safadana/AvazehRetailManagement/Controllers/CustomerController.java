@@ -33,7 +33,7 @@ public class CustomerController {
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<CustomerModelDto>> getWithPagination(@RequestParam String searchText,
+    public CompletableFuture<Page<CustomerModel>> getWithPagination(@RequestParam String searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
