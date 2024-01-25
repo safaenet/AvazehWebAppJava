@@ -7,9 +7,6 @@ import javax.validation.constraints.Email;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,11 +49,11 @@ public class CustomerModel {
     @Column(columnDefinition = "TEXT")
     private String descriptions;
 
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(orphanRemoval = true)
     @JoinColumn(name = "customerId")
     private List<PhoneNumberModel> phoneNumbers;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<InvoiceModel> invoices;
+    // @JsonIgnore
+    // @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<InvoiceModel> invoices;
 }

@@ -19,7 +19,7 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.Models.PhoneNumberModel
 public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
 
     @Async
-    @Query("SELECT c FROM CustomerModel c JOIN c.phoneNumbers p WHERE " +
+    @Query("SELECT c FROM CustomerModel c LEFT JOIN FETCH c.phoneNumbers p WHERE " +
             "p.phoneNumber LIKE ?1 " +
             "OR UPPER(c.fullName) LIKE ?1 " +
             "OR UPPER(c.companyName) LIKE ?1 " +

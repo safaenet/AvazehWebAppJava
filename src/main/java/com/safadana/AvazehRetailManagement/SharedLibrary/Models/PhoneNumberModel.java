@@ -3,8 +3,6 @@ package com.safadana.AvazehRetailManagement.SharedLibrary.Models;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +24,7 @@ public class PhoneNumberModel {
     })
     private Long id;
 
-    @JsonIgnore
+    @Column(nullable = false)
     private Long customerId;
 
     @Column(length = 50, nullable = false)
