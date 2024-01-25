@@ -19,6 +19,7 @@ import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.CustomerServ
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModelDto;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.PhoneNumberModel;
 
 @CrossOrigin
 @RestController
@@ -64,5 +65,10 @@ public class CustomerController {
     @GetMapping("/CustomerBalance/{customerId}")
     public CompletableFuture<Double> getCustomerBalance(@PathVariable Long customerId) {
         return service.getCustomerBalance(customerId);
+    }
+
+    @GetMapping("/Phones/{customerId}")
+    public CompletableFuture<List<PhoneNumberModel>> getPhones(@PathVariable Long customerId) {
+        return service.getPhoneNumbers(customerId);
     }
 }

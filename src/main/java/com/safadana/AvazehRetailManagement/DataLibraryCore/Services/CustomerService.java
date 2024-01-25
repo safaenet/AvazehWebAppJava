@@ -14,6 +14,7 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.Helpers.PersianCalendar
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModelDto;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.PhoneNumberModel;
 
 @Service
 public class CustomerService {
@@ -58,5 +59,9 @@ public class CustomerService {
 
     public CompletableFuture<Double> getCustomerBalance(Long customerId) {
         return DAO.getCustomerBalance(customerId);
+    }
+
+    public CompletableFuture<List<PhoneNumberModel>> getPhoneNumbers(Long customerId){
+        return DAO.getPhoneNumbers(customerId);
     }
 }

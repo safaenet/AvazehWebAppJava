@@ -14,14 +14,15 @@ import org.springframework.stereotype.Repository;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModel;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModelDto;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.SharedLibrary.Models.PhoneNumberModel;
 
 @Repository
 public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
 
     @Async
-    @Query("SELECT c FROM CustomerModel c LEFT JOIN c.phoneNumbers p WHERE " +
-            // "pn.phoneNumber LIKE ?1 " +
-            " UPPER(c.fullName) LIKE ?1 " +
+    @Query("SELECT c FROM CustomerModel c WHERE " +
+            // "c.phoneNumbers.phoneNumber LIKE ?1 " +
+            "UPPER(c.fullName) LIKE ?1 " +
             "OR UPPER(c.companyName) LIKE ?1 " +
             "OR UPPER(c.emailAddress) LIKE ?1 " +
             "OR UPPER(c.postAddress) LIKE ?1 " +
@@ -39,6 +40,10 @@ public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
     //         "OR c.dateJoined LIKE ?1 " +
     //         "OR UPPER(c.descriptions) LIKE ?1")
     // CompletableFuture<Page<CustomerModelDto>> findByMany(String searchText, Pageable pageable);
+
+    @Async
+    @Query("SELECT c.phoneNumbers FROM CustomerModel c WHERE c.id= 51")
+    CompletableFuture<List<PhoneNumberModel>> getPhoneNumbers(Long id);
 
     @Async
     @Query("SELECT NEW com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox(c.id, c.fullName AS itemName) FROM CustomerModel c ORDER BY c.fullName")
