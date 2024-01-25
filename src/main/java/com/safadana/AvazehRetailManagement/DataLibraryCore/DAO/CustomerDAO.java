@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModelDto;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.PhoneNumberModel;
 
@@ -20,9 +19,9 @@ import com.safadana.AvazehRetailManagement.SharedLibrary.Models.PhoneNumberModel
 public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
 
     @Async
-    @Query("SELECT c FROM CustomerModel c WHERE " +
-            // "c.phoneNumbers.phoneNumber LIKE ?1 " +
-            "UPPER(c.fullName) LIKE ?1 " +
+    @Query("SELECT c FROM CustomerModel c JOIN c.phoneNumbers p WHERE " +
+            "p.phoneNumber LIKE ?1 " +
+            "OR UPPER(c.fullName) LIKE ?1 " +
             "OR UPPER(c.companyName) LIKE ?1 " +
             "OR UPPER(c.emailAddress) LIKE ?1 " +
             "OR UPPER(c.postAddress) LIKE ?1 " +
@@ -42,7 +41,7 @@ public interface CustomerDAO extends JpaRepository<CustomerModel, Long> {
     // CompletableFuture<Page<CustomerModelDto>> findByMany(String searchText, Pageable pageable);
 
     @Async
-    @Query("SELECT c.phoneNumbers FROM CustomerModel c WHERE c.id= 51")
+    @Query("SELECT c.phoneNumbers FROM CustomerModel c WHERE c.id= ?1")
     CompletableFuture<List<PhoneNumberModel>> getPhoneNumbers(Long id);
 
     @Async

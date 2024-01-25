@@ -1,6 +1,7 @@
 package com.safadana.AvazehRetailManagement.Controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.CustomerService;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Models.CustomerModelDto;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.SharedLibrary.Models.PhoneNumberModel;
 
@@ -34,7 +34,7 @@ public class CustomerController {
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<CustomerModel>> getWithPagination(@RequestParam String searchText,
+    public CompletableFuture<Page<CustomerModel>> getWithPagination(@RequestParam("searchText") Optional<String> searchText,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
