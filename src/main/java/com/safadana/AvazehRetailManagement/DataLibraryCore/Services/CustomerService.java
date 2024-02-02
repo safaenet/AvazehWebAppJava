@@ -50,7 +50,7 @@ public class CustomerService {
         return result;
     }
 
-    public CompletableFuture<CustomerModel> getById(Long id) {
+    public CompletableFuture<CustomerModel> getById(long id) {
         if (id == 0)
             return null;
         var customer = DAO.findById(id).get();
