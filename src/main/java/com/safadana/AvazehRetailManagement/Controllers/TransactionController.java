@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.TransactionService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ItemsForComboBox;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionListModel;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Models.TransactionModel;
+import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
+import com.safadana.AvazehRetailManagement.Models.TransactionListModel;
+import com.safadana.AvazehRetailManagement.Models.TransactionModel;
+import com.safadana.AvazehRetailManagement.Services.TransactionService;
 
 @CrossOrigin
 @RestController

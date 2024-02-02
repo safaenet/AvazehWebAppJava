@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safadana.AvazehRetailManagement.DataLibraryCore.Services.ChequeService;
-import com.safadana.AvazehRetailManagement.SharedLibrary.Models.ChequeModel;
+import com.safadana.AvazehRetailManagement.Models.ChequeModel;
+import com.safadana.AvazehRetailManagement.Services.ChequeService;
 
 @CrossOrigin
 @RestController
