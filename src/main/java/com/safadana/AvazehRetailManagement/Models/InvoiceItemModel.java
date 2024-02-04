@@ -17,8 +17,8 @@ import lombok.Data;
 @Data
 public class InvoiceItemModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
-    @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator-invoiceitems")
+    @GenericGenerator(name = "sequence-generator-invoiceitems", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
             @Parameter(name = "sequence_name", value = "user_sequence_invoiceitems"),
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")

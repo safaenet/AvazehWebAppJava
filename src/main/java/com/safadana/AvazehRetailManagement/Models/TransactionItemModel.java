@@ -17,8 +17,8 @@ import jakarta.persistence.Table;
 @Data
 public class TransactionItemModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
-    @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator-transactionitems")
+    @GenericGenerator(name = "sequence-generator-transactionitems", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
             @Parameter(name = "sequence_name", value = "user_sequence_transactionitems"),
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")

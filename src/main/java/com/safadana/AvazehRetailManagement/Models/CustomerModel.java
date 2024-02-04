@@ -22,8 +22,8 @@ import lombok.Data;
 @Data
 public class CustomerModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator")
-    @GenericGenerator(name = "sequence-generator", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator-customers")
+    @GenericGenerator(name = "sequence-generator-customers", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
             @Parameter(name = "sequence_name", value = "user_sequence_customers"),
             @Parameter(name = "initial_value", value = "1"),
             @Parameter(name = "increment_size", value = "1")
