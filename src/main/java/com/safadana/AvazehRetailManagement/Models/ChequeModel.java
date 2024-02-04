@@ -44,6 +44,9 @@ public class ChequeModel {
     @Column(nullable = false, length = 10)
     private String dueDate;
 
+    @Column(nullable = false, length = 20)
+    private String dateCreated; //Date saved in DB
+
     @Column(length = 50, nullable = false)
     private String bankName;
 

@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DAO.ChequeDAO;
-import com.safadana.AvazehRetailManagement.Enums.ChequeQueryStatus;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
 import com.safadana.AvazehRetailManagement.Models.ChequeModel;
 
@@ -54,6 +53,9 @@ public class ChequeService {
     }
 
     public CompletableFuture<ChequeModel> createUpdate(ChequeModel item) {
+        if (item.getDateCreated() == null || item.getDateCreated() == "") {
+            item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
+        }
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 

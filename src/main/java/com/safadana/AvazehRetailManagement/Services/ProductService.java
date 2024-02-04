@@ -56,23 +56,6 @@ public class ProductService {
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
             item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
         }
-        // if(item.getId() <= 0){ //New Item
-        // try {
-        // Long newId = DAO.getNextId().get();
-        // item.setId(newId);
-        // } catch (InterruptedException e) {
-        // e.printStackTrace();
-        // } catch (ExecutionException e) {
-        // e.printStackTrace();
-        // }
-        // }
-        // if(item.getId() > 0){
-        // item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
-        // return CompletableFuture.completedFuture(DAO.save(item));
-        // }
-        // return CompletableFuture.failedFuture(new Throwable("Error: Either there was
-        // a problem connecting to DB, or 'Id' was less than Zero."));
-
         if (item.getId() > 0) {
             item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
         }

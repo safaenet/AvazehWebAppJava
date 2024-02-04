@@ -32,6 +32,7 @@ public interface ChequeDAO extends JpaRepository<ChequeModel, Long> {
                 "UPPER(c.about) LIKE :searchText OR " +
                 "c.issueDate LIKE :searchText OR " +
                 "c.dueDate LIKE :searchText OR " +
+                "c.dateCreated LIKE :searchText OR " +
                 "UPPER(c.bankName) LIKE :searchText OR " +
                 "c.serialNumber LIKE :searchText OR " +
                 "c.identifier LIKE :searchText OR " +
