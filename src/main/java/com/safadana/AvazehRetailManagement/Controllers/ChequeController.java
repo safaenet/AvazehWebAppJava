@@ -1,6 +1,7 @@
 package com.safadana.AvazehRetailManagement.Controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class ChequeController {
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<ChequeModel>> getWithPagination(@RequestParam String searchText,
-            @RequestParam String chequeStatus,
+    public CompletableFuture<Page<ChequeModel>> getWithPagination(@RequestParam("searchText") Optional<String> searchText,
+            @RequestParam("chequeStatus") Optional<String> chequeStatus,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
