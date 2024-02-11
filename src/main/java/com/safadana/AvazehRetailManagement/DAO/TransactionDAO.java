@@ -36,7 +36,8 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "UPPER(i.descriptions) LIKE :searchText) AND (" +
                 "(:TransactionStatus = 'BALANCED' AND totalPositiveItemsSum + totalNegativeItemsSum = 0) OR " +
                 "(:TransactionStatus = 'POSITIVE' AND totalPositiveItemsSum + totalNegativeItemsSum > 0) OR " +
-                "(:TransactionStatus = 'NEGATIVE' AND totalPositiveItemsSum + totalNegativeItemsSum < 0)" +
+                "(:TransactionStatus = 'NEGATIVE' AND totalPositiveItemsSum + totalNegativeItemsSum < 0) OR " +
+                "(:TransactionStatus = 'ALL') " +
                 ") GROUP BY t.id")
         CompletableFuture<Page<TransactionListModel>> findByMany(@Param("searchText") String searchText, @Param("TransactionStatus") String TransactionStatus, Pageable pageable);
 
