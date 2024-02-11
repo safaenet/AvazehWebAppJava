@@ -1,6 +1,7 @@
 package com.safadana.AvazehRetailManagement.Services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +25,33 @@ public class TransactionService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<TransactionListModel>> getWithPagination(String searchText, int offset, int pageSize,
-        String sortColumn,
-        String sortOrder) {
+    public CompletableFuture<Page<TransactionListModel>> getWithPagination(Optional<String> searchText,
+            Optional<String> transactionStatus, int offset,
+            int pageSize,
+            String sortColumn,
+            String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
-        if(sortColumn == null || sortColumn == "") sortColumn = "id";
-        if(pageSize == 0) pageSize = 50;   
-        return DAO.findByMany(searchText,
-        PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
+        String SearchText = "";
+        if (searchText == null || !searchText.isPresent())
+            SearchText = "%";
+        else
+            SearchText = "%" + searchText.get().toUpperCase() + "%";
+        if (sortColumn == null || sortColumn == "")
+            sortColumn = "id";
+        String TransactionStatus = "";
+        if (transactionStatus == null || !transactionStatus.isPresent())
+            TransactionStatus = "ALL";
+        else
+            TransactionStatus = transactionStatus.get();
+        if (pageSize == 0)
+            pageSize = 50;
+        return DAO.findByMany(SearchText,
+                PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<TransactionModel> getById(Long id) {
-        if(id == 0) return null;
+    public CompletableFuture<TransactionModel> getById(long id) {
+        if (id == 0)
+            return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
@@ -48,7 +63,7 @@ public class TransactionService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         DAO.deleteById(id);
     }
 
@@ -56,7 +71,7 @@ public class TransactionService {
         return DAO.getProductItems();
     }
 
-    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(Long id) {
+    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(long id) {
         return DAO.getTransactionNames(id);
     }
 }

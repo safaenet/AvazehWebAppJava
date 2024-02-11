@@ -34,11 +34,13 @@ public class TransactionController {
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<TransactionListModel>> getWithPagination(@RequestParam String searchText,
+    public CompletableFuture<Page<TransactionListModel>> getWithPagination(
+            @RequestParam("searchText") Optional<String> searchText,
+            @RequestParam("transactionStatus") Optional<String> transactionStatus,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(searchText, offset, pageSize, sortColumn, sortOrder);
+        return service.getWithPagination(searchText, transactionStatus, offset, pageSize, sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")
