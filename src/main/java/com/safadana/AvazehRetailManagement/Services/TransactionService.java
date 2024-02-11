@@ -45,7 +45,7 @@ public class TransactionService {
             TransactionStatus = transactionStatus.get();
         if (pageSize == 0)
             pageSize = 50;
-        return DAO.findByMany(SearchText,
+        return DAO.findByMany(SearchText, TransactionStatus,
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 

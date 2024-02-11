@@ -24,17 +24,21 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) > 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalPositiveItemsSum, " +
                 "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) < 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalNegativeItemsSum) " +
                 "FROM TransactionModel t LEFT JOIN t.items i WHERE " +
-                "UPPER(t.fileName) LIKE ?1 OR " +
-                "t.dateCreated LIKE ?1 OR " +
-                "t.dateUpdated LIKE ?1 OR " +
-                "UPPER(t.descriptions) LIKE ?1 OR " +
+                "(UPPER(t.fileName) LIKE :searchText OR " +
+                "t.dateCreated LIKE :searchText OR " +
+                "t.dateUpdated LIKE :searchText OR " +
+                "UPPER(t.descriptions) LIKE :searchText OR " +
 
-                "UPPER(i.title) LIKE ?1 OR " +
-                "CAST(i.amount as text) LIKE ?1 OR " +
-                "i.dateCreated LIKE ?1 OR " +
-                "i.dateUpdated LIKE ?1 OR " +
-                "UPPER(i.descriptions) LIKE ?1 GROUP BY t.id")
-        CompletableFuture<Page<TransactionListModel>> findByMany(String searchText, Pageable pageable);
+                "UPPER(i.title) LIKE :searchText OR " +
+                "CAST(i.amount as text) LIKE :searchText OR " +
+                "i.dateCreated LIKE :searchText OR " +
+                "i.dateUpdated LIKE :searchText OR " +
+                "UPPER(i.descriptions) LIKE :searchText) AND (" +
+                "(:TransactionStatus = 'BALANCED' AND totalPositiveItemsSum + totalNegativeItemsSum = 0) OR " +
+                "(:TransactionStatus = 'POSITIVE' AND totalPositiveItemsSum + totalNegativeItemsSum > 0) OR " +
+                "(:TransactionStatus = 'NEGATIVE' AND totalPositiveItemsSum + totalNegativeItemsSum < 0)" +
+                ") GROUP BY t.id")
+        CompletableFuture<Page<TransactionListModel>> findByMany(@Param("searchText") String searchText, @Param("TransactionStatus") String TransactionStatus, Pageable pageable);
 
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "
