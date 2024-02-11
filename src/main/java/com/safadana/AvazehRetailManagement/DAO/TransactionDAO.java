@@ -28,7 +28,6 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "t.dateCreated LIKE :searchText OR " +
                 "t.dateUpdated LIKE :searchText OR " +
                 "UPPER(t.descriptions) LIKE :searchText OR " +
-
                 "UPPER(i.title) LIKE :searchText OR " +
                 "CAST(i.amount as text) LIKE :searchText OR " +
                 "i.dateCreated LIKE :searchText OR " +
