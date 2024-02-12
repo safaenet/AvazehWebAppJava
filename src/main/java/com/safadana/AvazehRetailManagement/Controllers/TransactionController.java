@@ -37,6 +37,7 @@ public class TransactionController {
     public CompletableFuture<Page<TransactionListModel>> getWithPagination(
             @RequestParam("searchText") Optional<String> searchText,
             @RequestParam("transactionStatus") Optional<String> transactionStatus,
+            @RequestParam("transactionDate") Optional<String> transactionDate,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {

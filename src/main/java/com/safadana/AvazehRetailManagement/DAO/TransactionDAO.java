@@ -21,9 +21,14 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.TransactionListModel" +
                 "(t.id, t.fileName, t.dateCreated, t.dateUpdated, t.descriptions, " +
-                "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) > 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalPositiveItemsSum, " +
-                "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) < 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalNegativeItemsSum) " +
+                "itemSums.pos AS totalPositiveItemsSum, " +
+                "itemSums.neg AS totalNegativeItemsSum) " +
                 "FROM TransactionModel t LEFT JOIN t.items i " +
+                "LEFT JOIN (SELECT COALESCE(SUM(CASE WHEN CAST(item.amount AS LONG) * CAST(item.countValue AS LONG) > 0 THEN CAST(item.amount AS LONG) * CAST(item.countValue AS LONG) ELSE 0 END), 0) AS pos, " +
+                        "COALESCE(SUM(CASE WHEN CAST(item.amount AS LONG) * CAST(item.countValue AS LONG) < 0 THEN CAST(item.amount AS LONG) * CAST(item.countValue AS LONG) ELSE 0 END), 0) AS neg, " +
+                        "COALESCE(SUM(CAST(item.amount AS LONG) * CAST(item.countValue AS LONG)), 0) AS bal " +
+                        "FROM TransactionModel t2 " +
+                        "LEFT JOIN t2.items item GROUP BY t2.id) AS itemSums " +
                 "WHERE " +
                 "(UPPER(t.fileName) LIKE :searchText OR " +
                 "t.dateCreated LIKE :searchText OR " +
@@ -34,11 +39,11 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "i.dateCreated LIKE :searchText OR " +
                 "i.dateUpdated LIKE :searchText OR " +
                 "UPPER(i.descriptions) LIKE :searchText) AND (" +
-                // "(:TransactionStatus = 'BALANCED' AND totalPositiveItemsSum + totalNegativeItemsSum = 0) OR " +
-                // "(:TransactionStatus = 'POSITIVE' AND totalPositiveItemsSum + totalNegativeItemsSum > 0) OR " +
-                // "(:TransactionStatus = 'NEGATIVE' AND totalPositiveItemsSum + totalNegativeItemsSum < 0) OR " +
+                "(:TransactionStatus = 'BALANCED' AND itemSums.bal = 0) OR " +
+                "(:TransactionStatus = 'POSITIVE' AND itemSums.bal > 0) OR " +
+                "(:TransactionStatus = 'NEGATIVE' AND itemSums.bal < 0) OR " +
                 "(:TransactionStatus = 'ALL') " +
-                ") GROUP BY t.id")
+                ") GROUP BY t.id, itemSums.pos, itemSums.neg, itemSums.bal")
         CompletableFuture<Page<TransactionListModel>> findByMany(@Param("searchText") String searchText, @Param("TransactionStatus") String TransactionStatus, Pageable pageable);
 
         @Async
