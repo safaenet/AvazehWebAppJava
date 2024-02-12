@@ -39,7 +39,7 @@ public class ProductService {
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<ProductModel> getById(Long id) {
+    public CompletableFuture<ProductModel> getById(long id) {
         if (id == 0)
             return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
@@ -62,7 +62,7 @@ public class ProductService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         DAO.deleteById(id);
     }
 

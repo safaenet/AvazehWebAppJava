@@ -26,7 +26,7 @@ public class InvoiceItemService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public CompletableFuture<InvoiceItemModel> getById(Long id) {
+    public CompletableFuture<InvoiceItemModel> getById(long id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
@@ -38,7 +38,7 @@ public class InvoiceItemService {
         return CompletableFuture.completedFuture(invoiceItem);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         InvoiceItemModel item = DAO.getReferenceById(id);
         invoiceService.updateInvoiceDateUpdated(item.getInvoiceId());
         DAO.deleteById(id);

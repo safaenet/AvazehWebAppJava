@@ -59,7 +59,7 @@ public class InvoiceService {
         return completedFuture;
     }
 
-    public CompletableFuture<InvoiceModel> getById(Long id) {
+    public CompletableFuture<InvoiceModel> getById(long id) {
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 
@@ -70,7 +70,7 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         itemDAO.deleteByInvoiceId(id);
         DAO.deleteById(id);
     }
@@ -89,7 +89,7 @@ public class InvoiceService {
         return completedFuture;
     }
 
-    public CompletableFuture<Boolean> updateInvoiceDateUpdated(Long invoiceId){
+    public CompletableFuture<Boolean> updateInvoiceDateUpdated(long invoiceId){
         InvoiceModel invoice;
         invoice = DAO.getReferenceById(invoiceId);
         invoice.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
