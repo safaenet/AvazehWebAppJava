@@ -23,7 +23,8 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "(t.id, t.fileName, t.dateCreated, t.dateUpdated, t.descriptions, " +
                 "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) > 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalPositiveItemsSum, " +
                 "COALESCE(SUM(CASE WHEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) < 0 THEN CAST(i.amount AS LONG) * CAST(i.countValue AS LONG) ELSE 0 END), 0) AS totalNegativeItemsSum) " +
-                "FROM TransactionModel t LEFT JOIN t.items i WHERE " +
+                "FROM TransactionModel t LEFT JOIN t.items i " +
+                "WHERE " +
                 "(UPPER(t.fileName) LIKE :searchText OR " +
                 "t.dateCreated LIKE :searchText OR " +
                 "t.dateUpdated LIKE :searchText OR " +
@@ -33,9 +34,9 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "i.dateCreated LIKE :searchText OR " +
                 "i.dateUpdated LIKE :searchText OR " +
                 "UPPER(i.descriptions) LIKE :searchText) AND (" +
-                "(:TransactionStatus = 'BALANCED' AND totalPositiveItemsSum + totalNegativeItemsSum = 0) OR " +
-                "(:TransactionStatus = 'POSITIVE' AND totalPositiveItemsSum + totalNegativeItemsSum > 0) OR " +
-                "(:TransactionStatus = 'NEGATIVE' AND totalPositiveItemsSum + totalNegativeItemsSum < 0) OR " +
+                // "(:TransactionStatus = 'BALANCED' AND totalPositiveItemsSum + totalNegativeItemsSum = 0) OR " +
+                // "(:TransactionStatus = 'POSITIVE' AND totalPositiveItemsSum + totalNegativeItemsSum > 0) OR " +
+                // "(:TransactionStatus = 'NEGATIVE' AND totalPositiveItemsSum + totalNegativeItemsSum < 0) OR " +
                 "(:TransactionStatus = 'ALL') " +
                 ") GROUP BY t.id")
         CompletableFuture<Page<TransactionListModel>> findByMany(@Param("searchText") String searchText, @Param("TransactionStatus") String TransactionStatus, Pageable pageable);
