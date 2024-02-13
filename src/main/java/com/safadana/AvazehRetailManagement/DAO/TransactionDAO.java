@@ -23,7 +23,7 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "(t.id, t.fileName, t.dateCreated, t.dateUpdated, t.descriptions, " +
                 "itemSums.pos AS totalPositiveItemsSum, " +
                 "itemSums.neg AS totalNegativeItemsSum, " +
-                "CASE WHEN itemSums.bal > 0 THEN 'POSITIVE' WHEN itemSums.bal < 0 THEN 'NEGATIVE' ELSE 'BALANCED' END AS finStatus)" +
+                "CASE WHEN itemSums.bal > 0 THEN com.safadana.AvazehRetailManagement.Enums$TransactionFinancialStatus.POSITIVE WHEN itemSums.bal < 0 THEN com.safadana.AvazehRetailManagement.Enums$TransactionFinancialStatus.NEGATIVE ELSE com.safadana.AvazehRetailManagement.Enums$TransactionFinancialStatus.BALANCED END AS finStatus)" +
                 "FROM TransactionModel t LEFT JOIN t.items i " +
                 "LEFT JOIN (SELECT COALESCE(SUM(CASE WHEN CAST(item.amount AS LONG) * CAST(item.countValue AS LONG) > 0 THEN CAST(item.amount AS LONG) * CAST(item.countValue AS LONG) ELSE 0 END), 0) AS pos, " +
                         "COALESCE(SUM(CASE WHEN CAST(item.amount AS LONG) * CAST(item.countValue AS LONG) < 0 THEN CAST(item.amount AS LONG) * CAST(item.countValue AS LONG) ELSE 0 END), 0) AS neg, " +
