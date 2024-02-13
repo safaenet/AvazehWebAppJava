@@ -26,27 +26,32 @@ public class TransactionService {
     }
 
     public CompletableFuture<Page<TransactionListModel>> getWithPagination(Optional<String> searchText,
-            Optional<String> transactionStatus, int offset,
+            Optional<String> transactionStatus, Optional<String> transactionDate, int offset,
             int pageSize,
             String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        String SearchText = "";
-        if (searchText == null || !searchText.isPresent())
-            SearchText = "%";
-        else
+        String SearchText = "%";
+        if (searchText != null && searchText.isPresent())
             SearchText = "%" + searchText.get().toUpperCase() + "%";
+            
         if (sortColumn == null || sortColumn == "")
             sortColumn = "id";
-        String TransactionStatus = "";
-        if (transactionStatus == null || !transactionStatus.isPresent())
-            TransactionStatus = "ALL";
-        else
+
+        String TransactionStatus = "ALL";
+        if (transactionStatus != null && transactionStatus.isPresent())
             TransactionStatus = transactionStatus.get();
+
+        String TransactionDate = "%";
+        if (transactionDate != null && transactionDate.isPresent()){
+            TransactionDate = "%" + transactionDate.get() + "%";
+            System.out.println(TransactionDate);
+        }
+            
         if (pageSize == 0)
             pageSize = 50;
-            
-        return DAO.findByMany(SearchText, TransactionStatus,
+
+        return DAO.findByMany(SearchText, TransactionStatus, TransactionDate,
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 

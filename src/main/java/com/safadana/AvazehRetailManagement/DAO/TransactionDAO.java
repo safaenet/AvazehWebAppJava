@@ -38,13 +38,13 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "CAST(i.amount as text) LIKE :searchText OR " +
                 "i.dateCreated LIKE :searchText OR " +
                 "i.dateUpdated LIKE :searchText OR " +
-                "UPPER(i.descriptions) LIKE :searchText) AND (" +
+                "UPPER(i.descriptions) LIKE :searchText) AND (t.dateCreated LIKE :TransactionDate OR t.dateUpdated LIKE :TransactionDate) AND (" +
                 "(:TransactionStatus = 'BALANCED' AND itemSums.bal = 0) OR " +
                 "(:TransactionStatus = 'POSITIVE' AND itemSums.bal > 0) OR " +
                 "(:TransactionStatus = 'NEGATIVE' AND itemSums.bal < 0) OR " +
                 "(:TransactionStatus = 'ALL') " +
                 ") GROUP BY t.id, itemSums.pos, itemSums.neg, itemSums.bal")
-        CompletableFuture<Page<TransactionListModel>> findByMany(@Param("searchText") String searchText, @Param("TransactionStatus") String TransactionStatus, Pageable pageable);
+        CompletableFuture<Page<TransactionListModel>> findByMany(@Param("searchText") String searchText, @Param("TransactionStatus") String TransactionStatus, @Param("TransactionDate") String TransactionDate, Pageable pageable);
 
         @Async
         @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "

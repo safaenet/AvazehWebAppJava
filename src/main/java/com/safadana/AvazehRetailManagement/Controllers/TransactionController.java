@@ -41,7 +41,7 @@ public class TransactionController {
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(searchText, transactionStatus, offset, pageSize, sortColumn, sortOrder);
+        return service.getWithPagination(searchText, transactionStatus, transactionDate, offset, pageSize, sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")
