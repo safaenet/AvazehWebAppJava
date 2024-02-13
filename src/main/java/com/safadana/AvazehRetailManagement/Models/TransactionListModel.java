@@ -1,5 +1,7 @@
 package com.safadana.AvazehRetailManagement.Models;
 
+import com.safadana.AvazehRetailManagement.Enums.TransactionFinancialStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,4 +15,5 @@ public class TransactionListModel {
     private String descriptions;
     private double totalPositiveItemsSum;
     private double totalNegativeItemsSum;
+    private TransactionFinancialStatus finStatus;
 }
