@@ -18,7 +18,7 @@ public class TransactionItemService {
     @Autowired
     TransactionItemDAO DAO;
 
-    public CompletableFuture<List<TransactionItemModel>> getAll(Long transactionId) {
+    public CompletableFuture<List<TransactionItemModel>> getAll(long transactionId) {
         return DAO.findByTransactionId(transactionId);
     }
 
@@ -34,7 +34,7 @@ public class TransactionItemService {
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
-    public CompletableFuture<TransactionItemModel> getById(Long id) {
+    public CompletableFuture<TransactionItemModel> getById(long id) {
         if(id == 0) return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
@@ -47,7 +47,7 @@ public class TransactionItemService {
         return CompletableFuture.completedFuture(DAO.save(item));
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(long id) {
         DAO.deleteById(id);
     }
 }
