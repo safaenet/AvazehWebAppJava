@@ -1,6 +1,7 @@
 package com.safadana.AvazehRetailManagement.Controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.safadana.AvazehRetailManagement.Models.TransactionItemModel;
 import com.safadana.AvazehRetailManagement.Services.TransactionItemService;
 
-@CrossOrigin
+@CrossOrigin(allowedHeaders = "*")
 @RestController
 @RequestMapping("/TransactionItem")
 public class TransactionItemController {
@@ -32,11 +33,13 @@ public class TransactionItemController {
 
     @GetMapping("/GetWithPagination/{transactionId}")
     public CompletableFuture<Page<TransactionItemModel>> getWithPagination(@PathVariable Long transactionId,
-            @RequestParam String searchText,
+            @RequestParam("searchText") Optional<String> searchText,
+            @RequestParam("transactionStatus") Optional<String> transactionStatus,
+            @RequestParam("transactionDate") Optional<String> transactionDate,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(transactionId, searchText, offset, pageSize, sortColumn, sortOrder);
+        return service.getWithPagination(transactionId, searchText, transactionStatus, transactionDate, offset, pageSize, sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")

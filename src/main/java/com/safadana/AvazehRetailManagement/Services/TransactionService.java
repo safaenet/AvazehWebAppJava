@@ -31,6 +31,7 @@ public class TransactionService {
             String sortColumn,
             String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+
         String SearchText = "%";
         if (searchText != null && searchText.isPresent())
             SearchText = "%" + searchText.get().toUpperCase() + "%";
@@ -45,7 +46,6 @@ public class TransactionService {
         String TransactionDate = "%";
         if (transactionDate != null && transactionDate.isPresent()){
             TransactionDate = "%" + transactionDate.get() + "%";
-            System.out.println(TransactionDate);
         }
             
         if (pageSize == 0)

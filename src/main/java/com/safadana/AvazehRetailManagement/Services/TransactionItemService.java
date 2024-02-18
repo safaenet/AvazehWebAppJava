@@ -1,6 +1,7 @@
 package com.safadana.AvazehRetailManagement.Services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +23,39 @@ public class TransactionItemService {
         return DAO.findByTransactionId(transactionId);
     }
 
-    public CompletableFuture<Page<TransactionItemModel>> getWithPagination(Long transactionId, String searchText,
-            int offset, int pageSize,
+    public CompletableFuture<Page<TransactionItemModel>> getWithPagination(Long transactionId,
+            Optional<String> searchText,
+            Optional<String> transactionStatus, Optional<String> transactionDate, int offset, int pageSize,
             String sortColumn,
             String sortOrder) {
-            Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-            if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
-            if(sortColumn == null || sortColumn == "") sortColumn = "id";
-            if(pageSize == 0) pageSize = 50;   
-        return DAO.findByMany(transactionId, searchText,
+        Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        
+        String SearchText = "%";
+        if (searchText != null && searchText.isPresent())
+            SearchText = "%" + searchText.get().toUpperCase() + "%";
+
+        if (sortColumn == null || sortColumn == "")
+            sortColumn = "id";
+
+        if (pageSize == 0)
+            pageSize = 50;
+
+            String TransactionStatus = "ALL";
+            if (transactionStatus != null && transactionStatus.isPresent())
+                TransactionStatus = transactionStatus.get();
+    
+            String TransactionDate = "%";
+            if (transactionDate != null && transactionDate.isPresent()){
+                TransactionDate = "%" + transactionDate.get() + "%";
+            }
+            
+        return DAO.findByMany(transactionId, SearchText, TransactionStatus, TransactionDate,
                 PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)));
     }
 
     public CompletableFuture<TransactionItemModel> getById(long id) {
-        if(id == 0) return null;
+        if (id == 0)
+            return null;
         return CompletableFuture.completedFuture(DAO.findById(id).get());
     }
 

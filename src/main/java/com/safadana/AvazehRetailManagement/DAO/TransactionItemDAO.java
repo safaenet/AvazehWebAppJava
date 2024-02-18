@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
@@ -19,13 +20,19 @@ public interface TransactionItemDAO extends JpaRepository<TransactionItemModel, 
         CompletableFuture<List<TransactionItemModel>> findByTransactionId(Long transactionId);
 
         @Async
-        @Query("SELECT ti FROM TransactionItemModel ti WHERE " +
-                        "UPPER(ti.title) LIKE ?1 OR " +
-                        "CAST(ti.amount as text) LIKE ?1 OR " +
-                        "ti.countString LIKE ?1 OR " +
-                        "ti.dateCreated LIKE ?1 OR " +
-                        "ti.dateUpdated LIKE ?1 OR " +
-                        "UPPER(ti.descriptions) LIKE ?1")
-        CompletableFuture<Page<TransactionItemModel>> findByMany(Long transactionId, String searchText,
+        @Query("SELECT ti FROM TransactionItemModel ti WHERE (ti.transactionId = :TransactionId) AND " +
+                        "(UPPER(ti.title) LIKE :SearchText OR " +
+                        "CAST(ti.amount as text) LIKE :SearchText OR " +
+                        "ti.countString LIKE :SearchText OR " +
+                        "ti.dateCreated LIKE :SearchText OR " +
+                        "ti.dateUpdated LIKE :SearchText OR " +
+                        "UPPER(ti.descriptions) LIKE :SearchText) AND (ti.dateCreated LIKE :TransactionDate OR ti.dateUpdated LIKE :TransactionDate) AND (" +
+                        "(:TransactionStatus = 'BALANCED' AND CAST(ti.amount AS LONG) * CAST(ti.countValue AS LONG) = 0) OR " +
+                        "(:TransactionStatus = 'POSITIVE' AND CAST(ti.amount AS LONG) * CAST(ti.countValue AS LONG) > 0) OR " +
+                        "(:TransactionStatus = 'NEGATIVE' AND CAST(ti.amount AS LONG) * CAST(ti.countValue AS LONG) < 0) OR " +
+                        "(:TransactionStatus = 'ALL'))")
+        CompletableFuture<Page<TransactionItemModel>> findByMany(@Param("TransactionId") Long TransactionId,
+                        @Param("SearchText") String SearchText, @Param("TransactionStatus") String TransactionStatus,
+                        @Param("TransactionDate") String TransactionDate,
                         Pageable pageable);
 }
