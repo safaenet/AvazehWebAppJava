@@ -2,6 +2,8 @@ package com.safadana.AvazehRetailManagement.Models;
 
 import lombok.Data;
 
+import javax.validation.constraints.Size;
+
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -28,6 +30,7 @@ public class TransactionItemModel {
     private Long transactionId;
 
     @Column(length = 100, nullable = false)
+    @Size(min = 2, message = "The string must be at least 2 characters long")
     private String title;
 
     @Column(nullable = false)

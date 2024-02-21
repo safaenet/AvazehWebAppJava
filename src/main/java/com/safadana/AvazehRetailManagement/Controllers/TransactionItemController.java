@@ -49,6 +49,8 @@ public class TransactionItemController {
 
     @PostMapping("/CreateUpdate")
     public CompletableFuture<TransactionItemModel> createUpdate(@RequestBody TransactionItemModel item) {
+        System.out.println(item);
+        System.out.println("===================================");
         return service.createUpdate(item);
     }
 
