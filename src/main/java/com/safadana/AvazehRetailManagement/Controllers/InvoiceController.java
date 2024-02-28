@@ -1,6 +1,7 @@
 package com.safadana.AvazehRetailManagement.Controllers;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,11 @@ public class InvoiceController {
     }
 
     @GetMapping("/GetWithPagination")
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(@RequestParam String lifeStatus,
-            @RequestParam Long invoiceId, @RequestParam Long customerId, @RequestParam String date,
-            @RequestParam String finStatus, @RequestParam String searchText,
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(
+            @RequestParam("searchText") Optional<String> searchText,
+            @RequestParam("invoiceStatus") Optional<String> invoiceStatus,
+            @RequestParam("invoiceDate") Optional<String> invoiceDate,
+            @RequestParam Long customerId,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
