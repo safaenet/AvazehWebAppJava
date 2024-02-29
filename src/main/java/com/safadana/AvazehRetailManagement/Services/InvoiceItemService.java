@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.safadana.AvazehRetailManagement.DAO.InvoiceItemDAO;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
 import com.safadana.AvazehRetailManagement.Models.InvoiceItemModel;
+import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.RecentSellPriceModel;
 
 import jakarta.persistence.EntityManager;
@@ -65,5 +66,9 @@ public class InvoiceItemService {
         }
         CompletableFuture<List<RecentSellPriceModel>> completedFuture = CompletableFuture.completedFuture(recentSellPrices);
         return completedFuture;
+    }
+
+    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
+        return DAO.getProductItems();
     }
 }

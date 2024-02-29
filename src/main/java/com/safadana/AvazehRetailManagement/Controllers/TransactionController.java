@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.TransactionListModel;
 import com.safadana.AvazehRetailManagement.Models.TransactionModel;
 import com.safadana.AvazehRetailManagement.Services.TransactionService;
@@ -57,15 +56,5 @@ public class TransactionController {
     @DeleteMapping("/Delete/{id}")
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
-    }
-
-    @GetMapping("/ProductItems")
-    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
-        return service.getProductItems();
-    }
-
-    @GetMapping("/TransactionNames")
-    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@RequestParam Optional<Long> id) {
-        return service.getTransactionNames(id.isEmpty() ? 0 : id.get());
     }
 }

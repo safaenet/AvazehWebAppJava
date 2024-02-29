@@ -1,6 +1,5 @@
 package com.safadana.AvazehRetailManagement.DAO;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.data.domain.Page;
@@ -11,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
-import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.TransactionListModel;
 import com.safadana.AvazehRetailManagement.Models.TransactionModel;
 
@@ -46,15 +44,4 @@ public interface TransactionDAO extends JpaRepository<TransactionModel, Long> {
                 "(:TransactionStatus = 'ALL') " +
                 ") GROUP BY t.id, itemSums.pos, itemSums.neg, itemSums.bal")
         CompletableFuture<Page<TransactionListModel>> findByMany(@Param("searchText") String searchText, @Param("TransactionStatus") String TransactionStatus, @Param("TransactionDate") String TransactionDate, Pageable pageable);
-
-        @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(0 AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "
-                        + "UNION " +
-                        "SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(1 AS id, ti.title AS itemName) FROM TransactionItemModel ti")
-        CompletableFuture<List<ItemsForComboBox>> getProductItems();
-
-        @Async
-        @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
-                        + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
-        CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") Long id);
 }

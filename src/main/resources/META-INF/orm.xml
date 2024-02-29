@@ -29,7 +29,7 @@
         <query>
             <![CDATA[
                 WITH RECURSIVE InvoiceHierarchy AS (
-                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions,
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
                 SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i
                 INNER JOIN customers c ON i.customer_id = c.id
@@ -38,7 +38,7 @@
                 LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
                 WHERE i.id = InvSums.SFN AND i.id = PFN AND i.id = InvFwds.FactorNum AND i.previnvoiceid IS NULL
                 UNION ALL
-                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions,
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
                 SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, prevInvoice.invBalance AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i
                 INNER JOIN customers c ON i.customer_id = c.id
@@ -56,16 +56,22 @@
                 )
                 SELECT * FROM InvoiceHierarchy ih
                 WHERE
-                    (:lifeStatus = 'ALL' OR (:lifeStatus = 'ACTIVE' AND ih.isactive = true) OR (:lifeStatus = 'INACTIVE' AND ih.isactive = false)) AND
-                    (:invoiceId <= 0 OR ih.id = :invoiceId OR ih.previnvoiceid = :invoiceId OR ih.fwdInvoiceId = :invoiceId) AND
-                    (:customerId <= 0 OR ih.customerId = :customerId) AND
-                    (:date = 'ALL' OR ih.datecreated like :date OR ih.dateupdated LIKE :date) AND
-                    (:finStatus = 'ALL' OR
-                            (:finStatus = 'BALANCED' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance = 0) OR
-                            (:finStatus = 'DEPTOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance > 0) OR
-                            (:finStatus = 'CREDITOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance < 0) OR
-                            (:finStatus = 'OVERDUE' AND ih.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0)) AND
-                    (:searchText = '%' OR UPPER(ih.customerFullName) LIKE :searchText OR UPPER(ih.about) LIKE :searchText OR UPPER(ih.descriptions) LIKE :searchText) 
+                    ((:customerId > 0 AND ih.customerId = :customerId) OR :customerId <= 0) AND
+                    (ih.datecreated like :invoiceDate OR ih.dateupdated LIKE :invoiceDate) AND
+
+                    (
+                        (:invoiceStatus = 'BALANCED' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance = 0) OR
+                        (:invoiceStatus = 'DEPTOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance > 0) OR
+                        (:invoiceStatus = 'CREDITOR' AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance < 0) OR
+                        (:invoiceStatus = 'OVERDUE' AND ih.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0) OR
+                        (:invoiceStatus = 'ALL')
+                    ) AND
+
+                    (
+                        UPPER(ih.customerFullName) LIKE :searchText OR 
+                        UPPER(ih.about) LIKE :searchText OR 
+                        UPPER(ih.descriptions) LIKE :searchText
+                    ) 
             ]]>
         </query>
     </named-native-query>
@@ -74,7 +80,7 @@
         <query>
             <![CDATA[
                 WITH RECURSIVE InvoiceHierarchy AS (
-                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions,
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
                 SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i
                 INNER JOIN customers c ON i.customer_id = c.id
@@ -83,7 +89,7 @@
                 LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
                 WHERE i.id = InvSums.SFN AND i.id = PFN AND i.id = InvFwds.FactorNum AND i.previnvoiceid IS NULL
                 UNION ALL
-                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.isactive, i.descriptions,
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
                 SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, prevInvoice.invBalance AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i
                 INNER JOIN customers c ON i.customer_id = c.id
@@ -101,7 +107,6 @@
                 )
                 SELECT * FROM InvoiceHierarchy ih
                 WHERE
-                    ih.isactive = true AND
                     ih.id < :invoiceId AND
                     ih.customerId = :customerId AND
                     ih.fwdInvoiceId IS NULL AND
@@ -118,7 +123,6 @@
             <column name="about" type="java.lang.String"/>
             <column name="dateCreated" type="java.lang.String"/>
             <column name="dateUpdated" type="java.lang.String"/>
-            <column name="isActive" type="boolean"/>
             <column name="descriptions" type="java.lang.String"/>
             <column name="totalInvoiceSum" type="double"/>
             <column name="totalInvoicePayments" type="double"/>

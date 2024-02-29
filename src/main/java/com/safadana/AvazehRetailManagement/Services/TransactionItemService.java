@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DAO.TransactionItemDAO;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
+import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.TransactionItemModel;
 
 @Service
@@ -69,5 +70,13 @@ public class TransactionItemService {
 
     public void deleteById(long id) {
         DAO.deleteById(id);
+    }
+
+    public CompletableFuture<List<ItemsForComboBox>> getTitleItems() {
+        return DAO.getTitleItems();
+    }
+
+    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(long id) {
+        return DAO.getTransactionNames(id);
     }
 }

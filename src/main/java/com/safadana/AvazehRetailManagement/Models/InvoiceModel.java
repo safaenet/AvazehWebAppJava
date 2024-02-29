@@ -30,7 +30,7 @@ public class InvoiceModel {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence-generator-invoices")
     @GenericGenerator(name = "sequence-generator-invoices", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
             @Parameter(name = "sequence_name", value = "user_sequence_invoices"),
-            @Parameter(name = "initial_value", value = "1"),
+            @Parameter(name = "initial_value", value = "1000"),
             @Parameter(name = "increment_size", value = "1")
     })
     private Long id;
@@ -63,9 +63,6 @@ public class InvoiceModel {
 
     @Column(columnDefinition="TEXT")
     private String descriptions;
-
-    @Column(nullable = false)
-    private boolean isActive = true;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prevInvoiceId")

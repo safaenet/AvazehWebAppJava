@@ -14,7 +14,6 @@ public class InvoiceListModel {
     private String about;
     private String dateCreated;
     private String dateUpdated;
-    private boolean isActive;
     private String descriptions;
     private double totalInvoiceSum;
     private double totalInvoicePayments;

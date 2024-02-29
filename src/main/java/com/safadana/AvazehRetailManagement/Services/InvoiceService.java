@@ -1,6 +1,7 @@
 package com.safadana.AvazehRetailManagement.Services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,28 +34,45 @@ public class InvoiceService {
         return CompletableFuture.completedFuture(DAO.findAll());
     }
 
-    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(String lifeStatus, Long invoiceId, Long customerId, String date, String finStatus, String searchText,
-        int offset, int pageSize, String sortColumn, String sortOrder) {
+    @SuppressWarnings({ "null", "unchecked" })
+    public CompletableFuture<Page<InvoiceListModel>> getWithPagination(Optional<String> searchText,
+            Optional<String> invoiceStatus, Optional<String> invoiceDate, Optional<Long> customerId,
+            int offset, int pageSize, String sortColumn, String sortOrder) {
         Sort.Direction sortDir = sortOrder.toUpperCase().equals("DESC") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        if(lifeStatus == null || lifeStatus == "") lifeStatus = "ALL";
-        if(date == null || date == "") date = "ALL"; //else date = "%" + date + "%";
-        if(finStatus == null || finStatus == "") finStatus = "ALL";
-        if(searchText == null || searchText == "") searchText = "%"; else searchText = "%" + searchText.toUpperCase() + "%";
-        if(sortColumn == null || sortColumn == "") sortColumn = "id";
-        if(pageSize == 0) pageSize = 50;
+
+        String SearchText = "%";
+        if (searchText != null && searchText.isPresent())
+            SearchText = "%" + searchText.get().toUpperCase() + "%";
+
+        if (sortColumn == null || sortColumn == "")
+            sortColumn = "id";
+
+        String InvoiceStatus = "ALL";
+        if (invoiceStatus != null && invoiceStatus.isPresent())
+            InvoiceStatus = invoiceStatus.get();
+
+        String InvoiceDate = "%";
+        if (invoiceDate != null && invoiceDate.isPresent())
+            InvoiceDate = "%" + invoiceDate.get() + "%";
+
+        long CustomerId = 0;
+        if (customerId != null && customerId.isPresent())
+            CustomerId = customerId.get();
+
+        if (pageSize == 0)
+            pageSize = 50;
+
         Query query = entityManager.createNamedQuery("findInvoiceListByMany")
-        .setParameter("lifeStatus", lifeStatus)
-        .setParameter("invoiceId", invoiceId)
-        .setParameter("customerId", customerId)
-        .setParameter("date", date)
-        .setParameter("finStatus", finStatus)
-        .setParameter("searchText", searchText);
+                .setParameter("customerId", CustomerId)
+                .setParameter("invoiceDate", InvoiceDate)
+                .setParameter("invoiceStatus", InvoiceStatus)
+                .setParameter("searchText", SearchText);
         int total = query.getResultList().size();
         query.setFirstResult(offset * pageSize);
         query.setMaxResults(pageSize);
-        @SuppressWarnings("unchecked")
         List<InvoiceListModel> list = query.getResultList();
-        Page<InvoiceListModel> page = new PageImpl<>(list, PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)), total);
+        Page<InvoiceListModel> page = new PageImpl<>(list,
+                PageRequest.of(offset, pageSize).withSort(Sort.by(sortDir, sortColumn)), total);
         CompletableFuture<Page<InvoiceListModel>> completedFuture = CompletableFuture.completedFuture(page);
         return completedFuture;
     }
@@ -81,15 +99,15 @@ public class InvoiceService {
 
     public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(Long invoiceId, Long customerId) {
         Query query = entityManager.createNamedQuery("findPrevInvoiceList")
-        .setParameter("invoiceId", invoiceId)
-        .setParameter("customerId", customerId);
+                .setParameter("invoiceId", invoiceId)
+                .setParameter("customerId", customerId);
         @SuppressWarnings("unchecked")
         List<InvoiceListModel> list = query.getResultList();
         CompletableFuture<List<InvoiceListModel>> completedFuture = CompletableFuture.completedFuture(list);
         return completedFuture;
     }
 
-    public CompletableFuture<Boolean> updateInvoiceDateUpdated(long invoiceId){
+    public CompletableFuture<Boolean> updateInvoiceDateUpdated(long invoiceId) {
         InvoiceModel invoice;
         invoice = DAO.getReferenceById(invoiceId);
         invoice.setDateUpdated(PersianCalendarHelper.getPersianDateTime());

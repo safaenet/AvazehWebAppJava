@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.Models.InvoiceItemModel;
+import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.RecentSellPriceModel;
 import com.safadana.AvazehRetailManagement.Services.InvoiceItemService;
 
@@ -42,5 +43,10 @@ public class InvoiceItemController {
     @GetMapping("/RecentSellPrices/{customerId}/{productId}/{maxRecord}")
     public CompletableFuture<List<RecentSellPriceModel>> getRecentSellPrices(@PathVariable Long customerId, @PathVariable Long productId, @PathVariable int maxRecord) {
         return service.getRecentSellPrices(customerId, productId, maxRecord);
+    }
+
+    @GetMapping("/ProductItems")
+    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
+        return service.getProductItems();
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.TransactionItemModel;
 import com.safadana.AvazehRetailManagement.Services.TransactionItemService;
 
@@ -49,13 +50,21 @@ public class TransactionItemController {
 
     @PostMapping("/CreateUpdate")
     public CompletableFuture<TransactionItemModel> createUpdate(@RequestBody TransactionItemModel item) {
-        System.out.println(item);
-        System.out.println("===================================");
         return service.createUpdate(item);
     }
 
     @DeleteMapping("/Delete/{id}")
     public void delete(@PathVariable Long id) {
         service.deleteById(id);
+    }
+
+    @GetMapping("/TitleItems")
+    public CompletableFuture<List<ItemsForComboBox>> getTitleItems() {
+        return service.getTitleItems();
+    }
+
+    @GetMapping("/TransactionNames")
+    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@RequestParam Optional<Long> id) {
+        return service.getTransactionNames(id.isEmpty() ? 0 : id.get());
     }
 }

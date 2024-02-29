@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.safadana.AvazehRetailManagement.DAO.TransactionDAO;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
-import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.TransactionListModel;
 import com.safadana.AvazehRetailManagement.Models.TransactionModel;
 
@@ -44,9 +43,8 @@ public class TransactionService {
             TransactionStatus = transactionStatus.get();
 
         String TransactionDate = "%";
-        if (transactionDate != null && transactionDate.isPresent()){
+        if (transactionDate != null && transactionDate.isPresent())
             TransactionDate = "%" + transactionDate.get() + "%";
-        }
             
         if (pageSize == 0)
             pageSize = 50;
@@ -71,13 +69,5 @@ public class TransactionService {
 
     public void deleteById(long id) {
         DAO.deleteById(id);
-    }
-
-    public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
-        return DAO.getProductItems();
-    }
-
-    public CompletableFuture<List<ItemsForComboBox>> getTransactionNames(long id) {
-        return DAO.getTransactionNames(id);
     }
 }

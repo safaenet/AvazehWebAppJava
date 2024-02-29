@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
+import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.TransactionItemModel;
 
 @Repository
@@ -35,4 +36,15 @@ public interface TransactionItemDAO extends JpaRepository<TransactionItemModel, 
                         @Param("SearchText") String SearchText, @Param("TransactionStatus") String TransactionStatus,
                         @Param("TransactionDate") String TransactionDate,
                         Pageable pageable);
+
+        @Async
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(p.id AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true "
+                        + "UNION " +
+                        "SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(0 AS id, ti.title AS itemName) FROM TransactionItemModel ti")
+        CompletableFuture<List<ItemsForComboBox>> getTitleItems();
+        
+        @Async
+        @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(t.id AS id, t.fileName AS itemName) "
+                        + "FROM TransactionModel t WHERE t.id <> COALESCE(:transactionId, 0)")
+        CompletableFuture<List<ItemsForComboBox>> getTransactionNames(@Param("transactionId") Long id);
 }

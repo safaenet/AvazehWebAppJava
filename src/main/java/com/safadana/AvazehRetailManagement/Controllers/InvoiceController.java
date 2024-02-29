@@ -37,12 +37,11 @@ public class InvoiceController {
             @RequestParam("searchText") Optional<String> searchText,
             @RequestParam("invoiceStatus") Optional<String> invoiceStatus,
             @RequestParam("invoiceDate") Optional<String> invoiceDate,
-            @RequestParam Long customerId,
+            @RequestParam("customerId") Optional<Long> customerId,
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(lifeStatus, invoiceId, customerId, date, finStatus, searchText, offset,
-                pageSize, sortColumn, sortOrder);
+        return service.getWithPagination(searchText, invoiceStatus, invoiceDate, customerId, offset, pageSize, sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")

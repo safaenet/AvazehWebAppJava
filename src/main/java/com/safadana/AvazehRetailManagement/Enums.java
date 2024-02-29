@@ -18,7 +18,6 @@ public class Enums {
             return value;
         }
     }
-    
 
     public enum ChequeQueryStatus {
         NOTCASHED(0),
