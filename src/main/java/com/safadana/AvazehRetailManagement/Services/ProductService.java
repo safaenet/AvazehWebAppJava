@@ -12,7 +12,6 @@ import com.safadana.AvazehRetailManagement.DAO.ProductDAO;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
 import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.ProductModel;
-import com.safadana.AvazehRetailManagement.Models.ProductUnitModel;
 
 @Service
 public class ProductService {
@@ -68,9 +67,5 @@ public class ProductService {
 
     public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
         return DAO.getProductItems();
-    }
-
-    public CompletableFuture<List<ProductUnitModel>> getProductUnits() {
-        return DAO.getProductUnits();
     }
 }

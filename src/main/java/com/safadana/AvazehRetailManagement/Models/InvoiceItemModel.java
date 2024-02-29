@@ -42,9 +42,6 @@ public class InvoiceItemModel {
     @Column(nullable = false)
     private double countValue = 1;
 
-    @ManyToOne
-    private ProductUnitModel unit;
-
     @Column(length = 20, nullable = false)
     private String dateCreated;
 

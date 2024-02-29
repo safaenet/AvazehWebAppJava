@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.ProductModel;
-import com.safadana.AvazehRetailManagement.Models.ProductUnitModel;
 import com.safadana.AvazehRetailManagement.Services.ProductService;
 
 @CrossOrigin
@@ -63,10 +62,5 @@ public class ProductController {
     @GetMapping("/ProductItems") //loads active products
     public CompletableFuture<List<ItemsForComboBox>> getProductItems() {
         return service.getProductItems();
-    }
-
-    @GetMapping("/ProductUnits")
-    public CompletableFuture<List<ProductUnitModel>> getProductUnits() {
-        return service.getProductUnits();
     }
 }

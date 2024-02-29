@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
 import com.safadana.AvazehRetailManagement.Models.ProductModel;
-import com.safadana.AvazehRetailManagement.Models.ProductUnitModel;
 
 @Repository
 public interface ProductDAO extends JpaRepository<ProductModel, Long> {
@@ -30,8 +29,4 @@ public interface ProductDAO extends JpaRepository<ProductModel, Long> {
     @Async
     @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.ItemsForComboBox(p.id AS id, p.productName AS itemName) FROM ProductModel p WHERE p.isActive = true")
     CompletableFuture<List<ItemsForComboBox>> getProductItems();
-
-    @Async
-    @Query("SELECT NEW com.safadana.AvazehRetailManagement.Models.ProductUnitModel(u.id AS id, u.unitName) FROM ProductUnitModel u")
-    CompletableFuture<List<ProductUnitModel>> getProductUnits();
 }
