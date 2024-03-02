@@ -37,7 +37,9 @@
                 LEFT JOIN (SELECT COALESCE(SUM(ip.payamount), 0) AS PT, i.id AS PFN FROM invoicepayments ip RIGHT JOIN invoices i ON ip.invoiceid = i.id GROUP BY i.id) AS InvPays ON InvPays.PFN = i.id
                 LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
                 WHERE i.id = InvSums.SFN AND i.id = PFN AND i.id = InvFwds.FactorNum AND i.previnvoiceid IS NULL
+
                 UNION ALL
+
                 SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
                 SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, prevInvoice.invBalance AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i

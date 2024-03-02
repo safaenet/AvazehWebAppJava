@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.Models.InvoiceListModel;
 import com.safadana.AvazehRetailManagement.Models.InvoiceModel;
+import com.safadana.AvazehRetailManagement.Models.InvoiceModel_DTO;
 import com.safadana.AvazehRetailManagement.Services.InvoiceService;
 
 @CrossOrigin
@@ -45,7 +46,7 @@ public class InvoiceController {
     }
 
     @GetMapping("/Id/{id}")
-    public CompletableFuture<InvoiceModel> getById(@PathVariable Long id) {
+    public CompletableFuture<InvoiceModel_DTO> getById(@PathVariable Long id) {
         return service.getById(id);
     }
 

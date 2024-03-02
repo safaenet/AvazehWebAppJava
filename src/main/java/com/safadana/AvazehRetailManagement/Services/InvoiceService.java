@@ -16,6 +16,7 @@ import com.safadana.AvazehRetailManagement.DAO.InvoiceItemDAO;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
 import com.safadana.AvazehRetailManagement.Models.InvoiceListModel;
 import com.safadana.AvazehRetailManagement.Models.InvoiceModel;
+import com.safadana.AvazehRetailManagement.Models.InvoiceModel_DTO;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -77,8 +78,16 @@ public class InvoiceService {
         return completedFuture;
     }
 
-    public CompletableFuture<InvoiceModel> getById(long id) {
-        return CompletableFuture.completedFuture(DAO.findById(id).get());
+    public CompletableFuture<InvoiceModel_DTO> getById(long id) {
+        // return CompletableFuture.supplyAsync(() -> {
+        //     Query query = entityManager.createNamedQuery("loadSingleInvoice").setParameter("id", id);
+        //     try {
+        //         return (InvoiceModel_DTO) query.getSingleResult();
+        //     } catch (Exception e) {
+        //         return null;
+        //     }
+        // });
+        return null;
     }
 
     public CompletableFuture<InvoiceModel> createUpdateProduct(InvoiceModel item) {
