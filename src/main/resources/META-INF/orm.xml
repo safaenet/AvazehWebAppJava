@@ -28,6 +28,70 @@
     <named-native-query name = "findInvoiceListByMany" result-set-mapping="InvoiceListMapping">
         <query>
             <![CDATA[
+                CREATE OR REPLACE FUNCTION calcInvoiceSellSum(invId BIGINT) RETURNS BIGINT AS $$
+                BEGIN
+                    RETURN COALESCE(ROUND(
+                        CASE
+                        WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) --Percent
+                        WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue --Amount
+                        END), 0)
+                    FROM invoices i
+                    LEFT JOIN invoiceitems ii ON ii.invoiceid = i.id
+                    WHERE i.id = invId
+                    GROUP BY i.id;
+                END;
+                $$ LANGUAGE plpgsql;
+
+                CREATE OR REPLACE FUNCTION calcInvoicePaySum(invId BIGINT) RETURNS BIGINT AS $$
+                BEGIN
+                    RETURN COALESCE(SUM(ip.payamount), 0)
+                    FROM invoices i
+                    LEFT JOIN invoicepayments ip ON ip.invoiceid = i.id
+                    WHERE i.id = invId
+                    GROUP BY i.id;
+                END;
+                $$ LANGUAGE plpgsql;
+
+                CREATE OR REPLACE FUNCTION calcInvoicePrevBalance(invId BIGINT) RETURNS BIGINT AS $$
+                BEGIN
+                    IF (SELECT i.previnvoiceid FROM invoices i WHERE i.id = invId) IS NULL THEN RETURN 0;
+                    ELSE RETURN
+                        calcInvoiceSellSum((SELECT previnvoiceid FROM invoices WHERE id = invId)) -
+                        calcInvoicePaySum((SELECT previnvoiceid FROM invoices WHERE id = invId)) +
+                        calcInvoicePrevBalance((SELECT previnvoiceid FROM invoices WHERE id = invId));
+                    END IF;
+                END;
+                $$ LANGUAGE plpgsql;
+                
+                SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
+                calcInvoiceSellSum(i.id) AS totalInvoiceSum, calcInvoicePaySum(i.id) AS totalInvoicePayments, i.previnvoiceid, calcInvoicePrevBalance(i.id) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                FROM invoices i
+                INNER JOIN customers c ON i.customer_id = c.id
+                LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
+                WHERE
+                    ((:customerId > 0 AND i.customer_id = :customerId) OR :customerId <= 0) AND
+                    (i.datecreated LIKE :invoiceDate OR i.dateupdated LIKE :invoiceDate) AND
+
+                    (
+                        (:invoiceStatus = 'BALANCED' AND i.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance = 0) OR
+                        (:invoiceStatus = 'DEPTOR' AND i.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance > 0) OR
+                        (:invoiceStatus = 'CREDITOR' AND i.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance < 0) OR
+                        (:invoiceStatus = 'OVERDUE' AND i.fwdInvoiceId IS NULL AND ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0) OR
+                        (:invoiceStatus = 'ALL')
+                    ) AND
+
+                    (
+                        UPPER(ih.customerFullName) LIKE :searchText OR 
+                        UPPER(ih.about) LIKE :searchText OR 
+                        UPPER(ih.descriptions) LIKE :searchText
+                    ) 
+            ]]>
+        </query>
+    </named-native-query>
+
+    <!-- <named-native-query name = "findInvoiceListByMany" result-set-mapping="InvoiceListMapping">
+        <query>
+            <![CDATA[
                 WITH RECURSIVE InvoiceHierarchy AS (
                 SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
                 SFS AS totalInvoiceSum, PT AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
@@ -76,7 +140,7 @@
                     ) 
             ]]>
         </query>
-    </named-native-query>
+    </named-native-query> -->
 
     <named-native-query name = "findPrevInvoiceList" result-set-mapping="InvoiceListMapping">
         <query>
