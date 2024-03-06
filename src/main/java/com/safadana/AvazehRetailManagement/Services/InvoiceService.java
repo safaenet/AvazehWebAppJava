@@ -1,6 +1,5 @@
 package com.safadana.AvazehRetailManagement.Services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -15,10 +14,11 @@ import org.springframework.stereotype.Service;
 import com.safadana.AvazehRetailManagement.DAO.InvoiceDAO;
 import com.safadana.AvazehRetailManagement.DAO.InvoiceItemDAO;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
-import com.safadana.AvazehRetailManagement.Models.InvoiceItemModel;
+import com.safadana.AvazehRetailManagement.Models.InvoiceItemModel_DTO;
 import com.safadana.AvazehRetailManagement.Models.InvoiceListModel;
 import com.safadana.AvazehRetailManagement.Models.InvoiceModel;
 import com.safadana.AvazehRetailManagement.Models.InvoiceModel_DTO;
+import com.safadana.AvazehRetailManagement.Models.InvoicePaymentModel;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -80,48 +80,41 @@ public class InvoiceService {
         return completedFuture;
     }
 
-    @SuppressWarnings("unchecked")
     public CompletableFuture<InvoiceModel_DTO> getById(long id) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                String nativeQuery = "SELECT i.id, c.*, i.about, i.dateCreated, i.dateUpdated, i.dateUpdated, ii.*," +
-                                        "p.*, i.discountType, i.discountValue, i.descriptions, i.prevInvoiceId, calcinvoiceprevbalance(:invoiceId), InvFwds.fwdFactorNum AS fwdInvoiceId " +
-                                        "FROM invoices i " +
-                                        "LEFT JOIN customers c ON i.customer_id = c.id " +
-                                        "LEFT JOIN invoiceitems ii ON i.id = ii.invoiceid " +
-                                        "LEFT JOIN invoicepayments p ON i.id = p.invoiceid " +
-                                        "LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id" +
-                                        "WHERE i.id = :invoiceId";
-                List<Object[]> results = entityManager.createNativeQuery(nativeQuery).setParameter("invoiceId", id).getResultList();
+                InvoiceModel_DTO invoice = (InvoiceModel_DTO) entityManager.createNamedQuery("loadSingleInvoiceSpecs")
+                        .setParameter("invoiceId", id).getSingleResult();
 
-                InvoiceModel_DTO invoice = null;
-                List<InvoiceItemModel> items = new ArrayList<>();
-
-                for (Object[] row : results) {
-                    if (invoice == null) {
-                        invoice = new InvoiceModel_DTO();
-                        invoice.setId((Long) row[0]);
-                    }
-
-                    InvoiceItemModel item = new InvoiceItemModel();
-                    item.setId((Long) row[2]);
-                    item.setDescriptions((String) row[3]);
-
-                    items.add(item);
-                }
-
-                if (invoice != null) {
-                    invoice.setItems(items);
-                }
+                invoice.setItems(getInvoiceItemsByInvoiceId(id));
+                invoice.setPayments(getInvoicePaymentsByInvoiceId(id));
 
                 return invoice;
             } catch (Exception e) {
+                System.out.println(e);
                 return null;
             }
         });
     }
 
-    public CompletableFuture<InvoiceModel> createUpdateProduct(InvoiceModel item) {
+    public List<InvoiceItemModel_DTO> getInvoiceItemsByInvoiceId(long id) {
+        List<InvoiceItemModel_DTO> items = entityManager
+                .createQuery("SELECT NEW com.safadana.AvazehRetailManagement.Models.InvoiceItemModel_DTO(ii.id, ii.invoiceId, ii.product.id AS productId, ii.product.productName AS productName,"  +
+                "ii.buyPrice, ii.sellPrice, ii.countString, ii.countValue, ii.dateCreated, ii.dateUpdated, ii.delivered, ii.descriptions) FROM InvoiceItemModel ii WHERE ii.invoiceId = :invoiceId",
+                        InvoiceItemModel_DTO.class)
+                .setParameter("invoiceId", id).getResultList();
+        return items;
+    }
+
+    public List<InvoicePaymentModel> getInvoicePaymentsByInvoiceId(long id) {
+        List<InvoicePaymentModel> payments = entityManager
+                .createQuery("SELECT ip FROM InvoicePaymentModel ip WHERE ip.invoiceId = :invoiceId",
+                        InvoicePaymentModel.class)
+                .setParameter("invoiceId", id).getResultList();
+        return payments;
+    }
+
+    public CompletableFuture<InvoiceModel> createUpdate(InvoiceModel item) {
         if (PersianCalendarHelper.isValidPersianDateTime(item.getDateCreated()) == false)
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
         item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());

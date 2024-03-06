@@ -7,8 +7,6 @@ import java.util.List;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import com.safadana.AvazehRetailManagement.Enums.*;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,21 +45,21 @@ public class InvoiceModel {
     @Column(length = 20)
     private String dateUpdated;
 
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
     @JoinColumn(name = "invoiceId")
     private List<InvoiceItemModel> items;
 
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(cascade = { CascadeType.ALL }, orphanRemoval = true)
     @JoinColumn(name = "invoiceId")
     private List<InvoicePaymentModel> payments;
 
     @Column(nullable = false)
-    private DiscountTypes discountType = DiscountTypes.AMOUNT;
+    private int discountType = 1; // 0: PERCENT, 1:AMOUNT
 
     @Column(nullable = false)
     private double discountValue = 0;
 
-    @Column(columnDefinition="TEXT")
+    @Column(columnDefinition = "TEXT")
     private String descriptions;
 
     @OneToOne(fetch = FetchType.LAZY)

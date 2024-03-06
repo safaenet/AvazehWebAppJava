@@ -42,7 +42,8 @@ public class InvoiceController {
             @RequestParam int offset,
             @RequestParam int pageSize,
             @RequestParam String sortColumn, @RequestParam String sortOrder) {
-        return service.getWithPagination(searchText, invoiceStatus, invoiceDate, customerId, offset, pageSize, sortColumn, sortOrder);
+        return service.getWithPagination(searchText, invoiceStatus, invoiceDate, customerId, offset, pageSize,
+                sortColumn, sortOrder);
     }
 
     @GetMapping("/Id/{id}")
@@ -52,7 +53,7 @@ public class InvoiceController {
 
     @PostMapping("/CreateUpdate")
     public CompletableFuture<InvoiceModel> createUpdate(@RequestBody InvoiceModel item) {
-        return service.createUpdateProduct(item);
+        return service.createUpdate(item);
     }
 
     @DeleteMapping("/Delete/{id}")
@@ -66,7 +67,8 @@ public class InvoiceController {
     }
 
     @GetMapping("/GetPrevInvoices/{invoiceId}/{customerId}")
-    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(@PathVariable Long invoiceId, @PathVariable Long customerId) {
+    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(@PathVariable Long invoiceId,
+            @PathVariable Long customerId) {
         return service.getPrevInvoices(invoiceId, customerId);
     }
 }

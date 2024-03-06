@@ -9,7 +9,7 @@
                 FROM (
                     SELECT 
                         CASE 
-                            WHEN i.discountType = DiscountTypes.PERCENT THEN 
+                            WHEN i.discountType = 0 THEN 
                                 COALESCE(SUM(ii.countValue * ii.sellPrice), 0) - (i.discountValue / 100 * SUM(ii.countValue * ii.sellPrice)) - COALESCE(SUM(ip.payAmount), 0)
                             ELSE 
                                 COALESCE(SUM(ii.countValue * ii.sellPrice), 0) - i.discountValue - COALESCE(SUM(ip.payAmount), 0)
@@ -104,6 +104,18 @@
             ]]>
         </query>
     </named-native-query>
+
+    <named-native-query name = "loadSingleInvoiceSpecs" result-set-mapping="singleInvoiceSpecsMapping">
+        <query>
+            <![CDATA[
+                SELECT i.id, i.about, i.dateCreated, i.dateUpdated, i.discountType, i.discountValue, i.descriptions, i.prevInvoiceId,
+                calcinvoiceprevbalance(:invoiceId) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                FROM invoices i
+                LEFT JOIN (SELECT baseI.id AS FactorNum, prevI.id AS fwdFactorNum FROM invoices baseI LEFT JOIN invoices prevI ON baseI.id = prevI.previnvoiceid) AS InvFwds ON InvFwds.FactorNum = i.id
+                WHERE i.id = :invoiceId
+            ]]>
+        </query>
+    </named-native-query>
     
     <sql-result-set-mapping name="InvoiceListMapping">
         <constructor-result target-class="com.safadana.AvazehRetailManagement.Models.InvoiceListModel">
@@ -116,6 +128,21 @@
             <column name="descriptions" type="java.lang.String"/>
             <column name="totalInvoiceSum" type="double"/>
             <column name="totalInvoicePayments" type="double"/>
+            <column name="prevInvoiceId" type="java.lang.Long"/>
+            <column name="prevInvoiceBalance" type="double"/>
+            <column name="fwdInvoiceId" type="java.lang.Long"/>
+        </constructor-result>
+    </sql-result-set-mapping>
+    
+    <sql-result-set-mapping name="singleInvoiceSpecsMapping">
+        <constructor-result target-class="com.safadana.AvazehRetailManagement.Models.InvoiceModel_DTO">
+            <column name="id" type="java.lang.Long"/>
+            <column name="about" type="java.lang.String"/>
+            <column name="dateCreated" type="java.lang.String"/>
+            <column name="dateUpdated" type="java.lang.String"/>
+            <column name="discountType" type="java.lang.Integer"/>
+            <column name="discountValue" type="java.lang.String"/>
+            <column name="descriptions" type="java.lang.String"/>
             <column name="prevInvoiceId" type="java.lang.Long"/>
             <column name="prevInvoiceBalance" type="double"/>
             <column name="fwdInvoiceId" type="java.lang.Long"/>
