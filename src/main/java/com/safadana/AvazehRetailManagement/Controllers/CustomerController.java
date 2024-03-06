@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safadana.AvazehRetailManagement.Models.CustomerModel;
 import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
-import com.safadana.AvazehRetailManagement.Models.PhoneNumberModel;
 import com.safadana.AvazehRetailManagement.Services.CustomerService;
 
 @CrossOrigin
@@ -64,10 +63,5 @@ public class CustomerController {
     @GetMapping("/CustomerBalance/{customerId}")
     public CompletableFuture<Double> getCustomerBalance(@PathVariable Long customerId) {
         return service.getCustomerBalance(customerId);
-    }
-
-    @GetMapping("/Phones/{customerId}")
-    public CompletableFuture<List<PhoneNumberModel>> getPhones(@PathVariable Long customerId) {
-        return service.getPhoneNumbers(customerId);
     }
 }

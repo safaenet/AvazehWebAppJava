@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.safadana.AvazehRetailManagement.DAO.InvoiceDAO;
 import com.safadana.AvazehRetailManagement.DAO.InvoiceItemDAO;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
+import com.safadana.AvazehRetailManagement.Models.CustomerModel;
 import com.safadana.AvazehRetailManagement.Models.InvoiceItemModel_DTO;
 import com.safadana.AvazehRetailManagement.Models.InvoiceListModel;
 import com.safadana.AvazehRetailManagement.Models.InvoiceModel;
@@ -85,10 +86,10 @@ public class InvoiceService {
             try {
                 InvoiceModel_DTO invoice = (InvoiceModel_DTO) entityManager.createNamedQuery("loadSingleInvoiceSpecs")
                         .setParameter("invoiceId", id).getSingleResult();
-
+                CustomerModel customer = (CustomerModel) entityManager.createNamedQuery("loadCustomerByInvoiceId").setParameter("invoiceId", id).getSingleResult();
+                invoice.setCustomer(customer);
                 invoice.setItems(getInvoiceItemsByInvoiceId(id));
                 invoice.setPayments(getInvoicePaymentsByInvoiceId(id));
-
                 return invoice;
             } catch (Exception e) {
                 System.out.println(e);

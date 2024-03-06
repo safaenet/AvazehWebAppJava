@@ -1,7 +1,5 @@
 package com.safadana.AvazehRetailManagement.Models;
 
-import java.util.List;
-
 import javax.validation.constraints.Email;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -12,8 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -49,11 +45,6 @@ public class CustomerModel {
     @Column(columnDefinition = "TEXT")
     private String descriptions;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "customerId")
-    private List<PhoneNumberModel> phoneNumbers;
-
-    // @JsonIgnore
-    // @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<InvoiceModel> invoices;
+    @Column(length = 50)
+    private String phoneNumber;
 }

@@ -14,7 +14,6 @@ import com.safadana.AvazehRetailManagement.DAO.CustomerDAO;
 import com.safadana.AvazehRetailManagement.Helpers.PersianCalendarHelper;
 import com.safadana.AvazehRetailManagement.Models.CustomerModel;
 import com.safadana.AvazehRetailManagement.Models.ItemsForComboBox;
-import com.safadana.AvazehRetailManagement.Models.PhoneNumberModel;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -66,70 +65,41 @@ public class CustomerService {
         if (item.getId() == 0) { // New Item
             String nativeQuery = "SELECT nextval('user_sequence_customers')";
             Long nextAvailableId = (Long) entityManager.createNativeQuery(nativeQuery).getSingleResult();
-            nativeQuery = "INSERT INTO customers (id, fullname, companyname, emailaddress, postaddress, datejoined, descriptions) "
+            nativeQuery = "INSERT INTO customers (id, fullname, companyname, phonenumber, emailaddress, postaddress, datejoined, descriptions) "
                     +
-                    "VALUES (:id, :fullName, :companyName, :emailAddress, :postAddress, :dateJoined, :descriptions)";
+                    "VALUES (:id, :fullName, :companyName, :phoneNumber, :emailAddress, :postAddress, :dateJoined, :descriptions)";
             entityManager.createNativeQuery(nativeQuery)
                     .setParameter("id", nextAvailableId)
                     .setParameter("fullName", item.getFullName())
                     .setParameter("companyName", item.getCompanyName())
+                    .setParameter("phoneNumber", item.getPhoneNumber())
                     .setParameter("emailAddress", item.getEmailAddress())
                     .setParameter("postAddress", item.getPostAddress())
                     .setParameter("dateJoined", item.getDateJoined())
                     .setParameter("descriptions", item.getDescriptions())
                     .executeUpdate();
             item.setId(nextAvailableId);
-            addPhoneNumbersToDb(item);
 
         } else if (item.getId() > 0) { // Update Item
-            String nativeQuery = "UPDATE customers SET fullname = :fullName, companyname = :companyName, emailaddress = :emailAddress"
+            String nativeQuery = "UPDATE customers SET fullname = :fullName, companyname = :companyName, phonenumber = :phoneNumber, emailaddress = :emailAddress"
                     +
                     ", postaddress = :postAddress, datejoined = :dateJoined, descriptions = :descriptions WHERE id = :id";
             entityManager.createNativeQuery(nativeQuery)
                     .setParameter("id", item.getId())
                     .setParameter("fullName", item.getFullName())
                     .setParameter("companyName", item.getCompanyName())
+                    .setParameter("phoneNumber", item.getPhoneNumber())
                     .setParameter("emailAddress", item.getEmailAddress())
                     .setParameter("postAddress", item.getPostAddress())
                     .setParameter("dateJoined", item.getDateJoined())
                     .setParameter("descriptions", item.getDescriptions())
                     .executeUpdate();
-
-            deletePhoneNumbersFromDb(item.getId());
-            addPhoneNumbersToDb(item);
         }
-
         return CompletableFuture.completedFuture(item);
-    }
-
-    private void addPhoneNumbersToDb(CustomerModel item) {
-        if (item.getPhoneNumbers() != null && !item.getPhoneNumbers().isEmpty()) {
-            item.getPhoneNumbers().forEach((i) -> {
-                String nativeQuery = "SELECT nextval('user_sequence_phonenumbers')";
-                Long nextAvailableId = (Long) entityManager.createNativeQuery(nativeQuery)
-                        .getSingleResult();
-                nativeQuery = "INSERT INTO phonenumbers (id, customerid, phonenumber) VALUES (:id, :customerId, :phoneNumber)";
-                entityManager.createNativeQuery(nativeQuery)
-                        .setParameter("id", nextAvailableId)
-                        .setParameter("customerId", item.getId())
-                        .setParameter("phoneNumber", i.getPhoneNumber())
-                        .executeUpdate();
-                i.setId(nextAvailableId);
-                i.setCustomerId(item.getId());
-            });
-        }
-    }
-
-    private void deletePhoneNumbersFromDb(long customerId) {
-        String nativeQuery = "DELETE FROM phonenumbers WHERE customerid = :customerId";
-        entityManager.createNativeQuery(nativeQuery)
-                .setParameter("customerId", customerId)
-                .executeUpdate();
     }
 
     @Transactional
     public void deleteById(long id) {
-        deletePhoneNumbersFromDb(id);
         DAO.deleteById(id);
     }
 
@@ -139,9 +109,5 @@ public class CustomerService {
 
     public CompletableFuture<Double> getCustomerBalance(Long customerId) {
         return DAO.getCustomerBalance(customerId);
-    }
-
-    public CompletableFuture<List<PhoneNumberModel>> getPhoneNumbers(Long customerId) {
-        return DAO.getPhoneNumbers(customerId);
     }
 }
