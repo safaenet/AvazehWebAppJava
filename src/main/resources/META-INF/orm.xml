@@ -30,7 +30,7 @@
             <![CDATA[
                 WITH RECURSIVE InvoiceHierarchy AS (
                 SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
-                SFS AS totalInvoiceSum, COALESCE(PT, 0) AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                COALESCE(SFS, 0) AS totalInvoiceSum, COALESCE(PT, 0) AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i
                 INNER JOIN customers c ON i.customer_id = c.id
                 LEFT JOIN (SELECT COALESCE(ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END), 0) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
@@ -41,7 +41,7 @@
                 UNION ALL
 
                 SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
-                SFS AS totalInvoiceSum, COALESCE(PT, 0) AS totalInvoicePayments, i.previnvoiceid, ih.prevInvoiceBalance + ih.totalInvoiceSum - ih.totalInvoicePayments AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                COALESCE(SFS, 0) AS totalInvoiceSum, COALESCE(PT, 0) AS totalInvoicePayments, i.previnvoiceid, ih.prevInvoiceBalance + ih.totalInvoiceSum - ih.totalInvoicePayments AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i
                 INNER JOIN customers c ON i.customer_id = c.id
                 LEFT JOIN (SELECT ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
@@ -134,10 +134,10 @@
             <column name="dateCreated" type="java.lang.String"/>
             <column name="dateUpdated" type="java.lang.String"/>
             <column name="descriptions" type="java.lang.String"/>
-            <column name="totalInvoiceSum" type="double"/>
-            <column name="totalInvoicePayments" type="double"/>
+            <column name="totalInvoiceSum" type="java.lang.Double"/>
+            <column name="totalInvoicePayments" type="java.lang.Double"/>
             <column name="prevInvoiceId" type="java.lang.Long"/>
-            <column name="prevInvoiceBalance" type="double"/>
+            <column name="prevInvoiceBalance" type="java.lang.Double"/>
             <column name="fwdInvoiceId" type="java.lang.Long"/>
         </constructor-result>
     </sql-result-set-mapping>
@@ -152,7 +152,7 @@
             <column name="discountValue" type="java.lang.String"/>
             <column name="descriptions" type="java.lang.String"/>
             <column name="prevInvoiceId" type="java.lang.Long"/>
-            <column name="prevInvoiceBalance" type="double"/>
+            <column name="prevInvoiceBalance" type="java.lang.Double"/>
             <column name="fwdInvoiceId" type="java.lang.Long"/>
         </constructor-result>
     </sql-result-set-mapping>
