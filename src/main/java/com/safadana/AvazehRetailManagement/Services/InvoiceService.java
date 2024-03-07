@@ -101,7 +101,7 @@ public class InvoiceService {
     public List<InvoiceItemModel_DTO> getInvoiceItemsByInvoiceId(long id) {
         List<InvoiceItemModel_DTO> items = entityManager
                 .createQuery("SELECT NEW com.safadana.AvazehRetailManagement.Models.InvoiceItemModel_DTO(ii.id, ii.invoiceId, ii.product.id AS productId, ii.product.productName AS productName,"  +
-                "ii.buyPrice, ii.sellPrice, ii.countString, ii.countValue, ii.dateCreated, ii.dateUpdated, ii.delivered, ii.descriptions) FROM InvoiceItemModel ii WHERE ii.invoiceId = :invoiceId",
+                "ii.buyPrice, ii.sellPrice, ii.countString, ii.countValue, ii.dateCreated, ii.dateUpdated, ii.delivered, ii.descriptions) FROM InvoiceItemModel ii WHERE ii.invoiceId = :invoiceId ORDER BY ii.dateCreated DESC",
                         InvoiceItemModel_DTO.class)
                 .setParameter("invoiceId", id).getResultList();
         return items;
