@@ -63,10 +63,12 @@
                     ) AND
 
                     (
+                        CAST(ih.id AS VARCHAR) LIKE :searchText OR 
                         UPPER(ih.customerFullName) LIKE :searchText OR 
                         UPPER(ih.about) LIKE :searchText OR 
                         UPPER(ih.descriptions) LIKE :searchText
-                    ) 
+                    )
+                ORDER BY ih.id DESC
             ]]>
         </query>
     </named-native-query>
