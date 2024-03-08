@@ -31,6 +31,9 @@ public class CustomerModel {
 
     @Column(length = 50)
     private String companyName;
+    
+    @Column(length = 50)
+    private String phoneNumber;
 
     @Column(length = 50)
     @Email
@@ -44,7 +47,4 @@ public class CustomerModel {
 
     @Column(columnDefinition = "TEXT")
     private String descriptions;
-
-    @Column(length = 50)
-    private String phoneNumber;
 }
