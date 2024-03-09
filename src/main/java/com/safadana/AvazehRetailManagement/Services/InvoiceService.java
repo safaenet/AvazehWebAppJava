@@ -20,6 +20,7 @@ import com.safadana.AvazehRetailManagement.Models.InvoiceListModel;
 import com.safadana.AvazehRetailManagement.Models.InvoiceModel;
 import com.safadana.AvazehRetailManagement.Models.InvoiceModel_DTO;
 import com.safadana.AvazehRetailManagement.Models.InvoicePaymentModel;
+import com.safadana.AvazehRetailManagement.Models.InvoiceSpecsUpdate_DTO;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -115,11 +116,34 @@ public class InvoiceService {
         return payments;
     }
 
-    public CompletableFuture<InvoiceModel> createUpdate(InvoiceModel item) {
+    public CompletableFuture<Integer> createUpdate(InvoiceSpecsUpdate_DTO item) {
         if (PersianCalendarHelper.isValidPersianDateTime(item.getDateCreated()) == false)
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
         item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
-        return CompletableFuture.completedFuture(DAO.save(item));
+        System.out.println("-------------------");
+        System.out.println(item);
+        System.out.println("-------------------");
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Query query = entityManager.createNativeQuery("UPDATE invoices SET customer_id = :customerId, about = :about, datecreated = :dateCreated, dateupdated = :dateUpdated, " +
+                "discounttype = :discountType, discountvalue = :discountValue, descriptions = :descriptions, previnvoiceid = :prevInvoiceId WHERE id = :id")
+                .setParameter("customerId", item.getId())
+                .setParameter("about", item.getAbout())
+                .setParameter("dateCreated", item.getDateCreated())
+                .setParameter("dateUpdated", item.getDateUpdated())
+                .setParameter("discountType", item.getDiscountType())
+                .setParameter("discountValue", item.getDiscountValue())
+                .setParameter("descriptions", item.getDescriptions())
+                .setParameter("prevInvoiceId", item.getPrevInvoiceId());
+                int updatedEntities = query.executeUpdate();
+                System.out.println("AFFECTED ROWS: ");
+                System.out.println(updatedEntities);
+                return updatedEntities;
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            return 0;
+        });
     }
 
     public void deleteById(long id) {
