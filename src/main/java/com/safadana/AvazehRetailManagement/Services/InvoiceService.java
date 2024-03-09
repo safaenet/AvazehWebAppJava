@@ -120,7 +120,7 @@ public class InvoiceService {
         if (PersianCalendarHelper.isValidPersianDateTime(item.getDateCreated()) == false)
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
         item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
-        if(item.getId() == item.getPrevInvoiceId()) item.setPrevInvoiceId(null);
+        
         return CompletableFuture.supplyAsync(() -> {
             try {
                 int afftectedRows = DAO.updateInvoiceSpecs(item.getId(), item.getCustomerId(), item.getAbout(), item.getDateCreated(), item.getDateUpdated(),
