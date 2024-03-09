@@ -120,27 +120,14 @@ public class InvoiceService {
         if (PersianCalendarHelper.isValidPersianDateTime(item.getDateCreated()) == false)
             item.setDateCreated(PersianCalendarHelper.getPersianDateTime());
         item.setDateUpdated(PersianCalendarHelper.getPersianDateTime());
-        System.out.println("-------------------");
-        System.out.println(item);
-        System.out.println("-------------------");
+        if(item.getId() == item.getPrevInvoiceId()) item.setPrevInvoiceId(null);
         return CompletableFuture.supplyAsync(() -> {
             try {
-                Query query = entityManager.createNativeQuery("UPDATE invoices SET customer_id = :customerId, about = :about, datecreated = :dateCreated, dateupdated = :dateUpdated, " +
-                "discounttype = :discountType, discountvalue = :discountValue, descriptions = :descriptions, previnvoiceid = :prevInvoiceId WHERE id = :id")
-                .setParameter("customerId", item.getId())
-                .setParameter("about", item.getAbout())
-                .setParameter("dateCreated", item.getDateCreated())
-                .setParameter("dateUpdated", item.getDateUpdated())
-                .setParameter("discountType", item.getDiscountType())
-                .setParameter("discountValue", item.getDiscountValue())
-                .setParameter("descriptions", item.getDescriptions())
-                .setParameter("prevInvoiceId", item.getPrevInvoiceId());
-                int updatedEntities = query.executeUpdate();
-                System.out.println("AFFECTED ROWS: ");
-                System.out.println(updatedEntities);
-                return updatedEntities;
+                int afftectedRows = DAO.updateInvoiceSpecs(item.getId(), item.getCustomerId(), item.getAbout(), item.getDateCreated(), item.getDateUpdated(),
+                item.getDiscountType(), item.getDiscountValue(), item.getDescriptions(), item.getPrevInvoiceId());
+                return afftectedRows;
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
             return 0;
         });
