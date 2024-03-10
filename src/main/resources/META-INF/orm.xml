@@ -78,7 +78,7 @@
             <![CDATA[
                 WITH RECURSIVE InvoiceHierarchy AS (
                 SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
-                SFS AS totalInvoiceSum, COALESCE(PT, 0) AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                COALESCE(SFS, 0) AS totalInvoiceSum, COALESCE(PT, 0) AS totalInvoicePayments, i.previnvoiceid, CAST(0.0 AS double precision) AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i
                 INNER JOIN customers c ON i.customer_id = c.id
                 LEFT JOIN (SELECT COALESCE(ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END), 0) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
@@ -89,7 +89,7 @@
                 UNION ALL
 
                 SELECT i.id, i.customer_id AS customerId, c.fullname AS customerFullName, i.about, i.datecreated, i.dateupdated, i.descriptions,
-                SFS AS totalInvoiceSum, COALESCE(PT, 0) AS totalInvoicePayments, i.previnvoiceid, ih.prevInvoiceBalance + ih.totalInvoiceSum - ih.totalInvoicePayments AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
+                COALESCE(SFS, 0) AS totalInvoiceSum, COALESCE(PT, 0) AS totalInvoicePayments, i.previnvoiceid, ih.prevInvoiceBalance + ih.totalInvoiceSum - ih.totalInvoicePayments AS prevInvoiceBalance, InvFwds.fwdFactorNum AS fwdInvoiceId
                 FROM invoices i
                 INNER JOIN customers c ON i.customer_id = c.id
                 LEFT JOIN (SELECT ROUND(CASE WHEN i.discounttype = 0 THEN SUM(ii.countvalue * ii.sellprice) - (i.discountvalue / 100 * SUM(ii.countvalue * ii.sellprice)) WHEN i.discounttype = 1 THEN SUM(ii.countvalue * ii.sellprice) - i.discountvalue END) AS SFS, i.Id AS SFN  FROM invoiceitems ii RIGHT JOIN invoices i ON ii.invoiceid = i.Id GROUP BY i.id, i.discounttype, i.discountvalue) AS InvSums ON InvSums.SFN = i.id
@@ -103,6 +103,7 @@
                     ih.customerId = :customerId AND
                     ih.fwdInvoiceId IS NULL AND
                     ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0
+                ORDER BY ih.id DESC
             ]]>
         </query>
     </named-native-query>
