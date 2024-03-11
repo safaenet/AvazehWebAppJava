@@ -100,7 +100,7 @@
                 SELECT * FROM InvoiceHierarchy ih
                 WHERE
                     ih.id < :invoiceId AND
-                    ih.customerId = :customerId AND
+                    ih.customerId = (SELECT i.customer_id FROM invoices i WHERE i.id = :invoiceId) AND
                     ih.fwdInvoiceId IS NULL AND
                     ih.totalInvoiceSum - ih.totalInvoicePayments + ih.prevInvoiceBalance <> 0
                 ORDER BY ih.id DESC

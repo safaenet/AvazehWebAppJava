@@ -142,10 +142,9 @@ public class InvoiceService {
         return DAO.getInvoiceAbouts();
     }
 
-    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(Long invoiceId, Long customerId) {
+    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(Long invoiceId) {
         Query query = entityManager.createNamedQuery("findPrevInvoiceList")
-                .setParameter("invoiceId", invoiceId)
-                .setParameter("customerId", customerId);
+                .setParameter("invoiceId", invoiceId);
         @SuppressWarnings("unchecked")
         List<InvoiceListModel> list = query.getResultList();
         CompletableFuture<List<InvoiceListModel>> completedFuture = CompletableFuture.completedFuture(list);

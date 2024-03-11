@@ -67,11 +67,8 @@ public class InvoiceController {
         return service.getInvoiceAbouts();
     }
 
-    @GetMapping("/GetPrevInvoices/{invoiceId}/{customerId}")
-    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(@PathVariable Long invoiceId,
-            @PathVariable Long customerId) {
-                System.out.println(invoiceId);
-                System.out.println(customerId);
-        return service.getPrevInvoices(invoiceId, customerId);
+    @GetMapping("/GetPrevInvoices/{invoiceId}")
+    public CompletableFuture<List<InvoiceListModel>> getPrevInvoices(@PathVariable Long invoiceId) {
+        return service.getPrevInvoices(invoiceId);
     }
 }
