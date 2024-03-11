@@ -110,7 +110,7 @@ public class InvoiceService {
 
     public List<InvoicePaymentModel> getInvoicePaymentsByInvoiceId(long id) {
         List<InvoicePaymentModel> payments = entityManager
-                .createQuery("SELECT ip FROM InvoicePaymentModel ip WHERE ip.invoiceId = :invoiceId",
+                .createQuery("SELECT ip FROM InvoicePaymentModel ip WHERE ip.invoiceId = :invoiceId ORDER BY ip.dateCreated DESC",
                         InvoicePaymentModel.class)
                 .setParameter("invoiceId", id).getResultList();
         return payments;
